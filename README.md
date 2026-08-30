@@ -52,6 +52,8 @@ Telefon va kompyuter bir Wi-Fi tarmog'ida bo'lishi kerak. Boshqa tarmoqda bo'lsa
 
 Kodni o'zgartirsangiz, ilova telefonda o'zi yangilanadi.
 
+Bosqichma-bosqich yo'riqnoma, ulanmasa nima qilish va sinov ro'yxati — **`SINOV.md`**.
+
 ### Sifat nazorati
 
 ```bash
