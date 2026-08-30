@@ -84,7 +84,13 @@ Birinchi marta qo'shimcha paketni o'rnatishga ruxsat so'raydi — `y` bosing.
 
 **«Project is incompatible with this version of Expo Go»:**
 
-Play Market / App Store'dan Expo Go ni yangilang. Loyiha SDK 57 da.
+Loyiha **SDK 57** da. Expo Go do'kondagi eng oxirgi SDK ni qo'llab-quvvatlaydi,
+shuning uchun ikki tomonlama bo'lishi mumkin:
+
+- Expo Go eski bo'lsa — Play Market / App Store'dan yangilang.
+- Expo Go allaqachon yangiroq SDK ga o'tgan bo'lsa — loyihani ko'tarish kerak:
+  `npx expo install --fix` va keyin `npx expo-doctor`. Xato chiqsa menga yozing,
+  birga ko'taramiz.
 
 **Windows Firewall so'rasa** — «Allow access» bosing, aks holda telefon ulana olmaydi.
 
