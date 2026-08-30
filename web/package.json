@@ -1,0 +1,10 @@
+{
+  "name": "kun-tartibi-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kun Tartibi sayti va kutish ro'yxati API'si (Vercel)",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0"
+  }
+}

@@ -160,4 +160,31 @@ Foydalanuvchi «Sozlama → Zaxira olish» orqali hamma narsani `.json` fayl qil
 - Vaqt tanlash oynasi (`DateTimePicker`) Android va iOS'da har xil ko'rinadi — bu normal holat.
 - Ilova hozir bitta tilda (o'zbekcha). Rus yoki ingliz tili keyingi bosqichda qo'shiladi.
 
-Do'konga chiqish bo'yicha reja — `ROADMAP.md` faylida.
+---
+
+## Sayt (`web/`)
+
+Loyiha ichida ilovaning sayti ham bor: bosh sahifa, maxfiylik siyosati va qo'llab-quvvatlash
+sahifasi. Play Market maxfiylik siyosati uchun internetdagi havolani talab qiladi — shu sayt
+o'sha vazifani bajaradi.
+
+Saytda «Chiqqanda xabar beraylikmi?» formasi bor: email Vercel funksiyasi orqali Neon
+(Postgres) bazasiga yoziladi. Bu — saytning qismi, ilovaga aloqasi yo'q; ilova hamon hech
+qanday ma'lumot yig'maydi.
+
+```
+web/
+  index.html maxfiylik.html qollab.html   sahifalar
+  style.css                               uslub (ilova ranglari bilan bir xil)
+  img/                                    ekran rasmlari, ikonka, og:image
+  api/waitlist.js                         kutish ro'yxati API'si
+  api/_lib/validate.js                    tekshiruvlar (testlari bor)
+  db/schema.sql                           Neon uchun jadval
+  SETUP.md                                Vercel va Neon'ni ulash yo'riqnomasi
+```
+
+Mahalliy ko'rish: `web/` papkasida oddiy statik server yeterli, masalan
+`npx serve web`. API funksiyasi faqat Vercel'da (yoki `vercel dev` bilan) ishlaydi.
+
+Ishga tushirish bo'yicha qadamlar — `web/SETUP.md`.
+Do'konga chiqish bo'yicha reja — `ROADMAP.md`.

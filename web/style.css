@@ -70,7 +70,13 @@ body {
   margin: 0;
   background: var(--ground);
   color: var(--ink);
-  font-family: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Karla',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -365,6 +371,105 @@ section > .wrap > p.sub {
 .privacy-strip p {
   color: var(--ink-2);
   font-size: 15px;
+}
+
+/* ---- kutish ro'yxati ---- */
+.waitlist {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  max-width: 640px;
+}
+.waitlist h2 {
+  font-size: clamp(22px, 3vw, 28px);
+  margin-bottom: 8px;
+}
+.waitlist > p {
+  color: var(--ink-2);
+  font-size: 15.5px;
+  margin-bottom: 20px;
+}
+.waitlist form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+/* `hidden` atributi element selektoridan kuchsiz — aniq yozib qo'yamiz. */
+.waitlist form[hidden] {
+  display: none;
+}
+.waitlist input[type='email'],
+.waitlist input[type='text'] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 13px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15.5px;
+}
+.waitlist input::placeholder {
+  color: var(--muted);
+}
+.waitlist input:focus {
+  outline: 2px solid var(--lojuvard);
+  outline-offset: 1px;
+  border-color: var(--lojuvard);
+}
+.waitlist button {
+  flex: 0 0 auto;
+  padding: 13px 24px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--lojuvard);
+  color: var(--on-accent);
+  font-family: 'Jost', sans-serif;
+  font-size: 15.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.waitlist button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.waitlist button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.waitlist .fine {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+.waitlist .hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.waitlist .msg {
+  margin-top: 16px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  border: 1px solid transparent;
+}
+.waitlist .msg[data-kind='ok'] {
+  background: var(--feruza-soft);
+  border-color: var(--feruza);
+  color: var(--feruza);
+}
+.waitlist .msg[data-kind='err'] {
+  background: color-mix(in srgb, var(--anor) 12%, transparent);
+  border-color: var(--anor);
+  color: var(--anor);
+}
+.waitlist .msg[hidden] {
+  display: none;
 }
 
 /* ---- hujjat sahifasi ---- */

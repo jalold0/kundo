@@ -16,7 +16,15 @@ module.exports = [
     },
   },
   {
-    files: ['**/__tests__/**/*.{ts,tsx}', 'jest.setup.js'],
+    files: ['**/__tests__/**/*.{ts,tsx,js}', 'jest.setup.js'],
     rules: { 'no-undef': 'off' },
+  },
+  {
+    // Sayt va uning API'si — brauzer hamda Node muhiti, React emas.
+    files: ['web/**/*.js'],
+    rules: {
+      'no-undef': 'off',
+      'import/no-unresolved': 'off',
+    },
   },
 ];

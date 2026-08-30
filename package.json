@@ -60,11 +60,13 @@
   "jest": {
     "preset": "jest-expo",
     "testMatch": [
-      "**/__tests__/**/*.test.ts?(x)"
+      "**/__tests__/**/*.test.ts?(x)",
+      "**/__tests__/**/*.test.js"
     ],
     "collectCoverageFrom": [
       "src/lib/**/*.ts",
-      "src/store.tsx"
+      "src/store.tsx",
+      "web/api/**/*.js"
     ],
     "setupFiles": [
       "<rootDir>/jest.setup.js"

@@ -5,5 +5,5 @@
     "types": ["jest", "node"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".expo", "dist", "web-build", "coverage"]
+  "exclude": ["node_modules", ".expo", "dist", "web-build", "coverage", "web"]
 }
