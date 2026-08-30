@@ -103,6 +103,8 @@ export default function MoneyScreen() {
         title={monthLabel(ym)}
         right={
           <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Xarajat qo'shish"
             onPress={() => openAdd('chiqim')}
             style={{
               width: 42,
@@ -119,7 +121,13 @@ export default function MoneyScreen() {
       >
         <Card>
           <Row>
-            <Pressable onPress={() => setYm(addMonths(ym, -1))} hitSlop={12} style={navBtn(p)}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Oldingi oy"
+              onPress={() => setYm(addMonths(ym, -1))}
+              hitSlop={12}
+              style={navBtn(p)}
+            >
               <IconChevron color={p.ink2} dir="left" />
             </Pressable>
             <View style={{ flex: 1, alignItems: 'center' }}>
@@ -132,7 +140,13 @@ export default function MoneyScreen() {
                 </Pressable>
               ) : null}
             </View>
-            <Pressable onPress={() => setYm(addMonths(ym, 1))} hitSlop={12} style={navBtn(p)}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Keyingi oy"
+              onPress={() => setYm(addMonths(ym, 1))}
+              hitSlop={12}
+              style={navBtn(p)}
+            >
               <IconChevron color={p.ink2} dir="right" />
             </Pressable>
           </Row>

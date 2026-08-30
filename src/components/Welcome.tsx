@@ -38,7 +38,12 @@ export function Welcome() {
 
       <Card>
         <Row gap={S.md}>
-          <Check on={withHabits} onPress={() => setWithHabits(!withHabits)} tone={p.feruza} />
+          <Check
+            on={withHabits}
+            label="Uchta odat bilan boshlansin"
+            onPress={() => setWithHabits(!withHabits)}
+            tone={p.feruza}
+          />
           <View style={{ flex: 1 }}>
             <Txt>Uchta odat bilan boshlansin</Txt>
             <Txt v="small">{STARTER_HABITS.join(' · ')}</Txt>

@@ -247,12 +247,26 @@ export function Seg<T extends string>({
   );
 }
 
-export function Check({ on, onPress, tone }: { on: boolean; onPress: () => void; tone?: string }) {
+export function Check({
+  on,
+  onPress,
+  tone,
+  label,
+}: {
+  on: boolean;
+  onPress: () => void;
+  tone?: string;
+  /** Ekran o'quvchi uchun: nima belgilanayotgani. */
+  label?: string;
+}) {
   const p = usePal();
   const accent = tone ?? p.lojuvard;
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: on }}
+      accessibilityLabel={label}
       hitSlop={10}
       style={{
         width: 24,

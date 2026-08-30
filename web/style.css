@@ -1,0 +1,440 @@
+/* Kun Tartibi — sayt uslubi. Ranglar ilovaning o'zidan (Buxoro koshini). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+  --ground: #e9e3d7;
+  --surface: #fcfaf6;
+  --surface-2: #f3efe6;
+  --line: #dbd3c3;
+  --line-2: #c6bca7;
+  --ink: #171a21;
+  --ink-2: #3d4453;
+  --muted: #6e7383;
+  --lojuvard: #1d3f91;
+  --lojuvard-soft: #e0e5f3;
+  --feruza: #0f7a80;
+  --feruza-soft: #dceded;
+  --oltin: #98650f;
+  --anor: #93292b;
+  --on-accent: #fcfaf6;
+  --shadow: 0 1px 1px rgba(23, 26, 33, 0.05), 0 10px 30px -18px rgba(23, 26, 33, 0.4);
+  --r: 14px;
+  --naqsh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%231D3F91' stroke-width='1.1'%3E%3Crect x='11' y='11' width='42' height='42'/%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Cpath d='M0 15 L15 0 M49 0 L64 15 M64 49 L49 64 M15 64 L0 49'/%3E%3C/g%3E%3C/svg%3E");
+  --naqsh-opacity: 0.04;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ground: #111319;
+    --surface: #191c25;
+    --surface-2: #20242f;
+    --line: #2b3040;
+    --line-2: #3c4356;
+    --ink: #ede8de;
+    --ink-2: #c6c2b8;
+    --muted: #8b90a2;
+    --lojuvard: #82a2f2;
+    --lojuvard-soft: #1c2540;
+    --feruza: #3fb9bc;
+    --feruza-soft: #102c2e;
+    --oltin: #d3a44d;
+    --anor: #dd7c71;
+    --on-accent: #111319;
+    --shadow: 0 1px 1px rgba(0, 0, 0, 0.4), 0 12px 34px -20px rgba(0, 0, 0, 0.9);
+    --naqsh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2382A2F2' stroke-width='1.1'%3E%3Crect x='11' y='11' width='42' height='42'/%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Cpath d='M0 15 L15 0 M49 0 L64 15 M64 49 L49 64 M15 64 L0 49'/%3E%3C/g%3E%3C/svg%3E");
+    --naqsh-opacity: 0.055;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: var(--naqsh);
+  background-size: 78px 78px;
+  opacity: var(--naqsh-opacity);
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Jost', 'Karla', sans-serif;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+a {
+  color: var(--lojuvard);
+}
+p {
+  margin: 0;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- sarlavha ---- */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 62px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.brand svg {
+  width: 26px;
+  height: 26px;
+  color: var(--lojuvard);
+  flex: none;
+}
+.brand b {
+  font-family: 'Jost', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+}
+.top nav {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.top nav a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink-2);
+  font-size: 14.5px;
+}
+.top nav a:hover {
+  background: var(--surface-2);
+  color: var(--lojuvard);
+}
+@media (max-width: 620px) {
+  .top nav a.hide-sm {
+    display: none;
+  }
+}
+
+/* ---- hero ---- */
+.hero {
+  padding: 68px 0 40px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 44px;
+  align-items: center;
+}
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 44px 0 24px;
+    gap: 30px;
+  }
+}
+.hero h1 {
+  font-size: clamp(36px, 6vw, 58px);
+  line-height: 1.04;
+  margin-bottom: 18px;
+}
+.hero p.lead {
+  font-size: 18px;
+  color: var(--ink-2);
+  max-width: 46ch;
+}
+.hero .cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 15.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.btn.primary {
+  background: var(--lojuvard);
+  color: var(--on-accent);
+}
+.btn.primary:hover {
+  filter: brightness(1.08);
+}
+.btn.ghost {
+  border-color: var(--line-2);
+  color: var(--ink-2);
+  background: var(--surface);
+}
+.btn.ghost:hover {
+  border-color: var(--lojuvard);
+  color: var(--lojuvard);
+}
+.note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+
+.shot {
+  justify-self: center;
+  width: min(310px, 78vw);
+  border-radius: 26px;
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  background: var(--surface);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- bo'limlar ---- */
+section {
+  padding: 46px 0;
+}
+section > .wrap > h2 {
+  font-size: clamp(26px, 3.4vw, 34px);
+  margin-bottom: 8px;
+}
+section > .wrap > p.sub {
+  color: var(--muted);
+  max-width: 60ch;
+  margin-bottom: 28px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+.card p {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.card .ico {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 12px;
+  color: var(--lojuvard);
+}
+.card.teal .ico {
+  color: var(--feruza);
+}
+.card.gold .ico {
+  color: var(--oltin);
+}
+
+/* ---- ekranlar ---- */
+.shots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+@media (max-width: 780px) {
+  .shots {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+.shots figure {
+  margin: 0;
+}
+.shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow);
+}
+.shots figcaption {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---- maxfiylik chizig'i ---- */
+.privacy-strip {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 26px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+@media (max-width: 620px) {
+  .privacy-strip {
+    grid-template-columns: 1fr;
+  }
+}
+.privacy-strip svg {
+  width: 44px;
+  height: 44px;
+  color: var(--feruza);
+}
+.privacy-strip h3 {
+  font-size: 19px;
+  margin-bottom: 6px;
+}
+.privacy-strip p {
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+/* ---- hujjat sahifasi ---- */
+.doc {
+  max-width: 700px;
+  padding: 40px 0 60px;
+}
+.doc h1 {
+  font-size: clamp(30px, 5vw, 40px);
+  margin-bottom: 10px;
+}
+.doc h2 {
+  font-size: 20px;
+  margin: 32px 0 8px;
+}
+.doc p,
+.doc li {
+  color: var(--ink-2);
+  font-size: 15.5px;
+}
+.doc ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.doc li {
+  margin: 4px 0;
+}
+.doc .updated {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 26px;
+}
+.doc .callout {
+  background: var(--feruza-soft);
+  border: 1px solid var(--feruza);
+  color: var(--feruza);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  margin: 22px 0;
+  font-size: 15px;
+}
+
+/* ---- quyi qism ---- */
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding: 30px 0 50px;
+}
+footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+footer .links {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+footer a {
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 14px;
+}
+footer a:hover {
+  color: var(--lojuvard);
+}
+footer small {
+  color: var(--muted);
+  font-size: 13px;
+}

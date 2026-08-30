@@ -52,6 +52,7 @@ export function TaskRow({
       <View style={{ paddingTop: 1 }}>
         <Check
           on={task.done}
+          label={task.title}
           onPress={() => {
             Haptics.selectionAsync().catch(() => {});
             onToggle();
