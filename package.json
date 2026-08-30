@@ -1,0 +1,73 @@
+{
+  "name": "kun-tartibi",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
+    "@expo-google-fonts/jost": "^0.4.2",
+    "@expo-google-fonts/karla": "^0.4.2",
+    "@expo/metro-runtime": "~57.0.14",
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/datetimepicker": "^9.1.0",
+    "@react-navigation/bottom-tabs": "^7.18.18",
+    "@react-navigation/native": "^7.3.18",
+    "@react-navigation/native-stack": "^7.18.10",
+    "expo": "~57.0.18",
+    "expo-constants": "~57.0.16",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.6",
+    "expo-font": "~57.0.2",
+    "expo-haptics": "~57.0.2",
+    "expo-sharing": "~57.0.16",
+    "expo-splash-screen": "~57.0.8",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-svg": "^15.15.4",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.4.0",
+    "@types/react": "~19.2.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "jest": "^30.5.0",
+    "jest-expo": "~57.0.5",
+    "prettier": "^3.9.6",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "build:apk": "eas build -p android --profile preview",
+    "build:play": "eas build -p android --profile production",
+    "build:ios": "eas build -p ios --profile production",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md,js,yml}\""
+  },
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts?(x)"
+    ],
+    "collectCoverageFrom": [
+      "src/lib/**/*.ts",
+      "src/store.tsx"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
+  }
+}

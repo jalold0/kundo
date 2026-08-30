@@ -1,0 +1,38 @@
+# Har bir o'zgarishda kod tekshiriladi: tiplar, lint va testlar.
+name: Tekshiruv
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Tiplar, lint va testlar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Paketlarni o'rnatish
+        run: npm ci
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier
+        run: npm run format:check
+
+      - name: Testlar
+        run: npm test -- --ci
+
+      - name: Bundle yig'ilishini tekshirish
+        run: npx expo export --platform android --output-dir /tmp/export-check

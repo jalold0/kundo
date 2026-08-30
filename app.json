@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Kun Tartibi",
+    "slug": "kun-tartibi",
+    "scheme": "kuntartibi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "primaryColor": "#1D3F91",
+    "backgroundColor": "#E9E3D7",
+    "assetBundlePatterns": ["assets/**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "online.buxoro.kuntartibi",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "Kun Tartibi",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "online.buxoro.kuntartibi",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#1D3F91",
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "monochromeImage": "./assets/adaptive-icon.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "edgeToEdgeEnabled": true,
+      "permissions": []
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#E9E3D7",
+          "dark": {
+            "image": "./assets/splash-icon-dark.png",
+            "backgroundColor": "#111319"
+          }
+        }
+      ],
+      "expo-font",
+      "expo-document-picker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": ""
+      }
+    }
+  }
+}

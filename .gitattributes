@@ -1,0 +1,4 @@
+# Windows va Linux orasida qator oxirlari muammo qilmasin
+* text=auto eol=lf
+*.png binary
+*.ttf binary
