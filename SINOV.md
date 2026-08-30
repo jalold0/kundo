@@ -59,12 +59,12 @@ To'xtatish: terminalda `Ctrl + C`.
 
 ## Ishlatish paytida foydali
 
-| Nima                | Qanday                                             |
-| ------------------- | -------------------------------------------------- |
-| Qayta yuklash       | terminalda `r` bosing                              |
+| Nima                | Qanday                                                 |
+| ------------------- | ------------------------------------------------------ |
+| Qayta yuklash       | terminalda `r` bosing                                  |
 | Dev menyu           | telefonni **silkiting** (yoki uch barmoq bilan bosing) |
-| Kompyuter brauzerda | terminalda `w` bosing                              |
-| Loglarni ko'rish    | terminal oynasining o'zida chiqadi                 |
+| Kompyuter brauzerda | terminalda `w` bosing                                  |
+| Loglarni ko'rish    | terminal oynasining o'zida chiqadi                     |
 
 ---
 
