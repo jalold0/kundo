@@ -58,8 +58,9 @@ Bu bosqichni o'tkazib yubormang. Do'konga chiqqan ilovaning birinchi bahosi eng 
 | Qisqa tavsif (80 belgi)                          | tayyor                                              |
 | To'liq tavsif (4000 belgi)                       | tayyor                                              |
 | Ekran rasmlari (kamida 2 ta, telefon o'lchamida) | **siz olasiz** — ilovani telefonda ochib skrinshot  |
-| Ikonka 512×512                                   | `assets/icon.png` dan tayyorlanadi                  |
-| Play uchun banner 1024×500                       | **kerak**                                           |
+| Ikonka 512×512 (Play)                            | ✅ `store/icon-512-play.png`                        |
+| Ikonka 1024×1024 (App Store, alfasiz)            | ✅ `store/icon-1024-appstore.png`                   |
+| Play uchun banner 1024×500                       | ✅ `store/banner-1024x500.png`                      |
 | Maxfiylik siyosati (internetdagi havola)         | ✅ joylandi: kundoapp.vercel.app/maxfiylik.html      |
 | Yosh reytingi so'rovnomasi                       | Play Console'da to'ldiriladi                        |
 | Ma'lumot xavfsizligi formasi                     | oson — ilova hech narsa yig'maydi                   |

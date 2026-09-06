@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      Play Console «Feature graphic» — 1024x500.
+      Qayta chizish:
+        chrome --headless=new --window-size=1024,500 --force-device-scale-factor=1 \
+               --screenshot=banner-1024x500.png file:///C:/Dev/kundo/store/banner.html
+      Ranglar assets/icon.png dan olingan: #1D3F91 (ko'k), #FCFAF6 (oq), #0F7A80 (yashil).
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Karla:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1024px; height: 500px; overflow: hidden; }
+
+      .banner {
+        width: 1024px; height: 500px;
+        background: #e9e3d7;
+        display: flex; align-items: stretch;
+        font-family: 'Karla', system-ui, sans-serif;
+      }
+
+      /* Chap tomon — matn */
+      .left {
+        flex: 1;
+        padding: 0 56px 0 76px;
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      .wordmark {
+        font-family: 'Jost', system-ui, sans-serif;
+        font-weight: 600; font-size: 108px; line-height: 1;
+        letter-spacing: -0.035em; color: #1d3f91;
+      }
+      .tagline {
+        margin-top: 20px;
+        font-weight: 500; font-size: 31px; line-height: 1.32;
+        color: #1d3f91; opacity: 0.82; max-width: 520px;
+      }
+      .chips { margin-top: 34px; display: flex; gap: 12px; }
+      .chip {
+        font-weight: 600; font-size: 18px; letter-spacing: 0.01em;
+        color: #1d3f91;
+        padding: 10px 18px; border-radius: 999px;
+        background: rgba(29, 63, 145, 0.07);
+        border: 1.5px solid rgba(29, 63, 145, 0.16);
+        white-space: nowrap;
+      }
+      .chip.accent {
+        color: #0f7a80;
+        background: rgba(15, 122, 128, 0.09);
+        border-color: rgba(15, 122, 128, 0.24);
+      }
+
+      /* O'ng tomon — ko'k panel va belgi */
+      .right {
+        width: 356px; position: relative; overflow: hidden;
+        background: #1d3f91;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .mark { width: 196px; position: relative; z-index: 2; }
+      /* Belgi ortidagi yumshoq yorug'lik — tekis ko'k panelga hajm beradi */
+      .glow {
+        position: absolute; z-index: 1;
+        width: 520px; height: 520px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(252, 250, 246, 0.13) 0%, rgba(252, 250, 246, 0) 68%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <div class="left">
+        <div class="wordmark">Kundo</div>
+        <div class="tagline">Kun rejasi, odatlar va xarajat —<br />bir daftarda</div>
+        <div class="chips">
+          <span class="chip">Internetsiz ishlaydi</span>
+          <span class="chip">Hisob shart emas</span>
+          <span class="chip accent">Reklamasiz</span>
+        </div>
+      </div>
+      <div class="right">
+        <div class="glow"></div>
+        <img class="mark" src="./mark.png" alt="Kundo" />
+      </div>
+    </div>
+  </body>
+</html>
