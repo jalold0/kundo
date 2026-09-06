@@ -42,3 +42,11 @@ yarn-error.*
 
 # Vercel
 .vercel
+
+# Imzo kalitlari — hech qachon omborga tushmasin
+*.jks
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+credentials.json
