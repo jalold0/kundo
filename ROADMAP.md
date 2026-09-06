@@ -60,12 +60,15 @@ Bu bosqichni o'tkazib yubormang. Do'konga chiqqan ilovaning birinchi bahosi eng 
 | Ekran rasmlari (kamida 2 ta, telefon o'lchamida) | **siz olasiz** — ilovani telefonda ochib skrinshot  |
 | Ikonka 512×512                                   | `assets/icon.png` dan tayyorlanadi                  |
 | Play uchun banner 1024×500                       | **kerak**                                           |
-| Maxfiylik siyosati (internetdagi havola)         | `store/privacy-uz.md` da matn tayyor, joylash kerak |
+| Maxfiylik siyosati (internetdagi havola)         | ✅ joylandi: kundoapp.vercel.app/maxfiylik.html      |
 | Yosh reytingi so'rovnomasi                       | Play Console'da to'ldiriladi                        |
 | Ma'lumot xavfsizligi formasi                     | oson — ilova hech narsa yig'maydi                   |
 
-Maxfiylik siyosatini joylashning eng oson yo'li: GitHub Pages sahifasi
-(oldin qilgan PWA papkangiz turgan joyga qo'shib qo'yish mumkin).
+Maxfiylik siyosati va qo'llab-quvvatlash sahifasi allaqachon internetda —
+sayt `web/` papkasida, Vercel'da joylangan (`web/SETUP.md`):
+
+- <https://kundoapp.vercel.app/maxfiylik.html>
+- <https://kundoapp.vercel.app/qollab.html>
 
 ## 4-bosqich. Chiqarish va keyingi ishlar
 
@@ -75,6 +78,35 @@ Maxfiylik siyosatini joylashning eng oson yo'li: GitHub Pages sahifasi
 
 ---
 
+## Yo'nalish qarori (2026-09-07)
+
+Savol qo'yilgan edi: ilovani login/parolli, akkauntga asoslangan tizimga aylantirib,
+darhol xalqaro bozorga chiqsakmi? Qaror — **yo'q, hozircha emas**. Tartib shunday:
+
+1. **Offline versiya avval do'konga chiqadi** (shu hujjatning 1–4 bosqichi).
+2. Akkaunt va bulutli sinxronizatsiya — **ixtiyoriy** qo'shimcha sifatida, chiqishdan
+   keyin, haqiqiy talab ko'ringanda.
+3. Xalqaro bozor yo'li akkaunt orqali emas, **til va valyuta** orqali o'tadi.
+
+Sabablari:
+
+- «Hisob ochish shart emas, internet shart emas, ma'lumot telefondan chiqmaydi» — bu
+  ilovaning eng kuchli va'dasi. Majburiy login uni bekor qiladi va o'rnatganlarning bir
+  qismi ro'yxatdan o'tish ekranida to'xtaydi.
+- Akkaunt qo'shilishi bilan maxfiylik siyosati qaytadan yoziladi, Data Safety formasi
+  o'zgaradi, do'konlar esa **akkauntni o'chirish yo'lini** (ilova ichida + veb-havola)
+  majburiy qiladi. Birinchi topshirishda bularsiz o'tish ancha oson.
+- Anonim foydalanuvchini keyinchalik akkauntga ko'tarish oson; majburiy loginni keyin
+  olib tashlash — qiyin.
+- Play Console yopiq sinovi kalendar vaqtini talab qiladi. Uni hozirgi offline build
+  bilan bugundan boshlash mumkin.
+
+Sinxronizatsiya qilinganda hal qilinishi shart bo'lgan texnik masala: hozir butun holat
+`AsyncStorage` da **bitta blob** bo'lib yotadi. «Oxirgi yozgan g'olib» tamoyilida
+sinxronlansa, ikkita qurilmada ishlagan odam ma'lumotining bir qismini yo'qotadi.
+Kerak bo'ladi: har yozuvga `updatedAt`, o'chirilganlik belgisi (tombstone) va
+qurilma identifikatori.
+
 ## Keyingi versiyalar uchun g'oyalar
 
 Birinchi versiya ataylab sodda. Odamlar ishlatgandan keyin nima kerakligi ma'lum bo'ladi.
@@ -83,7 +115,9 @@ Ehtimoliy yo'nalishlar:
 **Yaqin kelajak**
 
 - Eslatma bildirishnomalari (vazifa vaqti kelganda)
-- Rus va ingliz tillari
+- Rus va ingliz tillari — bu ko'ringanidan kattaroq ish: matnlar hozir kod ichida
+  o'zbekcha qotib yozilgan, ularni ajratib olish kerak. Valyuta ham: `amount` butun son
+  bo'lib **so'mda** saqlanadi, dollar/evro uchun yozuvga valyuta kodi qo'shilishi kerak
 - Bosh ekran vidjeti (bugungi vazifalar / oylik xarajat)
 
 **Keyinroq**
