@@ -2,6 +2,7 @@
   "expo": {
     "name": "Kundo",
     "slug": "kundo",
+    "owner": "jalold0",
     "scheme": "kundo",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -56,7 +57,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "d915e71a-8916-4e23-9bb4-46c38ec6f90f"
       }
     }
   }
