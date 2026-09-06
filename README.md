@@ -1,4 +1,4 @@
-# Kun Tartibi
+# Kundo
 
 Kun rejasi, odatlar va xarajatlarni bir joyda yuritadigan mobil ilova.
 Expo (React Native) da yozilgan — bitta koddan Android va iOS uchun ilova chiqadi.

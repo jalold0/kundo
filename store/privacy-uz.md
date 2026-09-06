@@ -1,4 +1,4 @@
-# Maxfiylik siyosati — Kun Tartibi
+# Maxfiylik siyosati — Kundo
 
 **Oxirgi yangilanish:** <SANA>
 **Ishlab chiquvchi:** <ISM / TASHKILOT>
@@ -14,7 +14,7 @@
 
 ## Qisqacha
 
-Kun Tartibi ilovasi foydalanuvchi haqida hech qanday ma'lumot yig'maydi, saqlamaydi
+Kundo ilovasi foydalanuvchi haqida hech qanday ma'lumot yig'maydi, saqlamaydi
 va uzatmaydi. Ilovaga kiritilgan barcha yozuvlar faqat foydalanuvchining o'z
 qurilmasida qoladi.
 

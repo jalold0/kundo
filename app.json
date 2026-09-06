@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Kun Tartibi",
-    "slug": "kun-tartibi",
-    "scheme": "kuntartibi",
+    "name": "Kundo",
+    "slug": "kundo",
+    "scheme": "kundo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,15 +12,15 @@
     "assetBundlePatterns": ["assets/**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "online.buxoro.kuntartibi",
+      "bundleIdentifier": "online.buxoro.kundo",
       "buildNumber": "1",
       "infoPlist": {
-        "CFBundleDisplayName": "Kun Tartibi",
+        "CFBundleDisplayName": "Kundo",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "online.buxoro.kuntartibi",
+      "package": "online.buxoro.kundo",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#1D3F91",

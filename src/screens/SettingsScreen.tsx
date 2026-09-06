@@ -146,7 +146,7 @@ export default function SettingsScreen() {
         <Row gap={S.md}>
           <StarMark color={p.lojuvard} size={30} />
           <View style={{ flex: 1 }}>
-            <Txt v="h2">Kun Tartibi</Txt>
+            <Txt v="h2">Kundo</Txt>
             <Txt v="monoSm">versiya {version}</Txt>
           </View>
         </Row>

@@ -22,7 +22,7 @@ versiyasini o'rnating, keyin PowerShell'ni yopib qayta oching.
 Paketlarni o'rnatish (3–5 daqiqa, internet kerak):
 
 ```powershell
-cd C:\Dev\kun-tartibi
+cd C:\Dev\kundo
 npm install
 ```
 
@@ -42,7 +42,7 @@ Telefon va kompyuter **bitta Wi-Fi** da bo'lishi shart.
 ## 3. Har safar ishga tushirish
 
 ```powershell
-cd C:\Dev\kun-tartibi
+cd C:\Dev\kundo
 npx expo start
 ```
 

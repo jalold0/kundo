@@ -25,7 +25,7 @@ export function Welcome() {
     <Sheet
       visible={visible}
       onClose={start}
-      title="Kun Tartibi"
+      title="Kundo"
       footer={<Btn label="Boshlash" onPress={start} />}
     >
       <Row gap={S.md}>

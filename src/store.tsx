@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { addDays, iso, today, wd } from './lib/date';
 import type { AppState, Entry, EntryKind, Habit, Repeat, RepeatRule, Settings, Task } from './types';
 
-const KEY = 'kunTartibi.state.v1';
+const KEY = 'kundo.state.v1';
 
 export function uid(): string {
   return Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);

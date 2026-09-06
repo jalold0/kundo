@@ -7,7 +7,7 @@ import type { AppState } from '../types';
 /** Zaxira faylini yaratib, ulashish oynasini ochadi. */
 export async function exportBackup(state: AppState): Promise<{ ok: boolean; message: string }> {
   try {
-    const name = `kun-tartibi-zaxira-${today()}.json`;
+    const name = `kundo-zaxira-${today()}.json`;
     const file = new File(Paths.cache, name);
     if (file.exists) file.delete();
     file.create({ overwrite: true });
@@ -41,7 +41,7 @@ export async function pickBackup(): Promise<{ ok: boolean; data?: AppState; mess
     const text = await new File(asset.uri).text();
     const data = JSON.parse(text);
     if (!data || (!Array.isArray(data.tasks) && !Array.isArray(data.entries))) {
-      return { ok: false, message: 'Bu Kun Tartibi zaxira fayliga o‘xshamaydi.' };
+      return { ok: false, message: 'Bu Kundo zaxira fayliga o‘xshamaydi.' };
     }
     return { ok: true, data, message: 'Fayl o‘qildi.' };
   } catch (e: any) {

@@ -9,10 +9,10 @@ Tartib muhim: **GitHub → Neon → Vercel**. Vercel bazaning manzilini so'raydi
 
 ## 1. Kodni GitHub'ga yuklash
 
-Ombor allaqachon yaratilgan: `github.com/jalold0/kun-tartibi`
+Ombor allaqachon yaratilgan: `gitlab.com/jalold0/kundo`
 
 ```powershell
-cd C:\Dev\kun-tartibi
+cd C:\Dev\kundo
 git push -u origin main
 ```
 
@@ -24,7 +24,7 @@ Birinchi marta brauzerda GitHub'ga kirishni so'raydi — ruxsat berasiz.
 
 1. [neon.com](https://neon.com) → **Sign up** → GitHub bilan kiring (alohida parol kerak emas).
 2. **Create project**:
-   - Name: `kun-tartibi`
+   - Name: `kundo`
    - Postgres version: eng oxirgisi (o'zi tanlab qo'yadi)
    - Region: **Europe (Frankfurt)** — O'zbekistonga eng yaqini
 3. Loyiha ochilgach chapdagi **SQL Editor** ga o'ting.
@@ -46,7 +46,7 @@ Birinchi marta brauzerda GitHub'ga kirishni so'raydi — ruxsat berasiz.
 ## 3. Vercel — saytni chiqarish
 
 1. [vercel.com](https://vercel.com) → **Continue with GitHub** bilan kiring.
-2. **Add New → Project** → ro'yxatdan `kun-tartibi` ni toping → **Import**.
+2. **Add New → Project** → ro'yxatdan `kundo` ni toping → **Import**.
 3. Sozlamalar (eng muhim joyi):
 
    | Maydon             | Qiymat                                |
@@ -69,7 +69,7 @@ Birinchi marta brauzerda GitHub'ga kirishni so'raydi — ruxsat berasiz.
    Uchala muhit (Production, Preview, Development) uchun ham belgilangan bo'lsin.
 
 5. **Deploy** bosing. 1–2 daqiqada sayt tayyor:
-   `https://kun-tartibi.vercel.app`
+   `https://kundo.vercel.app`
 
 ---
 
@@ -90,8 +90,8 @@ Vercel → Project → Settings → Environment Variables dan tekshiring, keyin
 
 Deploy bo'lgach shu ikkitasi tayyor bo'ladi — Play Console shularni so'raydi:
 
-- Maxfiylik siyosati: `https://kun-tartibi.vercel.app/maxfiylik.html`
-- Qo'llab-quvvatlash: `https://kun-tartibi.vercel.app/qollab.html`
+- Maxfiylik siyosati: `https://kundo.vercel.app/maxfiylik.html`
+- Qo'llab-quvvatlash: `https://kundo.vercel.app/qollab.html`
 
 ---
 

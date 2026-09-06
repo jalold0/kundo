@@ -1,4 +1,4 @@
--- Kun Tartibi — kutish ro'yxati jadvali (Neon / PostgreSQL)
+-- Kundo — kutish ro'yxati jadvali (Neon / PostgreSQL)
 -- Neon konsolidagi SQL Editor'ga shu matnni qo'yib «Run» bosiladi.
 
 CREATE TABLE IF NOT EXISTS waitlist (

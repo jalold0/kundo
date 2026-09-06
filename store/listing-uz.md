@@ -8,13 +8,14 @@ Har biri uzunlik chegarasiga moslab yozilgan.
 ## Ilova nomi (30 belgi)
 
 ```
-Kun Tartibi
+Kundo — reja, odat, xarajat
 ```
 
-Muqobil (agar band bo'lsa):
+«Kundo» yasama so'z — uni hech kim qidirmaydi. Shuning uchun do'kon sarlavhasi
+kalit so'zlarni o'zi ko'tarib turishi kerak. Qisqaroq variant kerak bo'lsa:
 
 ```
-Kun Tartibi — reja va xarajat
+Kundo — reja va xarajat
 ```
 
 ## Qisqa tavsif (80 belgi)
@@ -26,7 +27,7 @@ Kunlik reja, odatlar va xarajatlar — bir joyda, internetsiz, hisobsiz.
 ## To'liq tavsif
 
 ```
-Kun Tartibi — kuningizni va pulingizni bir daftarda yuritish uchun oddiy ilova.
+Kundo — kuningizni va pulingizni bir daftarda yuritish uchun oddiy ilova.
 
 REJA
 Vazifalarni kun qismlariga ajratib yozasiz: ertalab, kunduzi, kechqurun.
