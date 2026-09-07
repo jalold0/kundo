@@ -229,3 +229,32 @@ export const IconTag = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
     </>,
     size,
   );
+
+export const IconBell = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Path
+        d="M6.6 10.2 a5.4 5.4 0 0 1 10.8 0 v3.4 l1.6 2.6 H5 l1.6-2.6 Z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+      />
+      <Path d="M10 19 a2.1 2.1 0 0 0 4 0" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </>,
+    size,
+  );
+
+export const IconClock = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Circle cx="12" cy="12" r="8.6" stroke={color} strokeWidth={strokeWidth} />
+      <Path
+        d="M12 7.4 V12 L15.4 14"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </>,
+    size,
+  );

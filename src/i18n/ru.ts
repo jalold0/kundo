@@ -256,6 +256,19 @@ export const ru: Dict = {
   'habits.stop': 'Остановить',
   'cats.moved': 'перенесено',
 
+  'settings.notify': 'Напоминания',
+  'notify.channel': 'Напоминания Kundo',
+  'notify.tasks': 'Напоминать о задаче',
+  'notify.tasksHint': 'Уведомление в указанное время задачи',
+  'notify.daily': 'Ежедневное напоминание',
+  'notify.dailyHint': 'Раз в день — отметить задачи и привычки',
+  'notify.dailyTitle': 'Пора закрыть день',
+  'notify.dailyBody': 'Отметьте задачи и привычки за сегодня.',
+  'notify.taskBody': 'Наступило время задачи.',
+  'notify.at': 'Время напоминания',
+  'notify.denied':
+    'Уведомления отключены в настройках телефона. Разрешите их для приложения, и они заработают.',
+
   'tone.lojuvard': 'Синий',
   'tone.feruza': 'Бирюзовый',
   'tone.oltin': 'Золотой',

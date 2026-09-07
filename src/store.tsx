@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { defaultCatList } from './lib/catalog';
 import { deviceLang, getLang, setLang, t, type Lang } from './i18n';
 import { addDays, daysInMonth, iso, today, wd } from './lib/date';
+import { resync } from './lib/notify';
 import type {
   AppState,
   Cat,
@@ -93,6 +94,9 @@ function seed(): AppState {
       currency: seedCurrency(lang),
       weekStartsMonday: true,
       onboarded: false,
+      notifyTasks: false,
+      notifyDaily: false,
+      notifyAt: '21:00',
       lastTaskCat: 'ish',
       lastSpendCat: 'oziq',
       lastIncomeCat: 'maosh',
@@ -196,6 +200,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
+  }, [state]);
+
+  // Eslatmalar holatga qarab qaytadan rejalashtiriladi. Saqlash bilan bir xil
+  // kechikish: har bosishda emas, o'zgarishlar tinchlangandan keyin.
+  useEffect(() => {
+    if (!loaded.current) return;
+    const id = setTimeout(() => {
+      resync(state);
+    }, 600);
+    return () => clearTimeout(id);
   }, [state]);
 
   const edit = useCallback((fn: (s: AppState) => AppState) => {

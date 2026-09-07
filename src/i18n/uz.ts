@@ -273,6 +273,20 @@ export const uz = {
   'habits.stop': 'To‘xtatish',
   'cats.moved': 'ko‘chirildi',
 
+  // eslatmalar
+  'settings.notify': 'Eslatmalar',
+  'notify.channel': 'Kundo eslatmalari',
+  'notify.tasks': 'Vazifa vaqtida eslatish',
+  'notify.tasksHint': 'Vaqti qo‘yilgan vazifa uchun o‘sha soatda bildirishnoma',
+  'notify.daily': 'Kunlik eslatma',
+  'notify.dailyHint': 'Har kuni bir marta — vazifa va odatlarni belgilash uchun',
+  'notify.dailyTitle': 'Kunni yopish vaqti',
+  'notify.dailyBody': 'Bugungi vazifa va odatlarni belgilab qo‘ying.',
+  'notify.taskBody': 'Vazifa vaqti keldi.',
+  'notify.at': 'Eslatma vaqti',
+  'notify.denied':
+    'Telefon sozlamasida bildirishnoma o‘chirilgan. Ilova sozlamalaridan ruxsat bersangiz ishlaydi.',
+
   // ranglar
   'tone.lojuvard': 'Ko‘k',
   'tone.feruza': 'Feruza',

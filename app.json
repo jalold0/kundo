@@ -54,7 +54,14 @@
       "expo-font",
       "expo-document-picker",
       "expo-sharing",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "color": "#1D3F91",
+          "defaultChannel": "kundo-eslatma"
+        }
+      ]
     ],
     "extra": {
       "eas": {

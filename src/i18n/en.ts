@@ -257,6 +257,19 @@ export const en: Dict = {
   'habits.stop': 'Stop',
   'cats.moved': 'moved',
 
+  'settings.notify': 'Reminders',
+  'notify.channel': 'Kundo reminders',
+  'notify.tasks': 'Remind me at the task time',
+  'notify.tasksHint': 'A notification at the time set on a task',
+  'notify.daily': 'Daily reminder',
+  'notify.dailyHint': 'Once a day — to tick off tasks and habits',
+  'notify.dailyTitle': 'Time to close the day',
+  'notify.dailyBody': 'Tick off today’s tasks and habits.',
+  'notify.taskBody': 'It is time for this task.',
+  'notify.at': 'Reminder time',
+  'notify.denied':
+    'Notifications are turned off in your phone settings. Allow them for the app and reminders will work.',
+
   'tone.lojuvard': 'Blue',
   'tone.feruza': 'Turquoise',
   'tone.oltin': 'Gold',

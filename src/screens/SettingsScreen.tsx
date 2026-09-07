@@ -1,15 +1,19 @@
 import Constants from 'expo-constants';
 import React, { useState } from 'react';
-import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
 import { CatsSheet } from '../components/CatsSheet';
+import { TimePanel } from '../components/pickers';
 import { exportBackup, exportEntriesCsv, pickBackup } from '../lib/backup';
+import { askPermission } from '../lib/notify';
 import { LANGS, t, type Lang } from '../i18n';
 import { useStore } from '../store';
 import { R, S } from '../theme';
 import type { ThemeMode } from '../theme';
 import type { CatKind } from '../types';
 import {
+  IconBell,
   IconChevron,
+  IconClock,
   IconDownload,
   IconHelp,
   IconList,
@@ -125,6 +129,19 @@ export default function SettingsScreen() {
     ]);
   };
 
+  /**
+   * Eslatmani yoqishdan oldin ruxsat so'raladi. Rad etilsa sozlama yoqilmaydi —
+   * aks holda yoqilgandek ko'rinib, hech narsa kelmasdi.
+   */
+  const setNotify = async (patch: { notifyTasks?: boolean; notifyDaily?: boolean }) => {
+    const turningOn = patch.notifyTasks === true || patch.notifyDaily === true;
+    if (turningOn && !(await askPermission())) {
+      toast.show(t('notify.denied'));
+      return;
+    }
+    store.setSettings(patch);
+  };
+
   const mailto = `mailto:${POCHTA}?subject=${encodeURIComponent(`Kundo ${version}`)}`;
 
   return (
@@ -162,6 +179,52 @@ export default function SettingsScreen() {
               onChange={(lang) => store.setSettings({ lang })}
             />
           </View>
+        </Section>
+
+        <Section title={t('settings.notify')}>
+          <Item
+            ico={IconBell}
+            title={t('notify.tasks')}
+            subtitle={t('notify.tasksHint')}
+            onPress={() => setNotify({ notifyTasks: !store.state.settings.notifyTasks })}
+            chevron={false}
+            right={
+              <Toggle
+                on={store.state.settings.notifyTasks}
+                onChange={(v) => setNotify({ notifyTasks: v })}
+                label={t('notify.tasks')}
+              />
+            }
+          />
+          <Sep />
+          <Item
+            ico={IconClock}
+            title={t('notify.daily')}
+            subtitle={t('notify.dailyHint')}
+            onPress={() => setNotify({ notifyDaily: !store.state.settings.notifyDaily })}
+            chevron={false}
+            right={
+              <Toggle
+                on={store.state.settings.notifyDaily}
+                onChange={(v) => setNotify({ notifyDaily: v })}
+                label={t('notify.daily')}
+              />
+            }
+          />
+          {store.state.settings.notifyDaily ? (
+            <View style={{ paddingHorizontal: S.lg, paddingBottom: S.lg, gap: S.sm }}>
+              <Row>
+                <Txt v="label" style={{ flex: 1 }}>
+                  {t('notify.at')}
+                </Txt>
+                <Txt v="mono">{store.state.settings.notifyAt}</Txt>
+              </Row>
+              <TimePanel
+                value={store.state.settings.notifyAt}
+                onChange={(notifyAt) => store.setSettings({ notifyAt })}
+              />
+            </View>
+          ) : null}
         </Section>
 
         <Section title={t('settings.cats')}>
@@ -339,6 +402,8 @@ function Item({
   danger,
   /** Strelka «boshqa joyga o'tadi» degan ma'noni beradi — dialog ochadigan qatorda o'chiriladi. */
   chevron = true,
+  /** Strelka o'rniga qo'yiladigan boshqaruv (masalan tugmacha). */
+  right,
 }: {
   ico: IconCmp;
   title: string;
@@ -347,6 +412,7 @@ function Item({
   disabled?: boolean;
   danger?: boolean;
   chevron?: boolean;
+  right?: React.ReactNode;
 }) {
   const p = usePal();
   const accent = danger ? p.anor : p.lojuvard;
@@ -389,6 +455,7 @@ function Item({
           </Txt>
         ) : null}
       </View>
+      {right}
       {chevron ? <IconChevron size={15} color={p.muted} /> : null}
     </Pressable>
   );
@@ -418,5 +485,20 @@ function Stat({ value, label }: { value: number; label: string }) {
         {label}
       </Txt>
     </View>
+  );
+}
+
+/** Tizim tugmachasi, lekin ilova ranglarida. */
+function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
+  const p = usePal();
+  return (
+    <Switch
+      value={on}
+      onValueChange={onChange}
+      accessibilityLabel={label}
+      trackColor={{ false: p.line2, true: p.feruza }}
+      thumbColor={p.surface}
+      ios_backgroundColor={p.line2}
+    />
   );
 }

@@ -65,6 +65,12 @@ export type Settings = {
   currency: string; // "so'm"
   weekStartsMonday: boolean;
   onboarded: boolean;
+  /** Vaqti qo'yilgan vazifa uchun eslatma. */
+  notifyTasks: boolean;
+  /** Har kunlik bitta eslatma. */
+  notifyDaily: boolean;
+  /** Kunlik eslatma vaqti, "HH:MM". */
+  notifyAt: string;
   lastTaskCat: string;
   lastSpendCat: string;
   lastIncomeCat: string;
