@@ -31,7 +31,7 @@
         "monochromeImage": "./assets/adaptive-icon.png"
       },
       "predictiveBackGestureEnabled": false,
-      "permissions": []
+      "permissions": ["android.permission.POST_NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png",
