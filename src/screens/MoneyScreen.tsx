@@ -97,18 +97,23 @@ export default function MoneyScreen() {
     store.setSettings(draft.kind === 'kirim' ? { lastIncomeCat: draft.cat } : { lastSpendCat: draft.cat });
     setAdding(false);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    toast.show(`${draft.kind === 'kirim' ? 'Kirim' : 'Chiqim'} yozildi: ${fmt(amount)} ${cur}`);
+    toast.show(
+      t('money.written', {
+        kind: draft.kind === 'kirim' ? t('money.income') : t('money.spend'),
+        sum: `${fmt(amount)} ${cur}`,
+      }),
+    );
   };
 
   return (
     <>
       <Screen
-        eyebrow="Xarajat"
+        eyebrow={t('money.eyebrow')}
         title={monthLabel(ym)}
         right={
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Xarajat qo'shish"
+            accessibilityLabel={t('money.addA11y')}
             onPress={() => openAdd('chiqim')}
             style={{
               width: 42,
@@ -127,7 +132,7 @@ export default function MoneyScreen() {
           <Row>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Oldingi oy"
+              accessibilityLabel={t('common.prevMonth')}
               onPress={() => setYm(addMonths(ym, -1))}
               hitSlop={12}
               style={navBtn(p)}
@@ -135,18 +140,18 @@ export default function MoneyScreen() {
               <IconChevron color={p.ink2} dir="left" />
             </Pressable>
             <View style={{ flex: 1, alignItems: 'center' }}>
-              <Txt v="label">{isCurrent ? 'joriy oy' : 'oy'}</Txt>
+              <Txt v="label">{isCurrent ? t('money.currentMonth') : t('money.month')}</Txt>
               {!isCurrent ? (
                 <Pressable onPress={() => setYm(thisMonth())}>
                   <Txt v="small" color={p.lojuvard}>
-                    Shu oyga qaytish
+                    {t('money.backToMonth')}
                   </Txt>
                 </Pressable>
               ) : null}
             </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Keyingi oy"
+              accessibilityLabel={t('common.nextMonth')}
               onPress={() => setYm(addMonths(ym, 1))}
               hitSlop={12}
               style={navBtn(p)}
@@ -156,7 +161,7 @@ export default function MoneyScreen() {
           </Row>
 
           <View style={{ marginTop: S.lg, gap: 4 }}>
-            <Txt v="label">Oylik chiqim</Txt>
+            <Txt v="label">{t('money.monthSpend')}</Txt>
             <Row style={{ alignItems: 'baseline' }} gap={7}>
               {/* Millionli summalar ham bir qatorda qolsin — kichrayadi, sinmaydi. */}
               <Txt
@@ -178,16 +183,17 @@ export default function MoneyScreen() {
             </Row>
             {delta !== null ? (
               <Txt v="small" color={delta > 0 ? p.anor : delta < 0 ? p.feruza : p.muted}>
-                {delta > 0 ? '↑' : delta < 0 ? '↓' : '='} o‘tgan oyga nisbatan {Math.abs(delta)}%{'  ·  '}
+                {delta > 0 ? '↑' : delta < 0 ? '↓' : '='} {t('money.vsPrev', { pct: Math.abs(delta) })}
+                {'  ·  '}
                 {fmtShort(prevSpend)}
               </Txt>
             ) : null}
           </View>
 
           <Row gap={S.md} style={{ marginTop: S.lg }}>
-            <Metric label="kirim" value={fmt(income)} tone={income > 0 ? p.feruza : p.muted} />
+            <Metric label={t('money.in')} value={fmt(income)} tone={income > 0 ? p.feruza : p.muted} />
             <Metric
-              label="farq"
+              label={t('money.diff')}
               value={`${balance >= 0 ? '+' : MINUS}${fmt(Math.abs(balance))}`}
               tone={balance === 0 ? p.muted : balance > 0 ? p.feruza : p.anor}
             />
@@ -201,7 +207,7 @@ export default function MoneyScreen() {
             <View style={{ marginTop: S.md, gap: S.sm }}>
               <Row>
                 <Txt v="small" style={{ flex: 1 }}>
-                  Oylik byudjet: {fmt(budget)} {cur}
+                  {t('money.budget', { sum: `${fmt(budget)} ${cur}` })}
                 </Txt>
                 <Pressable
                   onPress={() => {
@@ -222,18 +228,22 @@ export default function MoneyScreen() {
               />
               <Row>
                 <Txt v="small" color={left >= 0 ? p.ink2 : p.anor} style={{ flex: 1 }}>
-                  {left >= 0 ? `${fmt(left)} ${cur} qoldi` : `${fmt(-left)} ${cur} oshib ketdi`}
+                  {left >= 0
+                    ? t('money.left', { sum: `${fmt(left)} ${cur}` })
+                    : t('money.over', { sum: `${fmt(-left)} ${cur}` })}
                 </Txt>
-                {perDayLeft > 0 ? <Txt v="small">kuniga ~{fmtShort(perDayLeft)}</Txt> : null}
+                {perDayLeft > 0 ? (
+                  <Txt v="small">{t('money.perDay', { sum: fmtShort(perDayLeft) })}</Txt>
+                ) : null}
               </Row>
             </View>
           ) : (
             <Row style={{ marginTop: S.md }}>
               <Txt v="small" style={{ flex: 1 }}>
-                Bu oyga byudjet belgilanmagan.
+                {t('money.noBudget')}
               </Txt>
               <Btn
-                label="Byudjet qo'yish"
+                label={t('money.setBudget')}
                 tone="ghost"
                 small
                 onPress={() => {
@@ -246,13 +256,13 @@ export default function MoneyScreen() {
         </Card>
 
         <Row gap={S.sm}>
-          <Btn label="Chiqim qo'shish" style={{ flex: 1 }} onPress={() => openAdd('chiqim')} />
-          <Btn label="Kirim" tone="ghost" style={{ flex: 1 }} onPress={() => openAdd('kirim')} />
+          <Btn label={t('money.addSpend')} style={{ flex: 1 }} onPress={() => openAdd('chiqim')} />
+          <Btn label={t('money.income')} tone="ghost" style={{ flex: 1 }} onPress={() => openAdd('kirim')} />
         </Row>
 
         {spend > 0 ? (
           <Card>
-            <Txt v="label">Kunlik sarf</Txt>
+            <Txt v="label">{t('money.daily')}</Txt>
             <Row gap={2} style={{ height: 62, alignItems: 'flex-end', marginTop: S.md }}>
               {daily.map((v, i) => (
                 <View
@@ -275,7 +285,7 @@ export default function MoneyScreen() {
                 1
               </Txt>
               <Txt v="monoSm" style={{ fontSize: 9.5 }}>
-                eng ko'p: {fmtShort(maxDaily)}
+                {t('money.dailyMax', { sum: fmtShort(maxDaily) })}
               </Txt>
               <Txt v="monoSm" style={{ flex: 1, textAlign: 'right', fontSize: 9.5 }}>
                 {dim}
@@ -286,7 +296,7 @@ export default function MoneyScreen() {
 
         {cats.length ? (
           <Card>
-            <Txt v="label">Yo'nalishlar bo'yicha</Txt>
+            <Txt v="label">{t('money.byCat')}</Txt>
             <View style={{ gap: S.md, marginTop: S.md }}>
               {cats.map((c) => {
                 const meta = findCat(state.cats.spend, c.cat);
@@ -316,7 +326,7 @@ export default function MoneyScreen() {
               <View style={{ padding: S.md, paddingHorizontal: S.lg, backgroundColor: p.surface2 }}>
                 <Row>
                   <Txt v="h3" style={{ flex: 1 }}>
-                    {d === today() ? 'Bugun' : longDate(d)}
+                    {d === today() ? t('common.today') : longDate(d)}
                   </Txt>
                   <Txt v="monoSm">
                     {fmt(rows.reduce((a, e) => a + (e.kind === 'chiqim' ? e.amount : 0), 0))}
@@ -369,7 +379,7 @@ export default function MoneyScreen() {
             </Card>
           ))
         ) : (
-          <Empty text="Bu oyda hali yozuv yo'q. Yuqoridagi «+» tugmasi bilan birinchi xarajatni qo'shing." />
+          <Empty text={t('money.empty')} />
         )}
       </Screen>
 
@@ -377,8 +387,8 @@ export default function MoneyScreen() {
       <Sheet
         visible={adding}
         onClose={() => setAdding(false)}
-        title={draft.kind === 'kirim' ? 'Kirim qo’shish' : 'Chiqim qo’shish'}
-        footer={<Btn label="Saqlash" onPress={submit} disabled={parseAmount(draft.amount) <= 0} />}
+        title={draft.kind === 'kirim' ? t('money.addIncomeTitle') : t('money.addSpendTitle')}
+        footer={<Btn label={t('common.save')} onPress={submit} disabled={parseAmount(draft.amount) <= 0} />}
       >
         <Seg
           value={draft.kind}
@@ -390,7 +400,7 @@ export default function MoneyScreen() {
         />
 
         <View style={{ gap: S.sm }}>
-          <Txt v="label">Summa ({cur})</Txt>
+          <Txt v="label">{t('money.amount', { cur })}</Txt>
           <Field
             value={draft.amount}
             onChangeText={(v) => setDraft({ ...draft, amount: maskAmount(v) })}
@@ -416,7 +426,7 @@ export default function MoneyScreen() {
         </View>
 
         <View style={{ gap: S.sm }}>
-          <Txt v="label">Yo'nalish</Txt>
+          <Txt v="label">{t('form.cat')}</Txt>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: S.sm }}>
             {catsOf(draft.kind).map((c) => (
               <Chip
@@ -431,18 +441,18 @@ export default function MoneyScreen() {
         </View>
 
         <View style={{ gap: S.sm }}>
-          <Txt v="label">Sana</Txt>
+          <Txt v="label">{t('money.date')}</Txt>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: S.sm }}>
             {lastDays(8, ym).map((d) => (
               <Chip
                 key={d}
-                label={d === today() ? 'Bugun' : longDate(d)}
+                label={d === today() ? t('common.today') : longDate(d)}
                 active={draft.date === d}
                 onPress={() => setDraft({ ...draft, date: d })}
               />
             ))}
             <Chip
-              label={lastDays(8, ym).includes(draft.date) ? 'Boshqa sana…' : longDate(draft.date)}
+              label={lastDays(8, ym).includes(draft.date) ? t('money.otherDate') : longDate(draft.date)}
               active={pickingDate || !lastDays(8, ym).includes(draft.date)}
               onPress={() => setPickingDate(!pickingDate)}
             />
@@ -453,11 +463,11 @@ export default function MoneyScreen() {
         </View>
 
         <View style={{ gap: S.sm }}>
-          <Txt v="label">Izoh (ixtiyoriy)</Txt>
+          <Txt v="label">{t('money.note')}</Txt>
           <Field
             value={draft.note}
             onChangeText={(v) => setDraft({ ...draft, note: v })}
-            placeholder="masalan: bozordan"
+            placeholder={t('money.notePlaceholder')}
           />
         </View>
       </Sheet>
@@ -466,10 +476,10 @@ export default function MoneyScreen() {
       <Sheet
         visible={!!editing}
         onClose={() => setEditing(null)}
-        title="Yozuv"
+        title={t('money.entry')}
         footer={
           <Btn
-            label="O‘chirish"
+            label={t('common.delete')}
             tone="danger"
             onPress={() => {
               if (!editing) return;
@@ -477,7 +487,7 @@ export default function MoneyScreen() {
               store.removeEntry(editing.id);
               setEditing(null);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
-              toast.show(`${fmt(amount)} ${cur} o‘chirildi`, { undo: store.undo });
+              toast.show(t('money.entryDeleted', { sum: `${fmt(amount)} ${cur}` }), { undo: store.undo });
             }}
           />
         }
@@ -502,7 +512,7 @@ export default function MoneyScreen() {
         <Row gap={S.sm}>
           <IconTrash color={p.muted} size={15} />
           <Txt v="small" style={{ flex: 1 }}>
-            Yozuvni o'chirsangiz, oylik hisob-kitob darhol yangilanadi.
+            {t('money.deleteNote')}
           </Txt>
         </Row>
       </Sheet>
@@ -511,11 +521,11 @@ export default function MoneyScreen() {
       <Sheet
         visible={budgeting}
         onClose={() => setBudgeting(false)}
-        title={`${monthLabel(ym)} byudjeti`}
+        title={t('money.budgetTitle', { month: monthLabel(ym) })}
         footer={
           <>
             <Btn
-              label="Saqlash"
+              label={t('common.save')}
               onPress={() => {
                 store.setBudget(ym, parseAmount(budgetText));
                 setBudgeting(false);
@@ -523,7 +533,7 @@ export default function MoneyScreen() {
             />
             {budget > 0 ? (
               <Btn
-                label="Byudjetni olib tashlash"
+                label={t('money.removeBudget')}
                 tone="ghost"
                 onPress={() => {
                   store.setBudget(ym, 0);

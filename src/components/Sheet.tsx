@@ -1,6 +1,7 @@
 import React from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { t } from '../i18n';
 import { R, S } from '../theme';
 import { Row, Txt, usePal } from '../ui/kit';
 
@@ -49,7 +50,7 @@ export function Sheet({
             </Txt>
             <Pressable onPress={onClose} hitSlop={12}>
               <Txt v="small" color={p.lojuvard}>
-                Yopish
+                {t('common.close')}
               </Txt>
             </Pressable>
           </Row>

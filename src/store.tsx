@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultCatList } from './lib/catalog';
-import { deviceLang, getLang, setLang } from './i18n';
+import { deviceLang, getLang, setLang, t, type Lang } from './i18n';
 import { addDays, daysInMonth, iso, today, wd } from './lib/date';
 import type {
   AppState,
@@ -66,7 +66,18 @@ export function catUsage(s: AppState, kind: CatKind, k: string): number {
   return s.entries.filter((e) => e.kind === ek && e.cat === k).length;
 }
 
+/**
+ * Valyuta belgisi — faqat birinchi ochilishda tilga qarab qo‘yiladi. Keyin u
+ * foydalanuvchi ma’lumoti: til almashsa o‘zgarmaydi (ko‘p valyuta alohida ish).
+ */
+function seedCurrency(lang: Lang): string {
+  if (lang === 'ru') return 'сум';
+  if (lang === 'en') return 'UZS';
+  return "so'm";
+}
+
 function seed(): AppState {
+  const lang = deviceLang();
   return {
     v: 1,
     tasks: [],
@@ -78,8 +89,8 @@ function seed(): AppState {
     notes: '',
     settings: {
       theme: 'system',
-      lang: deviceLang(),
-      currency: "so'm",
+      lang,
+      currency: seedCurrency(lang),
       weekStartsMonday: true,
       onboarded: false,
       lastTaskCat: 'ish',
@@ -90,8 +101,8 @@ function seed(): AppState {
   };
 }
 
-/** Boshlanish uchun taklif qilinadigan odatlar — foydalanuvchi tanlasa qo'shiladi. */
-export const STARTER_HABITS = ['Sport / mashq', "Kitob o'qish (30 daqiqa)", 'Suv — 2 litr'];
+/** Boshlanish uchun taklif qilinadigan odatlar — joriy tilda, tanlansa qo'shiladi. */
+export const starterHabits = (): string[] => [t('habit.sport'), t('habit.book'), t('habit.water')];
 
 export function normalize(raw: any): AppState {
   const base = seed();

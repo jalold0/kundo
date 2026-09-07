@@ -6,6 +6,7 @@ import { TaskForm, emptyDraft, type TaskDraft } from '../components/TaskForm';
 import { TaskRow } from '../components/TaskRow';
 import { BLOCKS, blockLabel } from '../lib/catalog';
 import { addDays, dayTitle, longDate, today, wd, wdays } from '../lib/date';
+import { t } from '../i18n';
 import { overdue, sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
 import type { AppState, BlockKey, Task } from '../types';
@@ -74,7 +75,7 @@ export default function TodayScreen() {
     });
     store.setSettings({ lastTaskCat: draft.cat });
     setAdding(false);
-    if (draft.repeat) toast.show('Takrorlanuvchi vazifa qo‘shildi.');
+    if (draft.repeat) toast.show(t('today.repeatAdded'));
   };
 
   const openEdit = (t: Task) => {
@@ -103,18 +104,18 @@ export default function TodayScreen() {
     store.removeTask(editing.id);
     setEditing(null);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
-    toast.show(`«${trim(name)}» o‘chirildi`, { undo: store.undo });
+    toast.show(t('today.deleted', { name: trim(name) }), { undo: store.undo });
   };
 
   return (
     <>
       <Screen
-        eyebrow="Kun rejasi"
+        eyebrow={t('today.eyebrow')}
         title={dayTitle(date)}
         right={
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Batafsil vazifa qo'shish"
+            accessibilityLabel={t('today.addDetailed')}
             onPress={openAdd}
             style={({ pressed }) => ({
               width: 44,
@@ -134,7 +135,7 @@ export default function TodayScreen() {
           <Row>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Oldingi kun"
+              accessibilityLabel={t('common.prevDay')}
               onPress={() => setDate(addDays(date, -1))}
               hitSlop={12}
               style={navBtn(p)}
@@ -147,7 +148,7 @@ export default function TodayScreen() {
             </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Keyingi kun"
+              accessibilityLabel={t('common.nextDay')}
               onPress={() => setDate(addDays(date, 1))}
               hitSlop={12}
               style={navBtn(p)}
@@ -165,11 +166,11 @@ export default function TodayScreen() {
               <Txt v="mono">
                 {done} / {list.length}
               </Txt>
-              <Txt v="small">{list.length ? 'bajarilgan vazifa' : 'bu kunga vazifa yo‘q'}</Txt>
+              <Txt v="small">{list.length ? t('today.doneTasks') : t('today.noTasks')}</Txt>
               {!isToday ? (
                 <Pressable onPress={() => setDate(today())} hitSlop={8} style={{ marginTop: S.sm }}>
                   <Txt v="small" color={p.lojuvard}>
-                    ← Bugunga qaytish
+                    {t('today.backToToday')}
                   </Txt>
                 </Pressable>
               ) : null}
@@ -183,12 +184,12 @@ export default function TodayScreen() {
             <TextInput
               value={quick}
               onChangeText={setQuick}
-              placeholder="Vazifa yozing va qo‘shing…"
+              placeholder={t('today.quickPlaceholder')}
               placeholderTextColor={p.muted}
               returnKeyType="done"
               onSubmitEditing={addQuick}
               blurOnSubmit={false}
-              accessibilityLabel="Tez vazifa qo'shish"
+              accessibilityLabel={t('today.quickAdd')}
               style={{
                 flex: 1,
                 paddingVertical: 12,
@@ -199,7 +200,7 @@ export default function TodayScreen() {
             />
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Qo'shish"
+              accessibilityLabel={t('common.add')}
               onPress={addQuick}
               disabled={!quick.trim()}
               hitSlop={8}
@@ -226,7 +227,7 @@ export default function TodayScreen() {
           <Card>
             <Row>
               <Txt v="label" style={{ flex: 1 }}>
-                Odatlar
+                {t('today.habits')}
               </Txt>
               <Txt v="monoSm">
                 {store.state.habits.filter((h) => h.days[date]).length}/{store.state.habits.length}
@@ -284,16 +285,16 @@ export default function TodayScreen() {
 
         {late.length && isToday ? (
           <Card style={{ borderColor: p.oltin, backgroundColor: p.oltinSoft }}>
-            <Txt color={p.oltin}>{late.length} ta vazifa oldingi kunlardan bajarilmay qolgan.</Txt>
+            <Txt color={p.oltin}>{t('today.late', { n: late.length })}</Txt>
             <Btn
-              label="Bugunga ko‘chirish"
+              label={t('today.rollover')}
               tone="ghost"
               small
               style={{ marginTop: S.md, borderColor: p.oltin }}
               onPress={() => {
                 const n = late.length;
                 store.rollover();
-                toast.show(`${n} ta vazifa bugunga ko‘chirildi`, { undo: store.undo });
+                toast.show(t('today.rolledOver', { n }), { undo: store.undo });
               }}
             />
           </Card>
@@ -301,7 +302,7 @@ export default function TodayScreen() {
 
         {list.length === 0 ? (
           <Card>
-            <Empty text="Kun bo‘sh. Yuqoridagi qatorga yozing yoki «+» tugmasi bilan vaqti va yo‘nalishi bilan qo‘shing." />
+            <Empty text={t('today.empty')} />
           </Card>
         ) : (
           BLOCKS.map((b) => {
@@ -343,8 +344,8 @@ export default function TodayScreen() {
       <Sheet
         visible={adding}
         onClose={() => setAdding(false)}
-        title="Yangi vazifa"
-        footer={<Btn label="Qo‘shish" onPress={submitAdd} disabled={!draft.title.trim()} />}
+        title={t('today.newTask')}
+        footer={<Btn label={t('common.add')} onPress={submitAdd} disabled={!draft.title.trim()} />}
       >
         <TaskForm draft={draft} set={setDraft} autoFocus />
       </Sheet>
@@ -352,34 +353,29 @@ export default function TodayScreen() {
       <Sheet
         visible={!!editing}
         onClose={() => setEditing(null)}
-        title="Vazifa"
+        title={t('today.task')}
         footer={
           <>
-            <Btn label="Saqlash" onPress={saveEdit} disabled={!editDraft.title.trim()} />
+            <Btn label={t('common.save')} onPress={saveEdit} disabled={!editDraft.title.trim()} />
             <Row gap={S.sm}>
               <Btn
-                label="Ertaga surish"
+                label={t('today.pushTomorrow')}
                 tone="ghost"
                 style={{ flex: 1 }}
                 onPress={() => {
                   if (!editing) return;
                   store.pushTask(editing.id, 1);
                   setEditing(null);
-                  toast.show('Ertaga surildi');
+                  toast.show(t('today.pushedTomorrow'));
                 }}
               />
-              <Btn label="O‘chirish" tone="danger" style={{ flex: 1 }} onPress={removeCurrent} />
+              <Btn label={t('common.delete')} tone="danger" style={{ flex: 1 }} onPress={removeCurrent} />
             </Row>
           </>
         }
       >
         <TaskForm draft={editDraft} set={setEditDraft} showRepeat={false} />
-        {editing?.rid ? (
-          <Txt v="small">
-            Bu takrorlanuvchi vazifa. Bu yerdagi o‘zgarish faqat shu kunga tegishli — butun takrorni «Odatlar»
-            bo‘limidan to‘xtatasiz.
-          </Txt>
-        ) : null}
+        {editing?.rid ? <Txt v="small">{t('today.repeatNote')}</Txt> : null}
       </Sheet>
     </>
   );

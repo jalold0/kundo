@@ -15,6 +15,7 @@ import {
   weekStart,
   wmin,
 } from '../lib/date';
+import { t } from '../i18n';
 import { habitMonth, longestStreak, streak, useStore } from '../store';
 import { F, R, S } from '../theme';
 import { IconChevron, IconTrash } from '../ui/icons';
@@ -45,16 +46,16 @@ export default function HabitsScreen() {
   return (
     <>
       <Screen
-        eyebrow="Odatlar va takrorlar"
-        title="Izchillik"
-        right={<Btn label="Odat qo'shish" tone="ghost" small onPress={() => setAdding(true)} />}
+        eyebrow={t('habits.eyebrow')}
+        title={t('habits.title')}
+        right={<Btn label={t('habits.addHabit')} tone="ghost" small onPress={() => setAdding(true)} />}
       >
         <Card pad={false}>
           <View style={{ padding: S.md, paddingHorizontal: S.lg, backgroundColor: p.surface2 }}>
             <Row gap={S.sm}>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Oldingi hafta"
+                accessibilityLabel={t('common.prevWeek')}
                 hitSlop={10}
                 onPress={() => setWs(addDays(ws, -7))}
                 style={navBtn(p, true)}
@@ -62,14 +63,14 @@ export default function HabitsScreen() {
                 <IconChevron color={p.ink2} dir="left" />
               </Pressable>
               <View style={{ flex: 1, alignItems: 'center' }}>
-                <Txt v="h3">{ws === thisWeek ? 'Shu hafta' : 'Hafta'}</Txt>
+                <Txt v="h3">{ws === thisWeek ? t('habits.thisWeek') : t('habits.week')}</Txt>
                 <Txt v="monoSm">
                   {longDate(ws)} — {longDate(addDays(ws, 6))}
                 </Txt>
               </View>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Keyingi hafta"
+                accessibilityLabel={t('common.nextWeek')}
                 hitSlop={10}
                 disabled={!canNextWeek}
                 onPress={() => setWs(addDays(ws, 7))}
@@ -81,7 +82,7 @@ export default function HabitsScreen() {
             {ws !== thisWeek ? (
               <Pressable onPress={() => setWs(thisWeek)} style={{ alignSelf: 'center', marginTop: 4 }}>
                 <Txt v="small" color={p.lojuvard}>
-                  Shu haftaga qaytish
+                  {t('habits.backToWeek')}
                 </Txt>
               </Pressable>
             ) : null}
@@ -107,15 +108,15 @@ export default function HabitsScreen() {
                     <Txt v="mono" color={p.feruza}>
                       {streak(h)}
                     </Txt>
-                    <Txt v="small">kun ketma-ket</Txt>
+                    <Txt v="small">{t('habits.streak')}</Txt>
                   </Row>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={`${h.name} odatini o'chirish`}
+                    accessibilityLabel={t('habits.deleteA11y', { name: h.name })}
                     hitSlop={12}
                     onPress={() => {
                       store.removeHabit(h.id);
-                      toast.show(`«${h.name}» o‘chirildi`, { undo: store.undo });
+                      toast.show(t('habits.deleted', { name: h.name }), { undo: store.undo });
                     }}
                   >
                     <IconTrash color={p.muted} size={16} />
@@ -160,7 +161,7 @@ export default function HabitsScreen() {
               </View>
             ))
           ) : (
-            <Empty text="Odat qo'shsangiz, har kuni bir bosish bilan belgilab borasiz — ketma-ket kunlar hisoblanadi." />
+            <Empty text={t('habits.emptyWeek')} />
           )}
         </Card>
 
@@ -169,7 +170,7 @@ export default function HabitsScreen() {
             <Row gap={S.sm}>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Oldingi oy"
+                accessibilityLabel={t('common.prevMonth')}
                 hitSlop={10}
                 onPress={() => setYm(addMonths(ym, -1))}
                 style={navBtn(p, true)}
@@ -177,12 +178,12 @@ export default function HabitsScreen() {
                 <IconChevron color={p.ink2} dir="left" />
               </Pressable>
               <View style={{ flex: 1, alignItems: 'center' }}>
-                <Txt v="h3">Oylik dinamika</Txt>
+                <Txt v="h3">{t('habits.monthly')}</Txt>
                 <Txt v="monoSm">{monthLabel(ym)}</Txt>
               </View>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Keyingi oy"
+                accessibilityLabel={t('common.nextMonth')}
                 hitSlop={10}
                 disabled={!canNextMonth}
                 onPress={() => setYm(addMonths(ym, 1))}
@@ -233,13 +234,17 @@ export default function HabitsScreen() {
                     ))}
                   </Row>
                   <Txt v="small">
-                    {m.done} / {m.counted} kun · eng uzun ketma-ketlik: {longestStreak(h)} kun
+                    {t('habits.monthDone', {
+                      done: m.done,
+                      total: m.counted,
+                      best: longestStreak(h),
+                    })}
                   </Txt>
                 </View>
               );
             })
           ) : (
-            <Empty text="Odat qo'shsangiz, oy bo'ylab dinamikasi shu yerda chiziq bo'lib ko'rinadi." />
+            <Empty text={t('habits.emptyMonth')} />
           )}
         </Card>
 
@@ -247,7 +252,7 @@ export default function HabitsScreen() {
           <View style={{ padding: S.md, paddingHorizontal: S.lg, backgroundColor: p.surface2 }}>
             <Row>
               <Txt v="h3" style={{ flex: 1 }}>
-                Takrorlanuvchi vazifalar
+                {t('habits.repeats')}
               </Txt>
               <Txt v="monoSm">{store.state.repeats.length}</Txt>
             </Row>
@@ -285,19 +290,19 @@ export default function HabitsScreen() {
                     </Txt>
                   </View>
                   <Btn
-                    label="To‘xtatish"
+                    label={t('habits.stop')}
                     tone="ghost"
                     small
                     onPress={() => {
                       store.removeRepeat(r.id);
-                      toast.show('Takrorlash to‘xtatildi', { undo: store.undo });
+                      toast.show(t('habits.repeatStopped'), { undo: store.undo });
                     }}
                   />
                 </Row>
               );
             })
           ) : (
-            <Empty text="Vazifa qo'shayotganda «Har kuni» yoki «Ish kunlari» ni tanlasangiz, shu yerda ko'rinadi." />
+            <Empty text={t('habits.emptyRepeats')} />
           )}
         </Card>
       </Screen>
@@ -305,8 +310,8 @@ export default function HabitsScreen() {
       <Sheet
         visible={adding}
         onClose={() => setAdding(false)}
-        title="Yangi odat"
-        footer={<Btn label="Qo‘shish" onPress={submit} disabled={!name.trim()} />}
+        title={t('habits.newHabit')}
+        footer={<Btn label={t('common.add')} onPress={submit} disabled={!name.trim()} />}
       >
         <Txt v="small">
           Har kuni takrorlanadigan kichik ish — masalan, ertalabki yurish yoki 30 daqiqa kitob.
@@ -314,7 +319,7 @@ export default function HabitsScreen() {
         <Field
           value={name}
           onChangeText={setName}
-          placeholder="Odat nomi…"
+          placeholder={t('habits.namePlaceholder')}
           autoFocus
           onSubmitEditing={submit}
         />

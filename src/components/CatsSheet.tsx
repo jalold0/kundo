@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { tones } from '../lib/catalog';
+import { t } from '../i18n';
 import { catUsage, useStore } from '../store';
 import { R, S } from '../theme';
 import type { CatKind, ToneKey } from '../types';
@@ -69,8 +70,8 @@ export function CatsSheet({
 
   const saveEdit = () => {
     const v = name.trim();
-    if (!v) return setErr('Nom bo‘sh bo‘lmaydi.');
-    if (taken(v, editing ?? undefined)) return setErr('Bunday nom allaqachon bor.');
+    if (!v) return setErr(t('cats.emptyName'));
+    if (taken(v, editing ?? undefined)) return setErr(t('cats.duplicate'));
     store.updateCat(kind, editing!, { label: v, tone });
     reset();
   };
@@ -87,15 +88,15 @@ export function CatsSheet({
     const n = catUsage(store.state, kind, k);
     store.removeCat(kind, k, moveTo);
     reset();
-    toast.show(n > 0 ? `Yo‘nalish o‘chirildi, ${n} yozuv ko‘chirildi.` : 'Yo‘nalish o‘chirildi.', {
+    toast.show(n > 0 ? t('cats.deletedMoved', { n }) : t('cats.deleted'), {
       undo: store.undo,
     });
   };
 
   const add = () => {
     const v = newName.trim();
-    if (!v) return setErr('Nom bo‘sh bo‘lmaydi.');
-    if (taken(v)) return setErr('Bunday nom allaqachon bor.');
+    if (!v) return setErr(t('cats.emptyName'));
+    if (taken(v)) return setErr(t('cats.duplicate'));
     store.addCat(kind, v, newTone);
     setNewName('');
     setErr('');
@@ -123,11 +124,11 @@ export function CatsSheet({
                 />
                 <View style={{ flex: 1 }}>
                   <Txt v="h3">{c.label}</Txt>
-                  <Txt v="small">{n > 0 ? `${n} yozuv` : 'yozuv yo‘q'}</Txt>
+                  <Txt v="small">{n > 0 ? t('cats.usage', { n }) : t('cats.unused')}</Txt>
                 </View>
                 <Pressable onPress={() => startEdit(c.k)} hitSlop={8} accessibilityRole="button">
                   <Txt v="small" color={p.lojuvard}>
-                    Tahrirlash
+                    {t('common.edit')}
                   </Txt>
                 </Pressable>
                 <Pressable
@@ -135,7 +136,7 @@ export function CatsSheet({
                   disabled={last}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel={`${c.label} — o‘chirish`}
+                  accessibilityLabel={t('cats.deleteA11y', { name: c.label })}
                   style={{ opacity: last ? 0.3 : 1 }}
                 >
                   <IconTrash color={p.anor} size={17} />
@@ -144,7 +145,12 @@ export function CatsSheet({
 
               {editing === c.k ? (
                 <View style={panel(p)}>
-                  <Field value={name} onChangeText={setName} placeholder="Yo‘nalish nomi" autoFocus />
+                  <Field
+                    value={name}
+                    onChangeText={setName}
+                    placeholder={t('cats.namePlaceholder')}
+                    autoFocus
+                  />
                   <Tones value={tone} onChange={setTone} />
                   {err ? (
                     <Txt v="small" color={p.anor}>
@@ -152,8 +158,8 @@ export function CatsSheet({
                     </Txt>
                   ) : null}
                   <Row gap={S.sm}>
-                    <Btn label="Saqlash" small onPress={saveEdit} style={{ flex: 1 }} />
-                    <Btn label="Bekor" small tone="ghost" onPress={reset} style={{ flex: 1 }} />
+                    <Btn label={t('common.save')} small onPress={saveEdit} style={{ flex: 1 }} />
+                    <Btn label={t('common.cancel')} small tone="ghost" onPress={reset} style={{ flex: 1 }} />
                   </Row>
                 </View>
               ) : null}
@@ -162,10 +168,7 @@ export function CatsSheet({
                 <View style={panel(p)}>
                   {n > 0 ? (
                     <>
-                      <Txt v="small">
-                        Bu yo‘nalishda {n} yozuv bor. Yozuvlar o‘chmaydi — ularni qaysi yo‘nalishga
-                        ko‘chiramiz?
-                      </Txt>
+                      <Txt v="small">{t('cats.moveAsk', { n })}</Txt>
                       <Row gap={S.sm} style={{ flexWrap: 'wrap' }}>
                         {list
                           .filter((x) => x.k !== c.k)
@@ -181,11 +184,17 @@ export function CatsSheet({
                       </Row>
                     </>
                   ) : (
-                    <Txt v="small">Bu yo‘nalishda yozuv yo‘q — bemalol o‘chiriladi.</Txt>
+                    <Txt v="small">{t('cats.deleteFree')}</Txt>
                   )}
                   <Row gap={S.sm}>
-                    <Btn label="O‘chirish" small tone="danger" onPress={confirmDelete} style={{ flex: 1 }} />
-                    <Btn label="Bekor" small tone="ghost" onPress={reset} style={{ flex: 1 }} />
+                    <Btn
+                      label={t('common.delete')}
+                      small
+                      tone="danger"
+                      onPress={confirmDelete}
+                      style={{ flex: 1 }}
+                    />
+                    <Btn label={t('common.cancel')} small tone="ghost" onPress={reset} style={{ flex: 1 }} />
                   </Row>
                 </View>
               ) : null}
@@ -197,15 +206,15 @@ export function CatsSheet({
       <Divider />
 
       <View style={{ gap: S.sm }}>
-        <Txt v="label">Yangi yo‘nalish</Txt>
-        <Field value={newName} onChangeText={setNewName} placeholder="masalan: Avtomobil" />
+        <Txt v="label">{t('cats.newTitle')}</Txt>
+        <Field value={newName} onChangeText={setNewName} placeholder={t('cats.newPlaceholder')} />
         <Tones value={newTone} onChange={setNewTone} />
         {err && !editing && !deleting ? (
           <Txt v="small" color={p.anor}>
             {err}
           </Txt>
         ) : null}
-        <Btn label="Qo‘shish" tone="ghost" onPress={add} />
+        <Btn label={t('common.add')} tone="ghost" onPress={add} />
       </View>
     </Sheet>
   );

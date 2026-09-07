@@ -2,6 +2,7 @@ import * as Haptics from 'expo-haptics';
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { t } from '../i18n';
 import { F, R, S } from '../theme';
 import { usePal } from './kit';
 
@@ -103,7 +104,7 @@ function ToastView({ toast, onDone }: { toast: Toast | null; onDone: () => void 
         {toast.undo ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Amalni bekor qilish"
+            accessibilityLabel={t('toast.undoA11y')}
             hitSlop={10}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
@@ -112,7 +113,7 @@ function ToastView({ toast, onDone }: { toast: Toast | null; onDone: () => void 
             }}
           >
             <Text style={{ fontFamily: F.display, fontSize: 14.5, color: p.dark ? p.lojuvard : '#A8BEF7' }}>
-              Bekor qilish
+              {t('common.undo')}
             </Text>
           </Pressable>
         ) : null}

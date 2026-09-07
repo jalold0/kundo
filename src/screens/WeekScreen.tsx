@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { TaskRow } from '../components/TaskRow';
 import { addDays, longDate, parseISO, today, wd, weekStart, wshort } from '../lib/date';
+import { t } from '../i18n';
 import { sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
 import { Bar, Card, Divider, Empty, Row, Screen, Txt, usePal } from '../ui/kit';
@@ -42,7 +43,7 @@ export default function WeekScreen() {
   const shown = picked ? perDay.filter((x) => x.d === picked) : perDay;
 
   return (
-    <Screen eyebrow="Hafta" title="Haftalik ko'rinish">
+    <Screen eyebrow={t('week.eyebrow')} title={t('week.title')}>
       <Card>
         <Row>
           <Pressable
@@ -125,13 +126,13 @@ export default function WeekScreen() {
       </Card>
 
       <Row gap={S.sm}>
-        <Stat value={String(total)} label="jami vazifa" />
-        <Stat value={String(tdone)} label="bajarilgan" tone={p.feruza} />
-        <Stat value={String(open)} label="ochiq qolgan" tone={open ? p.oltin : undefined} />
+        <Stat value={String(total)} label={t('week.total')} />
+        <Stat value={String(tdone)} label={t('week.done')} tone={p.feruza} />
+        <Stat value={String(open)} label={t('week.open')} tone={open ? p.oltin : undefined} />
       </Row>
 
       <Card>
-        <Txt v="label">Eng ko'p yo'nalish</Txt>
+        <Txt v="label">{t('week.topCat')}</Txt>
         <Row style={{ marginTop: 6 }}>
           <Txt v="h1" color={topCat.tone} style={{ flex: 1 }}>
             {topCat.uz}
@@ -148,7 +149,7 @@ export default function WeekScreen() {
             <View style={{ padding: S.md, paddingHorizontal: S.lg, backgroundColor: p.surface2 }}>
               <Row>
                 <Txt v="h3" style={{ flex: 1 }}>
-                  {x.d === today() ? 'Bugun' : longDate(x.d)}
+                  {x.d === today() ? t('common.today') : longDate(x.d)}
                 </Txt>
                 <Txt v="monoSm">
                   {x.done}/{rows.length}
@@ -166,13 +167,13 @@ export default function WeekScreen() {
                 />
               ))
             ) : (
-              <Empty text="Bu kunga vazifa yozilmagan." />
+              <Empty text={t('week.emptyDay')} />
             )}
           </Card>
         );
       })}
 
-      {!total ? <Empty text="Bu haftada hali vazifa yo'q. «Kun» bo'limidan qo'shing." /> : null}
+      {!total ? <Empty text={t('week.empty')} /> : null}
     </Screen>
   );
 }

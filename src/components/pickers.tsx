@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { daysInMonth, monthOf, months, parseISO, today, wmin } from '../lib/date';
+import { t } from '../i18n';
 import { R, S } from '../theme';
 import { IconChevron } from '../ui/icons';
 import { Row, Txt, usePal } from '../ui/kit';
@@ -23,7 +24,7 @@ export function TimePanel({ value, onChange }: { value: string; onChange: (t: st
   return (
     <View style={panel(p)}>
       <View style={{ gap: S.sm }}>
-        <Txt v="label">soat</Txt>
+        <Txt v="label">{t('form.hour')}</Txt>
         <Grid>
           {HOURS.map((h) => (
             <Cell key={h} label={h} active={hh === h} onPress={() => onChange(`${h}:${mm || '00'}`)} />
@@ -31,7 +32,7 @@ export function TimePanel({ value, onChange }: { value: string; onChange: (t: st
         </Grid>
       </View>
       <View style={{ gap: S.sm }}>
-        <Txt v="label">daqiqa</Txt>
+        <Txt v="label">{t('form.minute')}</Txt>
         <Grid>
           {MINS.map((m) => (
             <Cell key={m} label={m} active={mm === m} onPress={() => onChange(`${hh || '09'}:${m}`)} />
@@ -63,7 +64,7 @@ export function DatePanel({
       <Row>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Oldingi oy"
+          accessibilityLabel={t('common.prevMonth')}
           hitSlop={10}
           onPress={() => setYm(shiftMonth(ym, -1))}
           style={navBtn(p, true)}
@@ -75,7 +76,7 @@ export function DatePanel({
         </Txt>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Keyingi oy"
+          accessibilityLabel={t('common.nextMonth')}
           hitSlop={10}
           disabled={!canNext}
           onPress={() => setYm(shiftMonth(ym, 1))}

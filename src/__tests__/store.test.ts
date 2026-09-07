@@ -45,7 +45,8 @@ describe('normalize — buzilgan ma’lumotdan himoya', () => {
   test('bo‘sh yoki noto‘g‘ri kiritmadan ishlaydigan holat qaytaradi', () => {
     expect(normalize(null).tasks).toEqual([]);
     expect(normalize('salom' as any).habits).toEqual([]);
-    expect(normalize(undefined).settings.currency).toBe("so'm");
+    // Valyuta qurilma tiliga qarab qo‘yiladi, shuning uchun aniq qiymatga bog‘lanmaymiz.
+    expect(["so'm", 'сум', 'UZS']).toContain(normalize(undefined).settings.currency);
   });
 
   test('nomsiz yoki id’siz yozuvlar tashlab yuboriladi', () => {

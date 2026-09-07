@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { STARTER_HABITS, useStore } from '../store';
+import { t } from '../i18n';
+import { starterHabits, useStore } from '../store';
 import { S } from '../theme';
 import { StarMark } from '../ui/icons';
 import { Btn, Card, Check, Row, Txt, usePal } from '../ui/kit';
@@ -17,17 +18,21 @@ export function Welcome() {
   const visible = store.ready && !store.state.settings.onboarded;
 
   const start = () => {
-    if (withHabits && store.state.habits.length === 0) store.addHabits(STARTER_HABITS);
+    if (withHabits && store.state.habits.length === 0) store.addHabits(starterHabits());
     store.setSettings({ onboarded: true });
   };
 
   return (
-    <Sheet visible={visible} onClose={start} title="Kundo" footer={<Btn label="Boshlash" onPress={start} />}>
+    <Sheet
+      visible={visible}
+      onClose={start}
+      title="Kundo"
+      footer={<Btn label={t('welcome.start')} onPress={start} />}
+    >
       <Row gap={S.md}>
         <StarMark color={p.lojuvard} size={34} />
         <Txt v="small" style={{ flex: 1 }}>
-          Kuningiz va pulingiz uchun bitta daftar. Hammasi shu telefonda qoladi — ro'yxatdan o'tish ham,
-          internet ham kerak emas.
+          {t('welcome.intro')}
         </Txt>
       </Row>
 
@@ -35,25 +40,21 @@ export function Welcome() {
         <Row gap={S.md}>
           <Check
             on={withHabits}
-            label="Uchta odat bilan boshlansin"
+            label={t('welcome.startHabits')}
             onPress={() => setWithHabits(!withHabits)}
             tone={p.feruza}
           />
           <View style={{ flex: 1 }}>
-            <Txt>Uchta odat bilan boshlansin</Txt>
-            <Txt v="small">{STARTER_HABITS.join(' · ')}</Txt>
+            <Txt>{t('welcome.startHabits')}</Txt>
+            <Txt v="small">{starterHabits().join(' · ')}</Txt>
           </View>
         </Row>
       </Card>
 
       <View style={{ gap: S.sm }}>
-        <Line n="1" title="Kun" text="Vazifalarni ertalab, kunduzi, kechqurunga ajratib yozasiz." />
-        <Line
-          n="2"
-          title="Xarajat"
-          text="Har bir chiqimni bir necha soniyada yozib qo'yasiz — oy oxirida pul qayerga ketgani ko'rinadi."
-        />
-        <Line n="3" title="Odatlar" text="Har kuni bir bosish. Ketma-ket necha kun bajarganingiz sanaladi." />
+        <Line n="1" title={t('tab.day')} text={t('welcome.dayText')} />
+        <Line n="2" title={t('tab.money')} text={t('welcome.moneyText')} />
+        <Line n="3" title={t('tab.habits')} text={t('welcome.habitsText')} />
       </View>
     </Sheet>
   );

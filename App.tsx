@@ -20,6 +20,7 @@ import MoneyScreen from './src/screens/MoneyScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import TodayScreen from './src/screens/TodayScreen';
 import WeekScreen from './src/screens/WeekScreen';
+import { t } from './src/i18n';
 import { StoreProvider, useStore } from './src/store';
 import { F, paletteFor } from './src/theme';
 import { IconGear, IconGrid, IconList, IconWallet, StarMark } from './src/ui/icons';
@@ -66,37 +67,42 @@ function Tabs() {
         }}
       >
         <Tab.Screen
-          name="Kun"
+          name="day"
           component={TodayScreen}
           options={{
+            tabBarLabel: t('tab.day'),
             tabBarIcon: ({ color }) => <IconList color={color} size={21} />,
           }}
         />
         <Tab.Screen
-          name="Hafta"
+          name="week"
           component={WeekScreen}
           options={{
+            tabBarLabel: t('tab.week'),
             tabBarIcon: ({ color }) => <IconGrid color={color} size={21} />,
           }}
         />
         <Tab.Screen
-          name="Xarajat"
+          name="money"
           component={MoneyScreen}
           options={{
+            tabBarLabel: t('tab.money'),
             tabBarIcon: ({ color }) => <IconWallet color={color} size={21} />,
           }}
         />
         <Tab.Screen
-          name="Odatlar"
+          name="habits"
           component={HabitsScreen}
           options={{
+            tabBarLabel: t('tab.habits'),
             tabBarIcon: ({ color }) => <StarMark color={color} size={20} />,
           }}
         />
         <Tab.Screen
-          name="Sozlama"
+          name="settings"
           component={SettingsScreen}
           options={{
+            tabBarLabel: t('tab.settings'),
             tabBarIcon: ({ color }) => <IconGear color={color} size={21} />,
           }}
         />

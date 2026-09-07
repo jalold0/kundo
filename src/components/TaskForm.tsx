@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { BLOCKS, PRIS, REPEAT_RULES, blockLabel, priLabel, repeatLabel } from '../lib/catalog';
 import { useStore } from '../store';
+import { t } from '../i18n';
 import { S } from '../theme';
 import type { BlockKey, Pri, RepeatRule } from '../types';
 import { Chip, Field, Row, Txt, usePal } from '../ui/kit';
@@ -46,12 +47,12 @@ export function TaskForm({
       <Field
         value={draft.title}
         onChangeText={(v) => set({ ...draft, title: v })}
-        placeholder="Vazifa nomi…"
+        placeholder={t('form.titlePlaceholder')}
         autoFocus={autoFocus}
       />
 
       <View style={{ gap: S.sm }}>
-        <Txt v="label">Yo'nalish</Txt>
+        <Txt v="label">{t('form.cat')}</Txt>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: S.sm }}>
           {cats.map((c) => (
             <Chip
@@ -66,7 +67,7 @@ export function TaskForm({
       </View>
 
       <View style={{ gap: S.sm }}>
-        <Txt v="label">Ustuvorlik</Txt>
+        <Txt v="label">{t('form.pri')}</Txt>
         <Row gap={S.sm}>
           {PRIS.map((x) => (
             <Chip
@@ -81,7 +82,7 @@ export function TaskForm({
       </View>
 
       <View style={{ gap: S.sm }}>
-        <Txt v="label">Kun qismi va vaqt</Txt>
+        <Txt v="label">{t('form.blockAndTime')}</Txt>
         <Row gap={S.sm} style={{ flexWrap: 'wrap' }}>
           {BLOCKS.map((b) => (
             <Chip
@@ -93,7 +94,7 @@ export function TaskForm({
           ))}
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={draft.time ? `Vaqt ${draft.time}, o‘zgartirish` : 'Vaqt qo‘yish'}
+            accessibilityLabel={draft.time ? t('form.changeTime', { time: draft.time }) : t('form.setTime')}
             onPress={() => setPicking(!picking)}
             style={{
               paddingVertical: 7,
@@ -110,7 +111,7 @@ export function TaskForm({
           </Pressable>
           {draft.time ? (
             <Chip
-              label="vaqtni olib tashlash"
+              label={t('form.clearTime')}
               onPress={() => {
                 set({ ...draft, time: '' });
                 setPicking(false);
@@ -123,7 +124,7 @@ export function TaskForm({
 
       {showRepeat ? (
         <View style={{ gap: S.sm }}>
-          <Txt v="label">Takrorlash</Txt>
+          <Txt v="label">{t('form.repeat')}</Txt>
           <Row gap={S.sm} style={{ flexWrap: 'wrap' }}>
             {REPEAT_RULES.map((r) => (
               <Chip
