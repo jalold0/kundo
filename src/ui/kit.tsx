@@ -32,9 +32,20 @@ type TxtProps = {
   color?: string;
   style?: StyleProp<TextStyle>;
   numberOfLines?: number;
+  /** Uzun raqam bir qatorda qolishi uchun: joyi yetmasa shrift kichrayadi. */
+  adjustsFontSizeToFit?: boolean;
+  minimumFontScale?: number;
 };
 
-export function Txt({ children, v = 'body', color, style, numberOfLines }: TxtProps) {
+export function Txt({
+  children,
+  v = 'body',
+  color,
+  style,
+  numberOfLines,
+  adjustsFontSizeToFit,
+  minimumFontScale,
+}: TxtProps) {
   const p = usePal();
   const base: Record<string, TextStyle> = {
     display: { fontFamily: F.display, fontSize: 30, lineHeight: 34, letterSpacing: -0.6, color: p.ink },
@@ -54,7 +65,12 @@ export function Txt({ children, v = 'body', color, style, numberOfLines }: TxtPr
     monoSm: { fontFamily: F.mono, fontSize: 11.5, color: p.muted },
   };
   return (
-    <Text numberOfLines={numberOfLines} style={[base[v], color ? { color } : null, style]}>
+    <Text
+      numberOfLines={numberOfLines}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      minimumFontScale={minimumFontScale}
+      style={[base[v], color ? { color } : null, style]}
+    >
       {children}
     </Text>
   );

@@ -2,7 +2,7 @@ import * as Haptics from 'expo-haptics';
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
-import { REPEAT_RULES, taskCat } from '../lib/catalog';
+import { REPEAT_RULES, findCat } from '../lib/catalog';
 import { WDAYS, WMIN, addDays, longDate, today, wd, weekStart } from '../lib/date';
 import { streak, useStore } from '../store';
 import { F, R, S } from '../theme';
@@ -130,7 +130,7 @@ export default function HabitsScreen() {
           <Divider />
           {store.state.repeats.length ? (
             store.state.repeats.map((r) => {
-              const c = taskCat(r.cat);
+              const c = findCat(store.state.cats.task, r.cat);
               const rule = REPEAT_RULES.find((x) => x.k === r.rule)?.uz ?? '';
               return (
                 <Row

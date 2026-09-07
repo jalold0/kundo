@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { TaskRow } from '../components/TaskRow';
-import { CATS } from '../lib/catalog';
 import { WSHORT, addDays, longDate, parseISO, today, wd, weekStart } from '../lib/date';
 import { sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
@@ -30,14 +29,15 @@ export default function WeekScreen() {
   const tdone = perDay.reduce((a, x) => a + x.done, 0);
   const open = total - tdone;
 
+  const cats = store.state.cats.task;
   const topCat = useMemo(() => {
     let best = { uz: '—', n: 0, tone: p.ink };
-    CATS.forEach((c) => {
+    cats.forEach((c) => {
       const n = perDay.reduce((a, x) => a + x.list.filter((t) => t.cat === c.k).length, 0);
       if (n > best.n) best = { uz: c.uz, n, tone: p[c.tone] as string };
     });
     return best;
-  }, [perDay, p]);
+  }, [perDay, p, cats]);
 
   const shown = picked ? perDay.filter((x) => x.d === picked) : perDay;
 

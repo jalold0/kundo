@@ -1,7 +1,8 @@
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { pri as priOf, taskCat } from '../lib/catalog';
+import { findCat, pri as priOf } from '../lib/catalog';
+import { useStore } from '../store';
 import { S } from '../theme';
 import type { Task } from '../types';
 import { IconRepeat } from '../ui/icons';
@@ -19,7 +20,7 @@ export function TaskRow({
   showDate?: string;
 }) {
   const p = usePal();
-  const cat = taskCat(task.cat);
+  const cat = findCat(useStore().state.cats.task, task.cat);
   const tone = p[cat.tone] as string;
   const pr = priOf(task.pri);
   const stripe = task.pri === 1 ? p.anor : task.pri === 2 ? p.oltin : 'transparent';

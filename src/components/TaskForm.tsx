@@ -1,23 +1,25 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
-import { BLOCKS, CATS, PRIS, REPEAT_RULES, taskCat } from '../lib/catalog';
+import { Pressable, ScrollView, View } from 'react-native';
+import { BLOCKS, PRIS, REPEAT_RULES } from '../lib/catalog';
+import { useStore } from '../store';
 import { S } from '../theme';
-import type { BlockKey, CatKey, Pri, RepeatRule } from '../types';
+import type { BlockKey, Pri, RepeatRule } from '../types';
 import { Chip, Field, Row, Txt, usePal } from '../ui/kit';
+import { TimePanel } from './pickers';
 
 export type TaskDraft = {
   title: string;
-  cat: CatKey;
+  cat: string;
   pri: Pri;
   block: BlockKey;
   time: string;
   repeat: RepeatRule | '';
 };
 
-export const emptyDraft = (): TaskDraft => ({
+/** `cat` — sozlamalardagi yo'nalishlardan biri; qotib yozilgan qiymat yo'q. */
+export const emptyDraft = (cat: string): TaskDraft => ({
   title: '',
-  cat: 'ish',
+  cat,
   pri: 3,
   block: 'ertalab',
   time: '',
@@ -36,18 +38,8 @@ export function TaskForm({
   autoFocus?: boolean;
 }) {
   const p = usePal();
+  const cats = useStore().state.cats.task;
   const [picking, setPicking] = useState(false);
-
-  const timeAsDate = () => {
-    const d = new Date();
-    if (draft.time) {
-      const [h, m] = draft.time.split(':').map(Number);
-      d.setHours(h, m, 0, 0);
-    } else {
-      d.setHours(9, 0, 0, 0);
-    }
-    return d;
-  };
 
   return (
     <View style={{ gap: S.md }}>
@@ -61,7 +53,7 @@ export function TaskForm({
       <View style={{ gap: S.sm }}>
         <Txt v="label">Yo'nalish</Txt>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: S.sm }}>
-          {CATS.map((c) => (
+          {cats.map((c) => (
             <Chip
               key={c.k}
               label={c.uz}
@@ -100,14 +92,16 @@ export function TaskForm({
             />
           ))}
           <Pressable
-            onPress={() => setPicking(true)}
+            accessibilityRole="button"
+            accessibilityLabel={draft.time ? `Vaqt ${draft.time}, o‘zgartirish` : 'Vaqt qo‘yish'}
+            onPress={() => setPicking(!picking)}
             style={{
               paddingVertical: 7,
               paddingHorizontal: 12,
               borderRadius: 999,
               borderWidth: 1,
-              borderColor: draft.time ? p.feruza : p.line,
-              backgroundColor: draft.time ? p.feruzaSoft : p.surface,
+              borderColor: picking || draft.time ? p.feruza : p.line,
+              backgroundColor: picking || draft.time ? p.feruzaSoft : p.surface,
             }}
           >
             <Txt v="mono" color={draft.time ? p.feruza : p.muted} style={{ fontSize: 13 }}>
@@ -115,9 +109,16 @@ export function TaskForm({
             </Txt>
           </Pressable>
           {draft.time ? (
-            <Chip label="vaqtni olib tashlash" onPress={() => set({ ...draft, time: '' })} />
+            <Chip
+              label="vaqtni olib tashlash"
+              onPress={() => {
+                set({ ...draft, time: '' });
+                setPicking(false);
+              }}
+            />
           ) : null}
         </Row>
+        {picking ? <TimePanel value={draft.time} onChange={(t) => set({ ...draft, time: t })} /> : null}
       </View>
 
       {showRepeat ? (
@@ -135,27 +136,6 @@ export function TaskForm({
           </Row>
         </View>
       ) : null}
-
-      {picking ? (
-        <DateTimePicker
-          value={timeAsDate()}
-          mode="time"
-          is24Hour
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, date) => {
-            setPicking(Platform.OS === 'ios' ? event.type !== 'set' && event.type !== 'dismissed' : false);
-            if (event.type === 'set' && date) {
-              const hh = String(date.getHours()).padStart(2, '0');
-              const mm = String(date.getMinutes()).padStart(2, '0');
-              set({ ...draft, time: `${hh}:${mm}` });
-            }
-          }}
-        />
-      ) : null}
     </View>
   );
-}
-
-export function catTone(p: ReturnType<typeof usePal>, k: CatKey) {
-  return p[taskCat(k).tone] as string;
 }

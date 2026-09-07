@@ -1,12 +1,69 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { DEFAULT_CATS } from './lib/catalog';
 import { addDays, iso, today, wd } from './lib/date';
-import type { AppState, Entry, EntryKind, Habit, Repeat, RepeatRule, Settings, Task } from './types';
+import type {
+  AppState,
+  Cat,
+  CatKind,
+  Entry,
+  EntryKind,
+  Habit,
+  Repeat,
+  RepeatRule,
+  Settings,
+  Task,
+  ToneKey,
+} from './types';
 
 const KEY = 'kundo.state.v1';
 
 export function uid(): string {
   return Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+}
+
+const TONE_KEYS: ToneKey[] = ['lojuvard', 'feruza', 'oltin', 'anor', 'bodom'];
+
+/** Namunaviy yo'nalishlarning nusxasi — asl ro'yxat o'zgarmasin. */
+function defaultCats(): Record<CatKind, Cat[]> {
+  return {
+    task: DEFAULT_CATS.task.map((c) => ({ ...c })),
+    spend: DEFAULT_CATS.spend.map((c) => ({ ...c })),
+    income: DEFAULT_CATS.income.map((c) => ({ ...c })),
+  };
+}
+
+/**
+ * Saqlangan yo'nalish ro'yxatini tekshiradi. Eski zaxirada `cats` bo'lmasligi
+ * mumkin (yo'nalishlar ilgari kod ichida edi) — bunda namunaviylar qo'yiladi.
+ */
+function normCats(raw: unknown, kind: CatKind): Cat[] {
+  const seen = new Set<string>();
+  const list: Cat[] = Array.isArray(raw)
+    ? raw
+        .filter(
+          (c: any) =>
+            c && typeof c.k === 'string' && c.k && typeof c.uz === 'string' && c.uz.trim() && !seen.has(c.k),
+        )
+        .map((c: any) => {
+          seen.add(c.k);
+          return {
+            k: c.k as string,
+            uz: String(c.uz).trim(),
+            tone: (TONE_KEYS.includes(c.tone) ? c.tone : 'lojuvard') as ToneKey,
+          };
+        })
+    : [];
+  return list.length ? list : defaultCats()[kind];
+}
+
+/** Yo'nalishga bog'langan yozuvlar soni — o'chirishdan oldin ko'rsatiladi. */
+export function catUsage(s: AppState, kind: CatKind, k: string): number {
+  if (kind === 'task') {
+    return s.tasks.filter((t) => t.cat === k).length + s.repeats.filter((r) => r.cat === k).length;
+  }
+  const ek: EntryKind = kind === 'income' ? 'kirim' : 'chiqim';
+  return s.entries.filter((e) => e.kind === ek && e.cat === k).length;
 }
 
 function seed(): AppState {
@@ -16,6 +73,7 @@ function seed(): AppState {
     repeats: [],
     habits: [],
     entries: [],
+    cats: defaultCats(),
     budgets: {},
     notes: '',
     settings: {
@@ -47,6 +105,11 @@ export function normalize(raw: any): AppState {
     entries: Array.isArray(raw.entries)
       ? raw.entries.filter((e: any) => e && e.id && typeof e.amount === 'number')
       : [],
+    cats: {
+      task: normCats(raw.cats?.task, 'task'),
+      spend: normCats(raw.cats?.spend, 'spend'),
+      income: normCats(raw.cats?.income, 'income'),
+    },
     budgets: raw.budgets && typeof raw.budgets === 'object' ? raw.budgets : {},
     notes: typeof raw.notes === 'string' ? raw.notes : '',
     settings: { ...base.settings, ...(raw.settings ?? {}) },
@@ -77,6 +140,10 @@ type Ctx = {
   setBudget: (ym: string, amount: number) => void;
   setNotes: (v: string) => void;
   setSettings: (patch: Partial<Settings>) => void;
+  addCat: (kind: CatKind, uz: string, tone: ToneKey) => void;
+  updateCat: (kind: CatKind, k: string, patch: { uz?: string; tone?: ToneKey }) => void;
+  /** `moveTo` — o'chirilayotgan yo'nalishdagi yozuvlar ko'chiriladigan yo'nalish. */
+  removeCat: (kind: CatKind, k: string, moveTo: string) => void;
   replaceAll: (s: AppState) => void;
   mergeIn: (s: AppState) => void;
 };
@@ -268,6 +335,59 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       setNotes: (v) => edit((s) => ({ ...s, notes: v })),
       setSettings: (patch) => edit((s) => ({ ...s, settings: { ...s.settings, ...patch } })),
+
+      addCat: (kind, uz, tone) =>
+        edit((s) => {
+          const name = uz.trim();
+          if (!name) return s;
+          const list = s.cats[kind];
+          // Bir xil nom ikki marta bo'lmasin — foydalanuvchi o'zi ham ajratmaydi.
+          if (list.some((c) => c.uz.toLowerCase() === name.toLowerCase())) return s;
+          return { ...s, cats: { ...s.cats, [kind]: [...list, { k: `c${uid()}`, uz: name, tone }] } };
+        }),
+
+      updateCat: (kind, k, patch) =>
+        edit((s) => ({
+          ...s,
+          cats: {
+            ...s.cats,
+            // Kalit o'zgarmaydi: yozuvlar shu kalitga bog'langan.
+            [kind]: s.cats[kind].map((c) =>
+              c.k === k ? { ...c, uz: patch.uz?.trim() || c.uz, tone: patch.tone ?? c.tone } : c,
+            ),
+          },
+        })),
+
+      removeCat: (kind, k, moveTo) =>
+        editU((s) => {
+          const list = s.cats[kind];
+          // Oxirgi yo'nalish o'chmaydi, aks holda yozuv qo'yadigan joy qolmaydi.
+          if (list.length <= 1 || !list.some((c) => c.k === k)) return s;
+          const fallback = list.find((c) => c.k !== k)!.k;
+          const target = moveTo && moveTo !== k && list.some((c) => c.k === moveTo) ? moveTo : fallback;
+          const cats = { ...s.cats, [kind]: list.filter((c) => c.k !== k) };
+
+          if (kind === 'task') {
+            return {
+              ...s,
+              cats,
+              tasks: s.tasks.map((t) => (t.cat === k ? { ...t, cat: target } : t)),
+              repeats: s.repeats.map((r) => (r.cat === k ? { ...r, cat: target } : r)),
+              settings: s.settings.lastTaskCat === k ? { ...s.settings, lastTaskCat: target } : s.settings,
+            };
+          }
+
+          const ek: EntryKind = kind === 'income' ? 'kirim' : 'chiqim';
+          const settings = { ...s.settings };
+          if (kind === 'spend' && settings.lastSpendCat === k) settings.lastSpendCat = target;
+          if (kind === 'income' && settings.lastIncomeCat === k) settings.lastIncomeCat = target;
+          return {
+            ...s,
+            cats,
+            entries: s.entries.map((e) => (e.kind === ek && e.cat === k ? { ...e, cat: target } : e)),
+            settings,
+          };
+        }),
 
       replaceAll: (next) => editU(() => normalize(next)),
 

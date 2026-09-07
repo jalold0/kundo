@@ -1,19 +1,24 @@
 import Constants from 'expo-constants';
 import React, { useState } from 'react';
 import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
+import { CatsSheet } from '../components/CatsSheet';
 import { exportBackup, exportEntriesCsv, pickBackup } from '../lib/backup';
 import { useStore } from '../store';
 import { R, S } from '../theme';
 import type { ThemeMode } from '../theme';
+import type { CatKind } from '../types';
 import {
   IconChevron,
   IconDownload,
   IconHelp,
+  IconList,
   IconMail,
   IconShield,
   IconTable,
+  IconTag,
   IconTrash,
   IconUpload,
+  IconWallet,
   StarMark,
 } from '../ui/icons';
 import { Card, Divider, Row, Screen, Seg, Txt, usePal } from '../ui/kit';
@@ -29,8 +34,10 @@ export default function SettingsScreen() {
   const store = useStore();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
+  const [cats, setCats] = useState<CatKind | null>(null);
 
   const version = Constants.expoConfig?.version ?? '1.0.0';
+  const n = store.state.cats;
 
   const ochish = (url: string) => {
     Linking.openURL(url).catch(() => toast.show('Havolani ochib bo‘lmadi.'));
@@ -104,6 +111,8 @@ export default function SettingsScreen() {
               repeats: [],
               habits: [],
               entries: [],
+              // Yo'nalishlar va sozlamalar qoladi: o'chirilayotgani — yozuvlar.
+              cats: store.state.cats,
               budgets: {},
               notes: '',
               settings: store.state.settings,
@@ -119,132 +128,185 @@ export default function SettingsScreen() {
   const mailto = `mailto:${POCHTA}?subject=${encodeURIComponent(`Kundo ${version}`)}`;
 
   return (
-    <Screen eyebrow="Kundo" title="Sozlamalar">
-      <Section title="Ko‘rinish">
-        <View style={{ padding: S.lg, gap: S.md }}>
-          <View>
-            <Txt v="h3">Mavzu</Txt>
-            <Txt v="small" style={{ marginTop: 2 }}>
-              «Tizim» tanlansa, telefon sozlamasiga qarab o‘zi almashadi.
-            </Txt>
+    <>
+      <Screen eyebrow="Kundo" title="Sozlamalar">
+        <Section title="Ko‘rinish">
+          <View style={{ padding: S.lg, gap: S.md }}>
+            <View>
+              <Txt v="h3">Mavzu</Txt>
+              <Txt v="small" style={{ marginTop: 2 }}>
+                «Tizim» tanlansa, telefon sozlamasiga qarab o‘zi almashadi.
+              </Txt>
+            </View>
+            <Seg<ThemeMode>
+              value={store.state.settings.theme}
+              options={[
+                { k: 'system', uz: 'Tizim' },
+                { k: 'light', uz: 'Yorug‘' },
+                { k: 'dark', uz: 'Qorong‘i' },
+              ]}
+              onChange={(t) => store.setSettings({ theme: t })}
+            />
           </View>
-          <Seg<ThemeMode>
-            value={store.state.settings.theme}
-            options={[
-              { k: 'system', uz: 'Tizim' },
-              { k: 'light', uz: 'Yorug‘' },
-              { k: 'dark', uz: 'Qorong‘i' },
-            ]}
-            onChange={(t) => store.setSettings({ theme: t })}
+        </Section>
+
+        <Section title="Yo‘nalishlar">
+          <Item
+            ico={IconList}
+            title="Vazifa yo‘nalishlari"
+            subtitle={`${n.task.length} ta — ${n.task
+              .slice(0, 3)
+              .map((c) => c.uz)
+              .join(', ')}…`}
+            onPress={() => setCats('task')}
           />
-        </View>
-      </Section>
+          <Sep />
+          <Item
+            ico={IconWallet}
+            title="Chiqim yo‘nalishlari"
+            subtitle={`${n.spend.length} ta`}
+            onPress={() => setCats('spend')}
+          />
+          <Sep />
+          <Item
+            ico={IconTag}
+            title="Kirim yo‘nalishlari"
+            subtitle={`${n.income.length} ta`}
+            onPress={() => setCats('income')}
+          />
+        </Section>
 
-      <Section title="Ma’lumot">
-        <Item
-          ico={IconDownload}
-          title="Zaxira olish"
-          subtitle="Hamma yozuv bitta JSON fayliga"
-          onPress={doExport}
-          disabled={busy}
-        />
-        <Sep />
-        <Item
-          ico={IconUpload}
-          title="Zaxiradan tiklash"
-          subtitle="Fayldagini birlashtirish yoki butunlay almashtirish"
-          onPress={doImport}
-          disabled={busy}
-        />
-        <Sep />
-        <Item
-          ico={IconTable}
-          title="Xarajatlarni CSV qilish"
-          subtitle="Excel va Google Sheets ochadigan jadval"
-          onPress={doCsv}
-          disabled={busy}
-        />
-        <Divider />
-        <View style={{ paddingHorizontal: S.lg, paddingVertical: S.lg }}>
-          <Row gap={S.md}>
-            <Stat value={store.state.tasks.length} label="vazifa" />
-            <Stat value={store.state.habits.length} label="odat" />
-            <Stat value={store.state.entries.length} label="yozuv" />
+        <Section title="Ma’lumot">
+          <Item
+            ico={IconDownload}
+            title="Zaxira olish"
+            subtitle="Hamma yozuv bitta JSON fayliga"
+            onPress={doExport}
+            disabled={busy}
+          />
+          <Sep />
+          <Item
+            ico={IconUpload}
+            title="Zaxiradan tiklash"
+            subtitle="Fayldagini birlashtirish yoki butunlay almashtirish"
+            onPress={doImport}
+            disabled={busy}
+          />
+          <Sep />
+          <Item
+            ico={IconTable}
+            title="Xarajatlarni CSV qilish"
+            subtitle="Excel va Google Sheets ochadigan jadval"
+            onPress={doCsv}
+            disabled={busy}
+          />
+          <Divider />
+          <View style={{ paddingHorizontal: S.lg, paddingVertical: S.lg }}>
+            <Row gap={S.md}>
+              <Stat value={store.state.tasks.length} label="vazifa" />
+              <Stat value={store.state.habits.length} label="odat" />
+              <Stat value={store.state.entries.length} label="yozuv" />
+            </Row>
+            <Txt v="small" style={{ marginTop: S.md }}>
+              Hammasi shu telefonda saqlanadi — server yo‘q, hisob ochish shart emas.
+            </Txt>
+            {store.state.updated ? (
+              <Txt v="monoSm" style={{ marginTop: S.xs }}>
+                oxirgi o‘zgarish: {new Date(store.state.updated).toLocaleString('uz-UZ')}
+              </Txt>
+            ) : null}
+          </View>
+        </Section>
+
+        <Section title="Ilova">
+          <Row style={{ padding: S.lg }} gap={S.md}>
+            <View
+              style={{
+                width: 46,
+                height: 46,
+                borderRadius: R.md,
+                backgroundColor: p.lojuvard,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <StarMark color={p.onAccent} size={26} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Txt v="h2">Kundo</Txt>
+              <Txt v="monoSm" style={{ marginTop: 1 }}>
+                versiya {version}
+              </Txt>
+            </View>
           </Row>
-          <Txt v="small" style={{ marginTop: S.md }}>
-            Hammasi shu telefonda saqlanadi — server yo‘q, hisob ochish shart emas.
-          </Txt>
-          {store.state.updated ? (
-            <Txt v="monoSm" style={{ marginTop: S.xs }}>
-              oxirgi o‘zgarish: {new Date(store.state.updated).toLocaleString('uz-UZ')}
-            </Txt>
-          ) : null}
-        </View>
-      </Section>
-
-      <Section title="Ilova">
-        <Row style={{ padding: S.lg }} gap={S.md}>
-          <View
-            style={{
-              width: 46,
-              height: 46,
-              borderRadius: R.md,
-              backgroundColor: p.lojuvard,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <StarMark color={p.onAccent} size={26} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Txt v="h2">Kundo</Txt>
-            <Txt v="monoSm" style={{ marginTop: 1 }}>
-              versiya {version}
+          <View style={{ paddingHorizontal: S.lg, paddingBottom: S.lg }}>
+            <Txt v="small">
+              Kuningizni va xarajatlaringizni bir joyda tartibga soladigan oddiy daftar. Rang va naqshlar
+              Buxoro koshinidan ilhomlangan.
             </Txt>
           </View>
-        </Row>
-        <View style={{ paddingHorizontal: S.lg, paddingBottom: S.lg }}>
-          <Txt v="small">
-            Kuningizni va xarajatlaringizni bir joyda tartibga soladigan oddiy daftar. Rang va naqshlar
-            Buxoro koshinidan ilhomlangan.
-          </Txt>
-        </View>
-        <Divider />
-        <Item
-          ico={IconShield}
-          title="Maxfiylik siyosati"
-          subtitle="Ilova nima yig‘adi va nima yig‘maydi"
-          onPress={() => ochish(`${SAYT}/maxfiylik.html`)}
-        />
-        <Sep />
-        <Item
-          ico={IconHelp}
-          title="Yordam va savollar"
-          subtitle="Tez-tez so‘raladigan savollar"
-          onPress={() => ochish(`${SAYT}/qollab.html`)}
-        />
-        <Sep />
-        <Item
-          ico={IconMail}
-          title="Taklif va xato haqida yozish"
-          subtitle={POCHTA}
-          onPress={() => ochish(mailto)}
-        />
-      </Section>
+          <Divider />
+          <Item
+            ico={IconShield}
+            title="Maxfiylik siyosati"
+            subtitle="Ilova nima yig‘adi va nima yig‘maydi"
+            onPress={() => ochish(`${SAYT}/maxfiylik.html`)}
+          />
+          <Sep />
+          <Item
+            ico={IconHelp}
+            title="Yordam va savollar"
+            subtitle="Tez-tez so‘raladigan savollar"
+            onPress={() => ochish(`${SAYT}/qollab.html`)}
+          />
+          <Sep />
+          <Item
+            ico={IconMail}
+            title="Taklif va xato haqida yozish"
+            subtitle={POCHTA}
+            onPress={() => ochish(mailto)}
+          />
+        </Section>
 
-      <Section title="Xavfli hudud" tone={p.anor}>
-        <Item
-          ico={IconTrash}
-          danger
-          chevron={false}
-          title="Hamma ma’lumotni o‘chirish"
-          subtitle="Vazifa, odat va xarajat yozuvlari butunlay o‘chadi"
-          onPress={doReset}
+        <Section title="Xavfli hudud" tone={p.anor}>
+          <Item
+            ico={IconTrash}
+            danger
+            chevron={false}
+            title="Hamma ma’lumotni o‘chirish"
+            subtitle="Vazifa, odat va xarajat yozuvlari butunlay o‘chadi"
+            onPress={doReset}
+          />
+        </Section>
+      </Screen>
+
+      {cats ? (
+        <CatsSheet
+          visible
+          kind={cats}
+          onClose={() => setCats(null)}
+          title={CAT_SHEETS[cats].title}
+          hint={CAT_SHEETS[cats].hint}
         />
-      </Section>
-    </Screen>
+      ) : null}
+    </>
   );
 }
+
+const CAT_SHEETS: Record<CatKind, { title: string; hint: string }> = {
+  task: {
+    title: 'Vazifa yo‘nalishlari',
+    hint: 'Vazifa qo‘shganda tanlanadigan yo‘nalishlar. Nomini va rangini o‘zgartirsangiz, mavjud vazifalarda ham o‘zgaradi.',
+  },
+  spend: {
+    title: 'Chiqim yo‘nalishlari',
+    hint: 'Chiqim yozganda tanlanadigan yo‘nalishlar. Yo‘nalishni o‘chirsangiz, yozuvlari boshqa yo‘nalishga ko‘chadi — yo‘qolmaydi.',
+  },
+  income: {
+    title: 'Kirim yo‘nalishlari',
+    hint: 'Kirim yozganda tanlanadigan yo‘nalishlar. Yo‘nalishni o‘chirsangiz, yozuvlari boshqa yo‘nalishga ko‘chadi — yo‘qolmaydi.',
+  },
+};
 
 /* ---------- shu ekranning qismlari ---------- */
 

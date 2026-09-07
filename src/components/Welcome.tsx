@@ -22,12 +22,7 @@ export function Welcome() {
   };
 
   return (
-    <Sheet
-      visible={visible}
-      onClose={start}
-      title="Kundo"
-      footer={<Btn label="Boshlash" onPress={start} />}
-    >
+    <Sheet visible={visible} onClose={start} title="Kundo" footer={<Btn label="Boshlash" onPress={start} />}>
       <Row gap={S.md}>
         <StarMark color={p.lojuvard} size={34} />
         <Txt v="small" style={{ flex: 1 }}>

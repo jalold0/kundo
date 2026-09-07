@@ -166,7 +166,11 @@ export const IconTable = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
   wrap(
     <>
       <Rect x="3.5" y="4.5" width="17" height="15" rx="2.5" stroke={color} strokeWidth={strokeWidth} />
-      <Path d="M3.5 9.5 H20.5 M9.5 9.5 V19.5 M3.5 14.5 H20.5" stroke={color} strokeWidth={strokeWidth - 0.35} />
+      <Path
+        d="M3.5 9.5 H20.5 M9.5 9.5 V19.5 M3.5 14.5 H20.5"
+        stroke={color}
+        strokeWidth={strokeWidth - 0.35}
+      />
     </>,
     size,
   );
@@ -208,6 +212,20 @@ export const IconMail = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </>,
+    size,
+  );
+
+export const IconTag = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Path
+        d="M12.6 3.5 H19 a1.5 1.5 0 0 1 1.5 1.5 V11.4 L11.4 20.5 a1.5 1.5 0 0 1-2.1 0 L3.5 14.7 a1.5 1.5 0 0 1 0-2.1 Z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+      />
+      <Circle cx="16.4" cy="7.6" r="1.35" fill={color} />
     </>,
     size,
   );

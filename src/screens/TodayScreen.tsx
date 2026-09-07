@@ -8,7 +8,7 @@ import { BLOCKS } from '../lib/catalog';
 import { WDAYS, addDays, dayTitle, longDate, today, wd } from '../lib/date';
 import { overdue, sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
-import type { BlockKey, Task } from '../types';
+import type { AppState, BlockKey, Task } from '../types';
 import { IconChevron, IconPlus } from '../ui/icons';
 import { Bar, Btn, Card, Divider, Empty, Ring, Row, Screen, Txt, usePal } from '../ui/kit';
 import { useToast } from '../ui/toast';
@@ -21,9 +21,9 @@ export default function TodayScreen() {
   const [date, setDate] = useState(today());
   const [quick, setQuick] = useState('');
   const [adding, setAdding] = useState(false);
-  const [draft, setDraft] = useState<TaskDraft>(emptyDraft);
+  const [draft, setDraft] = useState<TaskDraft>(() => emptyDraft(firstCat(state)));
   const [editing, setEditing] = useState<Task | null>(null);
-  const [editDraft, setEditDraft] = useState<TaskDraft>(emptyDraft);
+  const [editDraft, setEditDraft] = useState<TaskDraft>(() => emptyDraft(firstCat(state)));
 
   useEffect(() => {
     ensureRepeats(date);
@@ -52,9 +52,8 @@ export default function TodayScreen() {
 
   const openAdd = () => {
     setDraft({
-      ...emptyDraft(),
+      ...emptyDraft(firstCat(state)),
       title: quick.trim(),
-      cat: store.state.settings.lastTaskCat,
       block: currentBlock(),
     });
     setQuick('');
@@ -344,4 +343,13 @@ function currentBlock(): BlockKey {
   if (h < 12) return 'ertalab';
   if (h < 18) return 'kunduzi';
   return 'kechqurun';
+}
+
+/**
+ * Yangi vazifa uchun yo'nalish: oxirgi ishlatilgani, agar u o'chirilgan bo'lsa —
+ * ro'yxatdagi birinchisi.
+ */
+function firstCat(state: AppState): string {
+  const list = state.cats.task;
+  return list.some((c) => c.k === state.settings.lastTaskCat) ? state.settings.lastTaskCat : list[0].k;
 }

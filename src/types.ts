@@ -1,6 +1,18 @@
 import type { ThemeMode } from './theme';
 
-export type CatKey = 'ish' | 'oqish' | 'biznes' | 'shaxsiy';
+/** Yo'nalish rangi — palitradagi urg'u ranglari (Buxoro koshini). */
+export type ToneKey = 'lojuvard' | 'feruza' | 'oltin' | 'anor' | 'bodom';
+
+/**
+ * Yo'nalish. Foydalanuvchi qo'shadi, nomini va rangini o'zgartiradi, o'chiradi —
+ * shuning uchun kod ichida qotib yozilgan ro'yxat emas, `AppState.cats` da yashaydi.
+ * `k` — yozuvlarda saqlanadigan barqaror kalit, uni hech qachon o'zgartirmaymiz.
+ */
+export type Cat = { k: string; uz: string; tone: ToneKey };
+
+/** Uch xil ro'yxat: vazifa yo'nalishlari, chiqim va kirim yo'nalishlari. */
+export type CatKind = 'task' | 'spend' | 'income';
+
 export type BlockKey = 'ertalab' | 'kunduzi' | 'kechqurun';
 export type Pri = 1 | 2 | 3;
 export type RepeatRule = 'kun' | 'ish' | 'hafta';
@@ -8,7 +20,7 @@ export type RepeatRule = 'kun' | 'ish' | 'hafta';
 export type Task = {
   id: string;
   title: string;
-  cat: CatKey;
+  cat: string; // cats.task kaliti
   pri: Pri;
   block: BlockKey;
   time?: string; // "HH:MM"
@@ -22,7 +34,7 @@ export type Task = {
 export type Repeat = {
   id: string;
   title: string;
-  cat: CatKey;
+  cat: string; // cats.task kaliti
   pri: Pri;
   block: BlockKey;
   time?: string;
@@ -39,7 +51,7 @@ export type Entry = {
   id: string;
   kind: EntryKind;
   amount: number; // butun son, so'mda
-  cat: string; // MONEY_CATS kaliti
+  cat: string; // cats.spend yoki cats.income kaliti
   note?: string;
   date: string; // "YYYY-MM-DD"
   created: number;
@@ -50,7 +62,7 @@ export type Settings = {
   currency: string; // "so'm"
   weekStartsMonday: boolean;
   onboarded: boolean;
-  lastTaskCat: CatKey;
+  lastTaskCat: string;
   lastSpendCat: string;
   lastIncomeCat: string;
 };
@@ -61,6 +73,7 @@ export type AppState = {
   repeats: Repeat[];
   habits: Habit[];
   entries: Entry[];
+  cats: Record<CatKind, Cat[]>;
   budgets: Record<string, number>; // "YYYY-MM" -> oylik limit
   notes: string;
   settings: Settings;

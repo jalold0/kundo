@@ -1,11 +1,11 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import React, { useMemo, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
-import { moneyCat, moneyCats } from '../lib/catalog';
+import { DatePanel } from '../components/pickers';
+import { findCat, kindOf } from '../lib/catalog';
 import { addMonths, daysInMonth, longDate, monthLabel, monthOf, thisMonth, today } from '../lib/date';
-import { fmt, fmtShort, maskAmount, parseAmount } from '../lib/money';
+import { MINUS, fmt, fmtShort, maskAmount, parseAmount } from '../lib/money';
 import { byCategory, dailyTotals, entriesInMonth, recentAmounts, sumBy, useStore } from '../store';
 import { F, R, S } from '../theme';
 import type { Entry, EntryKind } from '../types';
@@ -68,12 +68,15 @@ export default function MoneyScreen() {
   const lastCatFor = (kind: EntryKind) =>
     kind === 'kirim' ? store.state.settings.lastIncomeCat : store.state.settings.lastSpendCat;
 
+  /** Shu turdagi yo'nalishlar — sozlamalarda o'zgartirilishi mumkin. */
+  const catsOf = (kind: EntryKind) => state.cats[kindOf(kind)];
+
   const openAdd = (kind: EntryKind = 'chiqim') => {
-    const known = moneyCats(kind).some((c) => c.k === lastCatFor(kind));
+    const known = catsOf(kind).some((c) => c.k === lastCatFor(kind));
     setDraft({
       kind,
       amount: '',
-      cat: known ? lastCatFor(kind) : moneyCats(kind)[0].k,
+      cat: known ? lastCatFor(kind) : catsOf(kind)[0].k,
       note: '',
       date: isCurrent ? today() : `${ym}-01`,
     });
@@ -151,11 +154,26 @@ export default function MoneyScreen() {
             </Pressable>
           </Row>
 
-          <View style={{ marginTop: S.lg, gap: 3 }}>
+          <View style={{ marginTop: S.lg, gap: 4 }}>
             <Txt v="label">Oylik chiqim</Txt>
-            <Row style={{ alignItems: 'baseline' }} gap={6}>
-              <Txt style={{ fontFamily: F.display, fontSize: 34, color: p.ink }}>{fmt(spend)}</Txt>
-              <Txt v="small">{cur}</Txt>
+            <Row style={{ alignItems: 'baseline' }} gap={7}>
+              {/* Millionli summalar ham bir qatorda qolsin — kichrayadi, sinmaydi. */}
+              <Txt
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.55}
+                style={{
+                  flexShrink: 1,
+                  fontFamily: F.display,
+                  fontSize: 38,
+                  lineHeight: 44,
+                  letterSpacing: -0.9,
+                  color: p.ink,
+                }}
+              >
+                {fmt(spend)}
+              </Txt>
+              <Txt style={{ fontFamily: F.bodyMed, fontSize: 15, color: p.muted }}>{cur}</Txt>
             </Row>
             {delta !== null ? (
               <Txt v="small" color={delta > 0 ? p.anor : delta < 0 ? p.feruza : p.muted}>
@@ -165,20 +183,13 @@ export default function MoneyScreen() {
             ) : null}
           </View>
 
-          <Row gap={S.md} style={{ marginTop: S.md }}>
-            <View style={{ flex: 1 }}>
-              <Txt v="small">Kirim</Txt>
-              <Txt v="mono" color={p.feruza}>
-                {fmt(income)}
-              </Txt>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Txt v="small">Farq</Txt>
-              <Txt v="mono" color={balance >= 0 ? p.feruza : p.anor}>
-                {balance >= 0 ? '+' : '−'}
-                {fmt(Math.abs(balance))}
-              </Txt>
-            </View>
+          <Row gap={S.md} style={{ marginTop: S.lg }}>
+            <Metric label="kirim" value={fmt(income)} tone={income > 0 ? p.feruza : p.muted} />
+            <Metric
+              label="farq"
+              value={`${balance >= 0 ? '+' : MINUS}${fmt(Math.abs(balance))}`}
+              tone={balance === 0 ? p.muted : balance > 0 ? p.feruza : p.anor}
+            />
           </Row>
 
           <View style={{ marginTop: S.lg }}>
@@ -277,7 +288,7 @@ export default function MoneyScreen() {
             <Txt v="label">Yo'nalishlar bo'yicha</Txt>
             <View style={{ gap: S.md, marginTop: S.md }}>
               {cats.map((c) => {
-                const meta = moneyCat('chiqim', c.cat);
+                const meta = findCat(state.cats.spend, c.cat);
                 const tone = p[meta.tone] as string;
                 return (
                   <View key={c.cat} style={{ gap: 5 }}>
@@ -313,7 +324,7 @@ export default function MoneyScreen() {
               </View>
               <Divider />
               {rows.map((e) => {
-                const meta = moneyCat(e.kind, e.cat);
+                const meta = findCat(catsOf(e.kind), e.cat);
                 const tone = e.kind === 'kirim' ? p.feruza : (p[meta.tone] as string);
                 return (
                   <Pressable
@@ -374,7 +385,7 @@ export default function MoneyScreen() {
             { k: 'chiqim' as EntryKind, uz: 'Chiqim' },
             { k: 'kirim' as EntryKind, uz: 'Kirim' },
           ]}
-          onChange={(k) => setDraft({ ...draft, kind: k, cat: moneyCats(k)[0].k })}
+          onChange={(k) => setDraft({ ...draft, kind: k, cat: catsOf(k)[0].k })}
         />
 
         <View style={{ gap: S.sm }}>
@@ -406,7 +417,7 @@ export default function MoneyScreen() {
         <View style={{ gap: S.sm }}>
           <Txt v="label">Yo'nalish</Txt>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: S.sm }}>
-            {moneyCats(draft.kind).map((c) => (
+            {catsOf(draft.kind).map((c) => (
               <Chip
                 key={c.k}
                 label={c.uz}
@@ -431,28 +442,12 @@ export default function MoneyScreen() {
             ))}
             <Chip
               label={lastDays(8, ym).includes(draft.date) ? 'Boshqa sana…' : longDate(draft.date)}
-              active={!lastDays(8, ym).includes(draft.date)}
-              onPress={() => setPickingDate(true)}
+              active={pickingDate || !lastDays(8, ym).includes(draft.date)}
+              onPress={() => setPickingDate(!pickingDate)}
             />
           </ScrollView>
           {pickingDate ? (
-            <DateTimePicker
-              value={new Date(draft.date)}
-              mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              maximumDate={new Date()}
-              onChange={(event, d) => {
-                setPickingDate(
-                  Platform.OS === 'ios' ? event.type !== 'set' && event.type !== 'dismissed' : false,
-                );
-                if (event.type === 'set' && d) {
-                  const y = d.getFullYear();
-                  const m = String(d.getMonth() + 1).padStart(2, '0');
-                  const dd = String(d.getDate()).padStart(2, '0');
-                  setDraft({ ...draft, date: `${y}-${m}-${dd}` });
-                }
-              }}
-            />
+            <DatePanel value={draft.date} onChange={(d) => setDraft({ ...draft, date: d })} />
           ) : null}
         </View>
 
@@ -498,7 +493,7 @@ export default function MoneyScreen() {
               {fmt(editing.amount)} {cur}
             </Txt>
             <Txt v="small" style={{ marginTop: 4 }}>
-              {moneyCat(editing.kind, editing.cat).uz}
+              {findCat(catsOf(editing.kind), editing.cat).uz}
             </Txt>
             {editing.note ? <Txt style={{ marginTop: S.sm }}>{editing.note}</Txt> : null}
           </Card>
@@ -577,6 +572,25 @@ function lastDays(n: number, ym: string): string[] {
     d.setDate(d.getDate() - 1);
   }
   return out;
+}
+
+/** Kirim / farq ko'rsatkichi — Sozlamalar ekranidagi metrika chizig'i bilan bir uslubda. */
+function Metric({ label, value, tone }: { label: string; value: string; tone: string }) {
+  return (
+    <View style={{ flex: 1 }}>
+      <Txt v="label">{label}</Txt>
+      <Txt
+        v="mono"
+        color={tone}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
+        style={{ fontSize: 17, lineHeight: 23, marginTop: 3 }}
+      >
+        {value}
+      </Txt>
+    </View>
+  );
 }
 
 function navBtn(p: ReturnType<typeof usePal>) {
