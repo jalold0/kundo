@@ -1,8 +1,10 @@
-import { addDays, today } from '../lib/date';
+import { addDays, daysInMonth, monthOf, today } from '../lib/date';
 import {
   byCategory,
   dailyTotals,
   entriesInMonth,
+  habitMonth,
+  longestStreak,
   normalize,
   overdue,
   recentAmounts,
@@ -232,5 +234,81 @@ describe('moliyaviy hisob-kitob', () => {
     expect(recentAmounts(st, 'chiqim')).toEqual([30000, 20000, 10000]);
     expect(recentAmounts(st, 'kirim')).toEqual([900000]);
     expect(recentAmounts(st, 'chiqim', 2)).toEqual([30000, 20000]);
+  });
+});
+
+describe('eng uzun ketma-ketlik va oylik hisob', () => {
+  const h = (days: string[]): Habit => ({
+    id: 'h',
+    name: 'sport',
+    days: Object.fromEntries(days.map((d) => [d, true])) as Habit['days'],
+  });
+
+  test('eng uzun ketma-ketlik hozirgi seriyaga bog‘liq emas', () => {
+    const days = [
+      addDays(today(), -20),
+      addDays(today(), -19),
+      addDays(today(), -18),
+      addDays(today(), -17),
+      today(),
+    ];
+    expect(longestStreak(h(days))).toBe(4);
+    expect(streak(h(days))).toBe(1);
+  });
+
+  test('belgilanmagan odatda 0', () => {
+    expect(longestStreak(h([]))).toBe(0);
+  });
+
+  test('oylik hisob kelasi kunlarni sanamaydi', () => {
+    const ym = monthOf(today());
+    const kun = Number(today().slice(8, 10));
+    const m = habitMonth(h([today()]), ym);
+    expect(m.days).toHaveLength(daysInMonth(ym));
+    expect(m.counted).toBe(kun);
+    expect(m.done).toBe(1);
+    expect(m.days.filter((x) => x.future)).toHaveLength(daysInMonth(ym) - kun);
+  });
+
+  test('kelasi kun belgilangan bo‘lsa ham foizga qo‘shilmaydi', () => {
+    const ym = monthOf(today());
+    const kun = Number(today().slice(8, 10));
+    const oxiri = `${ym}-${String(daysInMonth(ym)).padStart(2, '0')}`;
+    const m = habitMonth(h([today(), oxiri]), ym);
+    expect(m.counted).toBe(kun);
+    // oy oxiri kelasi kun bo'lsa hisobga kirmaydi
+    expect(m.done).toBe(oxiri === today() ? 2 : 1);
+  });
+});
+
+describe('yo‘nalishlar migratsiyasi', () => {
+  test('cats bo‘lmasa namunaviylar qo‘yiladi', () => {
+    const s = normalize({ tasks: [] });
+    expect(s.cats.task.length).toBeGreaterThan(0);
+    expect(s.cats.spend.map((c) => c.k)).toContain('oziq');
+    expect(s.cats.income.length).toBeGreaterThan(0);
+  });
+
+  test('bo‘sh ro‘yxat namunaviylarga qaytadi', () => {
+    expect(normalize({ cats: { task: [] } }).cats.task.length).toBeGreaterThan(0);
+  });
+
+  test('noto‘g‘ri rang, takroriy kalit va bo‘sh nom tashlanadi', () => {
+    const s = normalize({
+      cats: {
+        spend: [
+          { k: 'a', uz: 'Avto', tone: 'pushti' },
+          { k: 'a', uz: 'Avto ikkinchi' },
+          { k: 'b', uz: '   ' },
+          { k: '', uz: 'Kalitsiz' },
+        ],
+      },
+    });
+    expect(s.cats.spend).toEqual([{ k: 'a', uz: 'Avto', tone: 'lojuvard' }]);
+  });
+
+  test('to‘g‘ri ro‘yxat o‘zgarmaydi', () => {
+    const list = [{ k: 'x', uz: 'Ish', tone: 'feruza' as const }];
+    expect(normalize({ cats: { task: list } }).cats.task).toEqual(list);
   });
 });

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_CATS } from './lib/catalog';
-import { addDays, iso, today, wd } from './lib/date';
+import { addDays, daysInMonth, iso, today, wd } from './lib/date';
 import type {
   AppState,
   Cat,
@@ -38,22 +38,23 @@ function defaultCats(): Record<CatKind, Cat[]> {
  * mumkin (yo'nalishlar ilgari kod ichida edi) — bunda namunaviylar qo'yiladi.
  */
 function normCats(raw: unknown, kind: CatKind): Cat[] {
+  const list: Cat[] = [];
   const seen = new Set<string>();
-  const list: Cat[] = Array.isArray(raw)
-    ? raw
-        .filter(
-          (c: any) =>
-            c && typeof c.k === 'string' && c.k && typeof c.uz === 'string' && c.uz.trim() && !seen.has(c.k),
-        )
-        .map((c: any) => {
-          seen.add(c.k);
-          return {
-            k: c.k as string,
-            uz: String(c.uz).trim(),
-            tone: (TONE_KEYS.includes(c.tone) ? c.tone : 'lojuvard') as ToneKey,
-          };
-        })
-    : [];
+  // Bir o'tishda: tekshirish ham, takroriy kalitni tashlash ham. Filter+map bo'lsa
+  // `seen` filtrlash paytida bo'sh qolib, dublikat o'tib ketadi.
+  if (Array.isArray(raw)) {
+    for (const c of raw as any[]) {
+      if (!c || typeof c.k !== 'string' || !c.k) continue;
+      if (typeof c.uz !== 'string' || !c.uz.trim()) continue;
+      if (seen.has(c.k)) continue;
+      seen.add(c.k);
+      list.push({
+        k: c.k,
+        uz: String(c.uz).trim(),
+        tone: (TONE_KEYS.includes(c.tone) ? c.tone : 'lojuvard') as ToneKey,
+      });
+    }
+  }
   return list.length ? list : defaultCats()[kind];
 }
 
@@ -475,6 +476,49 @@ export function streak(h: Habit): number {
     d = addDays(d, -1);
   }
   return n;
+}
+
+/** Eng uzun ketma-ketlik — butun tarix bo'ylab, hozirgi seriya bilan cheklanmagan. */
+export function longestStreak(h: Habit): number {
+  const days = Object.keys(h.days).sort();
+  let best = 0;
+  let run = 0;
+  let prev = '';
+  for (const d of days) {
+    run = prev && addDays(prev, 1) === d ? run + 1 : 1;
+    if (run > best) best = run;
+    prev = d;
+  }
+  return best;
+}
+
+export type HabitMonth = {
+  days: { d: string; on: boolean; future: boolean }[];
+  done: number;
+  /** Kelasi kunlarsiz — foiz oy oxirigacha soxta pasaymasin. */
+  counted: number;
+};
+
+/** Oy bo'ylab odat holati: har kun belgilangan-belgilanmaganligi va foiz uchun hisob. */
+export function habitMonth(h: Habit, ym: string): HabitMonth {
+  const n = daysInMonth(ym);
+  const t = today();
+  const days: HabitMonth['days'] = [];
+  let done = 0;
+  let counted = 0;
+  for (let i = 1; i <= n; i++) {
+    const d = `${ym}-${String(i).padStart(2, '0')}`;
+    const future = d > t;
+    const on = !!h.days[d];
+    // Foiz faqat kelgan kunlardan hisoblanadi, aks holda 100% dan oshib ketishi mumkin
+    // (eski ma'lumotda kelasi kun belgilangan bo'lsa — ilgari bunga ruxsat bor edi).
+    if (!future) {
+      counted++;
+      if (on) done++;
+    }
+    days.push({ d, on, future });
+  }
+  return { days, done, counted };
 }
 
 export function entriesInMonth(s: AppState, ym: string): Entry[] {

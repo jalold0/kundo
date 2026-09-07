@@ -9,7 +9,7 @@ import { WDAYS, addDays, dayTitle, longDate, today, wd } from '../lib/date';
 import { overdue, sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
 import type { AppState, BlockKey, Task } from '../types';
-import { IconChevron, IconPlus } from '../ui/icons';
+import { IconCheck, IconChevron, IconPlus } from '../ui/icons';
 import { Bar, Btn, Card, Divider, Empty, Ring, Row, Screen, Txt, usePal } from '../ui/kit';
 import { useToast } from '../ui/toast';
 
@@ -40,7 +40,7 @@ export default function TodayScreen() {
     if (!title) return;
     store.addTask({
       title,
-      cat: store.state.settings.lastTaskCat,
+      cat: firstCat(state),
       pri: 3,
       block: currentBlock(),
       date,
@@ -217,6 +217,70 @@ export default function TodayScreen() {
             </Pressable>
           </Row>
         </Card>
+
+        {/*
+          Odatlar shu yerda ham turadi: odam ertalab «Kun» ekranini ochadi va
+          odatni o'sha joyda belgilashni kutadi. Oylik dinamika «Odatlar» bo'limida.
+        */}
+        {store.state.habits.length && date <= today() ? (
+          <Card>
+            <Row>
+              <Txt v="label" style={{ flex: 1 }}>
+                Odatlar
+              </Txt>
+              <Txt v="monoSm">
+                {store.state.habits.filter((h) => h.days[date]).length}/{store.state.habits.length}
+              </Txt>
+            </Row>
+            <Row gap={S.sm} style={{ flexWrap: 'wrap', marginTop: S.md }}>
+              {store.state.habits.map((h) => {
+                const on = !!h.days[date];
+                return (
+                  <Pressable
+                    key={h.id}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: on }}
+                    accessibilityLabel={h.name}
+                    onPress={() => {
+                      Haptics.selectionAsync().catch(() => {});
+                      store.toggleHabit(h.id, date);
+                    }}
+                    style={({ pressed }) => ({
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 7,
+                      paddingVertical: 7,
+                      paddingHorizontal: 12,
+                      borderRadius: R.pill,
+                      borderWidth: StyleSheet.hairlineWidth * 2,
+                      borderColor: on ? p.feruza : p.line,
+                      backgroundColor: on ? p.feruzaSoft : p.surface,
+                      opacity: pressed ? 0.7 : 1,
+                    })}
+                  >
+                    <View
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 5,
+                        borderWidth: 1.6,
+                        borderColor: on ? p.feruza : p.line2,
+                        backgroundColor: on ? p.feruza : 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {on ? <IconCheck color={p.onAccent} size={10} /> : null}
+                    </View>
+                    <Txt v="small" color={on ? p.feruza : p.ink2}>
+                      {h.name}
+                    </Txt>
+                  </Pressable>
+                );
+              })}
+            </Row>
+          </Card>
+        ) : null}
 
         {late.length && isToday ? (
           <Card style={{ borderColor: p.oltin, backgroundColor: p.oltinSoft }}>
