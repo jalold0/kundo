@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_CATS } from './lib/catalog';
+import { defaultCatList } from './lib/catalog';
+import { deviceLang, getLang, setLang } from './i18n';
 import { addDays, daysInMonth, iso, today, wd } from './lib/date';
 import type {
   AppState,
@@ -26,11 +27,7 @@ const TONE_KEYS: ToneKey[] = ['lojuvard', 'feruza', 'oltin', 'anor', 'bodom'];
 
 /** Namunaviy yo'nalishlarning nusxasi — asl ro'yxat o'zgarmasin. */
 function defaultCats(): Record<CatKind, Cat[]> {
-  return {
-    task: DEFAULT_CATS.task.map((c) => ({ ...c })),
-    spend: DEFAULT_CATS.spend.map((c) => ({ ...c })),
-    income: DEFAULT_CATS.income.map((c) => ({ ...c })),
-  };
+  return { task: defaultCatList('task'), spend: defaultCatList('spend'), income: defaultCatList('income') };
 }
 
 /**
@@ -45,12 +42,14 @@ function normCats(raw: unknown, kind: CatKind): Cat[] {
   if (Array.isArray(raw)) {
     for (const c of raw as any[]) {
       if (!c || typeof c.k !== 'string' || !c.k) continue;
-      if (typeof c.uz !== 'string' || !c.uz.trim()) continue;
+      // `uz` — eski zaxiralardagi nom maydoni; o'qishda ikkalasi ham qabul qilinadi.
+      const label = typeof c.label === 'string' ? c.label : c.uz;
+      if (typeof label !== 'string' || !label.trim()) continue;
       if (seen.has(c.k)) continue;
       seen.add(c.k);
       list.push({
         k: c.k,
-        uz: String(c.uz).trim(),
+        label: label.trim(),
         tone: (TONE_KEYS.includes(c.tone) ? c.tone : 'lojuvard') as ToneKey,
       });
     }
@@ -79,6 +78,7 @@ function seed(): AppState {
     notes: '',
     settings: {
       theme: 'system',
+      lang: deviceLang(),
       currency: "so'm",
       weekStartsMonday: true,
       onboarded: false,
@@ -141,8 +141,8 @@ type Ctx = {
   setBudget: (ym: string, amount: number) => void;
   setNotes: (v: string) => void;
   setSettings: (patch: Partial<Settings>) => void;
-  addCat: (kind: CatKind, uz: string, tone: ToneKey) => void;
-  updateCat: (kind: CatKind, k: string, patch: { uz?: string; tone?: ToneKey }) => void;
+  addCat: (kind: CatKind, label: string, tone: ToneKey) => void;
+  updateCat: (kind: CatKind, k: string, patch: { label?: string; tone?: ToneKey }) => void;
   /** `moveTo` — o'chirilayotgan yo'nalishdagi yozuvlar ko'chiriladigan yo'nalish. */
   removeCat: (kind: CatKind, k: string, moveTo: string) => void;
   replaceAll: (s: AppState) => void;
@@ -157,6 +157,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loaded = useRef(false);
   const undoRef = useRef<AppState | null>(null);
+
+  // Til render paytida kerak (`t()` sinxron ishlaydi), shuning uchun holat
+  // o'zgarishi bilan darhol qo'yiladi. Effektda bo'lsa bir kadr eski tilda chiqadi.
+  if (state.settings.lang !== getLang()) setLang(state.settings.lang);
 
   useEffect(() => {
     (async () => {
@@ -337,14 +341,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       setNotes: (v) => edit((s) => ({ ...s, notes: v })),
       setSettings: (patch) => edit((s) => ({ ...s, settings: { ...s.settings, ...patch } })),
 
-      addCat: (kind, uz, tone) =>
+      addCat: (kind, label, tone) =>
         edit((s) => {
-          const name = uz.trim();
+          const name = label.trim();
           if (!name) return s;
           const list = s.cats[kind];
           // Bir xil nom ikki marta bo'lmasin — foydalanuvchi o'zi ham ajratmaydi.
-          if (list.some((c) => c.uz.toLowerCase() === name.toLowerCase())) return s;
-          return { ...s, cats: { ...s.cats, [kind]: [...list, { k: `c${uid()}`, uz: name, tone }] } };
+          if (list.some((c) => c.label.toLowerCase() === name.toLowerCase())) return s;
+          return { ...s, cats: { ...s.cats, [kind]: [...list, { k: `c${uid()}`, label: name, tone }] } };
         }),
 
       updateCat: (kind, k, patch) =>
@@ -354,7 +358,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             ...s.cats,
             // Kalit o'zgarmaydi: yozuvlar shu kalitga bog'langan.
             [kind]: s.cats[kind].map((c) =>
-              c.k === k ? { ...c, uz: patch.uz?.trim() || c.uz, tone: patch.tone ?? c.tone } : c,
+              c.k === k ? { ...c, label: patch.label?.trim() || c.label, tone: patch.tone ?? c.tone } : c,
             ),
           },
         })),

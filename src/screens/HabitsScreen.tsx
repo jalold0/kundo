@@ -2,10 +2,8 @@ import * as Haptics from 'expo-haptics';
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
-import { REPEAT_RULES, findCat } from '../lib/catalog';
+import { findCat, repeatLabel } from '../lib/catalog';
 import {
-  WDAYS,
-  WMIN,
   addDays,
   addMonths,
   longDate,
@@ -13,7 +11,9 @@ import {
   thisMonth,
   today,
   wd,
+  wdays,
   weekStart,
+  wmin,
 } from '../lib/date';
 import { habitMonth, longestStreak, streak, useStore } from '../store';
 import { F, R, S } from '../theme';
@@ -132,7 +132,7 @@ export default function HabitsScreen() {
                         key={d}
                         accessibilityRole="button"
                         accessibilityState={{ checked: on, disabled: future }}
-                        accessibilityLabel={`${h.name} — ${WDAYS[wd(d)]}`}
+                        accessibilityLabel={`${h.name} — ${wdays()[wd(d)]}`}
                         disabled={future}
                         onPress={() => {
                           Haptics.selectionAsync().catch(() => {});
@@ -151,7 +151,7 @@ export default function HabitsScreen() {
                         }}
                       >
                         <Txt v="monoSm" color={on ? p.onAccent : p.muted} style={{ fontSize: 11 }}>
-                          {WMIN[wd(d)]}
+                          {wmin()[wd(d)]}
                         </Txt>
                       </Pressable>
                     );
@@ -256,7 +256,7 @@ export default function HabitsScreen() {
           {store.state.repeats.length ? (
             store.state.repeats.map((r) => {
               const c = findCat(store.state.cats.task, r.cat);
-              const rule = REPEAT_RULES.find((x) => x.k === r.rule)?.uz ?? '';
+              const rule = repeatLabel(r.rule);
               return (
                 <Row
                   key={r.id}
@@ -280,7 +280,7 @@ export default function HabitsScreen() {
                     <Txt numberOfLines={1}>{r.title}</Txt>
                     <Txt v="small">
                       {rule}
-                      {r.rule === 'hafta' ? ` · ${WDAYS[r.wd]}` : ''}
+                      {r.rule === 'hafta' ? ` · ${wdays()[r.wd]}` : ''}
                       {r.time ? ` · ${r.time}` : ''}
                     </Txt>
                   </View>

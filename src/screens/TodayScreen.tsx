@@ -4,8 +4,8 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
 import { TaskForm, emptyDraft, type TaskDraft } from '../components/TaskForm';
 import { TaskRow } from '../components/TaskRow';
-import { BLOCKS } from '../lib/catalog';
-import { WDAYS, addDays, dayTitle, longDate, today, wd } from '../lib/date';
+import { BLOCKS, blockLabel } from '../lib/catalog';
+import { addDays, dayTitle, longDate, today, wd, wdays } from '../lib/date';
 import { overdue, sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
 import type { AppState, BlockKey, Task } from '../types';
@@ -143,7 +143,7 @@ export default function TodayScreen() {
             </Pressable>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <Txt v="h2">{longDate(date)}</Txt>
-              <Txt v="monoSm">{WDAYS[wd(date)]}</Txt>
+              <Txt v="monoSm">{wdays()[wd(date)]}</Txt>
             </View>
             <Pressable
               accessibilityRole="button"
@@ -312,7 +312,7 @@ export default function TodayScreen() {
               <Card key={b.k} pad={false}>
                 <View style={{ padding: S.md, paddingHorizontal: S.lg, backgroundColor: p.surface2 }}>
                   <Row>
-                    <Txt v="h3">{b.uz}</Txt>
+                    <Txt v="h3">{blockLabel(b.k)}</Txt>
                     <Txt v="monoSm" style={{ flex: 1 }}>
                       {' '}
                       {b.span}

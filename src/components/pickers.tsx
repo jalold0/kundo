@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { MONTHS_CAP, daysInMonth, monthOf, parseISO, today } from '../lib/date';
+import { daysInMonth, monthOf, months, parseISO, today, wmin } from '../lib/date';
 import { R, S } from '../theme';
 import { IconChevron } from '../ui/icons';
 import { Row, Txt, usePal } from '../ui/kit';
@@ -16,8 +16,6 @@ import { Row, Txt, usePal } from '../ui/kit';
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 const MINS = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
-/** Dushanbadan boshlanadigan hafta — `weekStart()` bilan bir xil tartib. */
-const WEEK = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
 
 export function TimePanel({ value, onChange }: { value: string; onChange: (t: string) => void }) {
   const p = usePal();
@@ -73,7 +71,7 @@ export function DatePanel({
           <IconChevron color={p.ink2} dir="left" />
         </Pressable>
         <Txt v="h3" style={{ flex: 1, textAlign: 'center' }}>
-          {MONTHS_CAP[m - 1]} {y}
+          {months()[m - 1]} {y}
         </Txt>
         <Pressable
           accessibilityRole="button"
@@ -88,7 +86,7 @@ export function DatePanel({
       </Row>
 
       <Row style={{ flexWrap: 'wrap' }} gap={0}>
-        {WEEK.map((w) => (
+        {week().map((w) => (
           <View key={w} style={{ width: '14.28%', alignItems: 'center', paddingBottom: 4 }}>
             <Txt v="label">{w}</Txt>
           </View>
@@ -216,4 +214,10 @@ function buildMonth(ym: string): (string | null)[] {
   const out: (string | null)[] = Array(off).fill(null);
   for (let d = 1; d <= n; d++) out.push(`${ym}-${String(d).padStart(2, '0')}`);
   return out;
+}
+
+/** Dushanbadan boshlanadigan hafta sarlavhalari — `weekStart()` bilan bir tartib. */
+function week(): string[] {
+  const w = wmin();
+  return [w[1], w[2], w[3], w[4], w[5], w[6], w[0]];
 }

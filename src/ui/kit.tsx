@@ -227,7 +227,7 @@ export function Seg<T extends string>({
   onChange,
 }: {
   value: T;
-  options: { k: T; uz: string }[];
+  options: { k: T; label: string }[];
   onChange: (v: T) => void;
 }) {
   const p = usePal();
@@ -254,7 +254,7 @@ export function Seg<T extends string>({
             <Text
               style={{ fontFamily: on ? F.display : F.body, fontSize: 13.5, color: on ? p.ink : p.muted }}
             >
-              {o.uz}
+              {o.label}
             </Text>
           </Pressable>
         );

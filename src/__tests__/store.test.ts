@@ -304,11 +304,21 @@ describe('yo‘nalishlar migratsiyasi', () => {
         ],
       },
     });
-    expect(s.cats.spend).toEqual([{ k: 'a', uz: 'Avto', tone: 'lojuvard' }]);
+    expect(s.cats.spend).toEqual([{ k: 'a', label: 'Avto', tone: 'lojuvard' }]);
   });
 
   test('to‘g‘ri ro‘yxat o‘zgarmaydi', () => {
-    const list = [{ k: 'x', uz: 'Ish', tone: 'feruza' as const }];
+    const list = [{ k: 'x', label: 'Ish', tone: 'feruza' as const }];
     expect(normalize({ cats: { task: list } }).cats.task).toEqual(list);
+  });
+
+  test('eski zaxiradagi uz maydoni label ga ko‘chadi', () => {
+    const s = normalize({ cats: { task: [{ k: 'x', uz: 'Ish', tone: 'feruza' }] } });
+    expect(s.cats.task).toEqual([{ k: 'x', label: 'Ish', tone: 'feruza' }]);
+  });
+
+  test('label bor bo‘lsa uz e’tiborga olinmaydi', () => {
+    const s = normalize({ cats: { task: [{ k: 'x', label: 'Yangi', uz: 'Eski', tone: 'anor' }] } });
+    expect(s.cats.task).toEqual([{ k: 'x', label: 'Yangi', tone: 'anor' }]);
   });
 });

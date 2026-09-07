@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { BLOCKS, PRIS, REPEAT_RULES } from '../lib/catalog';
+import { BLOCKS, PRIS, REPEAT_RULES, blockLabel, priLabel, repeatLabel } from '../lib/catalog';
 import { useStore } from '../store';
 import { S } from '../theme';
 import type { BlockKey, Pri, RepeatRule } from '../types';
@@ -56,7 +56,7 @@ export function TaskForm({
           {cats.map((c) => (
             <Chip
               key={c.k}
-              label={c.uz}
+              label={c.label}
               active={draft.cat === c.k}
               tone={p[c.tone] as string}
               onPress={() => set({ ...draft, cat: c.k })}
@@ -71,7 +71,7 @@ export function TaskForm({
           {PRIS.map((x) => (
             <Chip
               key={x.k}
-              label={x.uz}
+              label={priLabel(x.k)}
               active={draft.pri === x.k}
               tone={x.tone ? (p[x.tone] as string) : undefined}
               onPress={() => set({ ...draft, pri: x.k })}
@@ -86,7 +86,7 @@ export function TaskForm({
           {BLOCKS.map((b) => (
             <Chip
               key={b.k}
-              label={b.uz}
+              label={blockLabel(b.k)}
               active={draft.block === b.k}
               onPress={() => set({ ...draft, block: b.k })}
             />
@@ -128,7 +128,7 @@ export function TaskForm({
             {REPEAT_RULES.map((r) => (
               <Chip
                 key={r.k || 'bir'}
-                label={r.uz}
+                label={repeatLabel(r.k)}
                 active={draft.repeat === r.k}
                 onPress={() => set({ ...draft, repeat: r.k as RepeatRule | '' })}
               />

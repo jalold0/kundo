@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { TONES } from '../lib/catalog';
+import { tones } from '../lib/catalog';
 import { catUsage, useStore } from '../store';
 import { R, S } from '../theme';
 import type { CatKind, ToneKey } from '../types';
@@ -55,7 +55,7 @@ export function CatsSheet({
   };
 
   const taken = (v: string, exceptKey?: string) =>
-    list.some((c) => c.k !== exceptKey && c.uz.toLowerCase() === v.trim().toLowerCase());
+    list.some((c) => c.k !== exceptKey && c.label.toLowerCase() === v.trim().toLowerCase());
 
   const startEdit = (k: string) => {
     const c = list.find((x) => x.k === k);
@@ -63,7 +63,7 @@ export function CatsSheet({
     setDeleting(null);
     setErr('');
     setEditing(k);
-    setName(c.uz);
+    setName(c.label);
     setTone(c.tone);
   };
 
@@ -71,7 +71,7 @@ export function CatsSheet({
     const v = name.trim();
     if (!v) return setErr('Nom bo‘sh bo‘lmaydi.');
     if (taken(v, editing ?? undefined)) return setErr('Bunday nom allaqachon bor.');
-    store.updateCat(kind, editing!, { uz: v, tone });
+    store.updateCat(kind, editing!, { label: v, tone });
     reset();
   };
 
@@ -122,7 +122,7 @@ export function CatsSheet({
                   }}
                 />
                 <View style={{ flex: 1 }}>
-                  <Txt v="h3">{c.uz}</Txt>
+                  <Txt v="h3">{c.label}</Txt>
                   <Txt v="small">{n > 0 ? `${n} yozuv` : 'yozuv yo‘q'}</Txt>
                 </View>
                 <Pressable onPress={() => startEdit(c.k)} hitSlop={8} accessibilityRole="button">
@@ -135,7 +135,7 @@ export function CatsSheet({
                   disabled={last}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel={`${c.uz} — o‘chirish`}
+                  accessibilityLabel={`${c.label} — o‘chirish`}
                   style={{ opacity: last ? 0.3 : 1 }}
                 >
                   <IconTrash color={p.anor} size={17} />
@@ -172,7 +172,7 @@ export function CatsSheet({
                           .map((x) => (
                             <Chip
                               key={x.k}
-                              label={x.uz}
+                              label={x.label}
                               active={moveTo === x.k}
                               tone={p[x.tone] as string}
                               onPress={() => setMoveTo(x.k)}
@@ -216,20 +216,20 @@ function Tones({ value, onChange }: { value: ToneKey; onChange: (t: ToneKey) => 
   const p = usePal();
   return (
     <Row gap={S.sm}>
-      {TONES.map((t) => {
-        const on = t.k === value;
+      {tones().map((x) => {
+        const on = x.k === value;
         return (
           <Pressable
-            key={t.k}
-            onPress={() => onChange(t.k)}
+            key={x.k}
+            onPress={() => onChange(x.k)}
             accessibilityRole="button"
-            accessibilityLabel={t.uz}
+            accessibilityLabel={x.label}
             accessibilityState={{ selected: on }}
             style={{
               width: 32,
               height: 32,
               borderRadius: R.sm,
-              backgroundColor: p[t.k] as string,
+              backgroundColor: p[x.k] as string,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: on ? 2.5 : 0,

@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { findCat, pri as priOf } from '../lib/catalog';
+import { findCat, pri as priOf, priLabel } from '../lib/catalog';
 import { useStore } from '../store';
 import { S } from '../theme';
 import type { Task } from '../types';
@@ -75,10 +75,10 @@ export function TaskRow({
               {task.time}
             </Txt>
           ) : null}
-          <Tag label={cat.uz} tone={tone} />
+          <Tag label={cat.label} tone={tone} />
           {task.pri < 3 && pr.tone ? (
             <Txt v="small" color={p[pr.tone] as string}>
-              {pr.uz}
+              {priLabel(task.pri)}
             </Txt>
           ) : null}
           {task.rid ? (

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
 import { CatsSheet } from '../components/CatsSheet';
 import { exportBackup, exportEntriesCsv, pickBackup } from '../lib/backup';
+import { LANGS, t, type Lang } from '../i18n';
 import { useStore } from '../store';
 import { R, S } from '../theme';
 import type { ThemeMode } from '../theme';
@@ -25,6 +26,9 @@ import { Card, Divider, Row, Screen, Seg, Txt, usePal } from '../ui/kit';
 import { useToast } from '../ui/toast';
 
 const SAYT = 'https://kundoapp.vercel.app';
+
+/** `toLocaleString` uchun — sana va vaqt shu qoidada yoziladi. */
+const LOCALES: Record<Lang, string> = { uz: 'uz-UZ', ru: 'ru-RU', en: 'en-US' };
 const POCHTA = 'jaloldin@buxoro.online';
 
 type IconCmp = (props: { size?: number; color: string; strokeWidth?: number }) => React.ReactElement;
@@ -40,26 +44,26 @@ export default function SettingsScreen() {
   const n = store.state.cats;
 
   const ochish = (url: string) => {
-    Linking.openURL(url).catch(() => toast.show('Havolani ochib bo‘lmadi.'));
+    Linking.openURL(url).catch(() => toast.show(t('common.linkFailed')));
   };
 
   const doExport = async () => {
     setBusy(true);
     const r = await exportBackup(store.state);
     setBusy(false);
-    if (!r.ok) Alert.alert('Zaxira', r.message);
-    else toast.show('Zaxira fayli tayyorlandi.');
+    if (!r.ok) Alert.alert(t('settings.backupTitle'), r.message);
+    else toast.show(t('settings.backupDone'));
   };
 
   const doCsv = async () => {
     if (!store.state.entries.length) {
-      Alert.alert('Xarajatlar', 'Hali birorta yozuv yo‘q.');
+      Alert.alert(t('settings.spendTitle'), t('settings.csvEmpty'));
       return;
     }
     setBusy(true);
     const r = await exportEntriesCsv(store.state);
     setBusy(false);
-    if (!r.ok) Alert.alert('CSV', r.message);
+    if (!r.ok) Alert.alert(t('settings.csvTitle'), r.message);
   };
 
   const doImport = async () => {
@@ -67,28 +71,28 @@ export default function SettingsScreen() {
     const r = await pickBackup();
     setBusy(false);
     if (!r.ok || !r.data) {
-      if (r.message !== 'Bekor qilindi.') Alert.alert('Tiklash', r.message);
+      if (!r.canceled) Alert.alert(t('settings.restoreTitle'), r.message);
       return;
     }
     const d = r.data;
     Alert.alert(
-      'Zaxiradan tiklash',
-      `Faylda ${d.tasks?.length ?? 0} vazifa, ${d.entries?.length ?? 0} moliyaviy yozuv bor. Qanday qo‘shamiz?`,
+      t('settings.restoreTitle'),
+      t('settings.restoreAsk', { tasks: d.tasks?.length ?? 0, entries: d.entries?.length ?? 0 }),
       [
-        { text: 'Bekor', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Birlashtirish',
+          text: t('common.merge'),
           onPress: () => {
             store.mergeIn(d);
-            toast.show('Zaxira birlashtirildi.');
+            toast.show(t('settings.restoreMerged'));
           },
         },
         {
-          text: 'Almashtirish',
+          text: t('common.replace'),
           style: 'destructive',
           onPress: () => {
             store.replaceAll(d);
-            toast.show('Ma’lumot almashtirildi.', { undo: store.undo });
+            toast.show(t('settings.restoreReplaced'), { undo: store.undo });
           },
         },
       ],
@@ -96,129 +100,141 @@ export default function SettingsScreen() {
   };
 
   const doReset = () => {
-    Alert.alert(
-      'Hamma ma’lumotni o‘chirish',
-      'Vazifalar, odatlar va xarajat yozuvlari butunlay o‘chadi. Bu amalni qaytarib bo‘lmaydi — avval zaxira olib qo‘ying.',
-      [
-        { text: 'Bekor', style: 'cancel' },
-        {
-          text: 'O‘chirish',
-          style: 'destructive',
-          onPress: () => {
-            store.replaceAll({
-              v: 1,
-              tasks: [],
-              repeats: [],
-              habits: [],
-              entries: [],
-              // Yo'nalishlar va sozlamalar qoladi: o'chirilayotgani — yozuvlar.
-              cats: store.state.cats,
-              budgets: {},
-              notes: '',
-              settings: store.state.settings,
-              updated: null,
-            });
-            toast.show('Hamma yozuv o‘chirildi.', { undo: store.undo });
-          },
+    Alert.alert(t('settings.wipe'), t('settings.wipeAsk'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: () => {
+          store.replaceAll({
+            v: 1,
+            tasks: [],
+            repeats: [],
+            habits: [],
+            entries: [],
+            // Yo'nalishlar va sozlamalar qoladi: o'chirilayotgani — yozuvlar.
+            cats: store.state.cats,
+            budgets: {},
+            notes: '',
+            settings: store.state.settings,
+            updated: null,
+          });
+          toast.show(t('settings.wipeDone'), { undo: store.undo });
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const mailto = `mailto:${POCHTA}?subject=${encodeURIComponent(`Kundo ${version}`)}`;
 
   return (
     <>
-      <Screen eyebrow="Kundo" title="Sozlamalar">
-        <Section title="Ko‘rinish">
+      <Screen eyebrow="Kundo" title={t('settings.title')}>
+        <Section title={t('settings.appearance')}>
           <View style={{ padding: S.lg, gap: S.md }}>
             <View>
-              <Txt v="h3">Mavzu</Txt>
+              <Txt v="h3">{t('settings.theme')}</Txt>
               <Txt v="small" style={{ marginTop: 2 }}>
-                «Tizim» tanlansa, telefon sozlamasiga qarab o‘zi almashadi.
+                {t('settings.themeHint')}
               </Txt>
             </View>
             <Seg<ThemeMode>
               value={store.state.settings.theme}
               options={[
-                { k: 'system', uz: 'Tizim' },
-                { k: 'light', uz: 'Yorug‘' },
-                { k: 'dark', uz: 'Qorong‘i' },
+                { k: 'system', label: t('settings.themeSystem') },
+                { k: 'light', label: t('settings.themeLight') },
+                { k: 'dark', label: t('settings.themeDark') },
               ]}
-              onChange={(t) => store.setSettings({ theme: t })}
+              onChange={(mode) => store.setSettings({ theme: mode })}
+            />
+          </View>
+          <Divider />
+          <View style={{ padding: S.lg, gap: S.md }}>
+            <View>
+              <Txt v="h3">{t('settings.language')}</Txt>
+              <Txt v="small" style={{ marginTop: 2 }}>
+                {t('settings.languageHint')}
+              </Txt>
+            </View>
+            <Seg<Lang>
+              value={store.state.settings.lang}
+              options={LANGS.map((l) => ({ k: l.k, label: l.label }))}
+              onChange={(lang) => store.setSettings({ lang })}
             />
           </View>
         </Section>
 
-        <Section title="Yo‘nalishlar">
+        <Section title={t('settings.cats')}>
           <Item
             ico={IconList}
-            title="Vazifa yo‘nalishlari"
-            subtitle={`${n.task.length} ta — ${n.task
+            title={t('settings.catsTask')}
+            subtitle={`${t('settings.catsCount', { n: n.task.length })} — ${n.task
               .slice(0, 3)
-              .map((c) => c.uz)
+              .map((c) => c.label)
               .join(', ')}…`}
             onPress={() => setCats('task')}
           />
           <Sep />
           <Item
             ico={IconWallet}
-            title="Chiqim yo‘nalishlari"
-            subtitle={`${n.spend.length} ta`}
+            title={t('settings.catsSpend')}
+            subtitle={t('settings.catsCount', { n: n.spend.length })}
             onPress={() => setCats('spend')}
           />
           <Sep />
           <Item
             ico={IconTag}
-            title="Kirim yo‘nalishlari"
-            subtitle={`${n.income.length} ta`}
+            title={t('settings.catsIncome')}
+            subtitle={t('settings.catsCount', { n: n.income.length })}
             onPress={() => setCats('income')}
           />
         </Section>
 
-        <Section title="Ma’lumot">
+        <Section title={t('settings.data')}>
           <Item
             ico={IconDownload}
-            title="Zaxira olish"
-            subtitle="Hamma yozuv bitta JSON fayliga"
+            title={t('settings.backup')}
+            subtitle={t('settings.backupHint')}
             onPress={doExport}
             disabled={busy}
           />
           <Sep />
           <Item
             ico={IconUpload}
-            title="Zaxiradan tiklash"
-            subtitle="Fayldagini birlashtirish yoki butunlay almashtirish"
+            title={t('settings.restore')}
+            subtitle={t('settings.restoreHint')}
             onPress={doImport}
             disabled={busy}
           />
           <Sep />
           <Item
             ico={IconTable}
-            title="Xarajatlarni CSV qilish"
-            subtitle="Excel va Google Sheets ochadigan jadval"
+            title={t('settings.csv')}
+            subtitle={t('settings.csvHint')}
             onPress={doCsv}
             disabled={busy}
           />
           <Divider />
           <View style={{ paddingHorizontal: S.lg, paddingVertical: S.lg }}>
             <Row gap={S.md}>
-              <Stat value={store.state.tasks.length} label="vazifa" />
-              <Stat value={store.state.habits.length} label="odat" />
-              <Stat value={store.state.entries.length} label="yozuv" />
+              <Stat value={store.state.tasks.length} label={t('settings.statTasks')} />
+              <Stat value={store.state.habits.length} label={t('settings.statHabits')} />
+              <Stat value={store.state.entries.length} label={t('settings.statEntries')} />
             </Row>
             <Txt v="small" style={{ marginTop: S.md }}>
-              Hammasi shu telefonda saqlanadi — server yo‘q, hisob ochish shart emas.
+              {t('settings.localOnly')}
             </Txt>
             {store.state.updated ? (
               <Txt v="monoSm" style={{ marginTop: S.xs }}>
-                oxirgi o‘zgarish: {new Date(store.state.updated).toLocaleString('uz-UZ')}
+                {t('settings.lastChange', {
+                  when: new Date(store.state.updated).toLocaleString(LOCALES[store.state.settings.lang]),
+                })}
               </Txt>
             ) : null}
           </View>
         </Section>
 
-        <Section title="Ilova">
+        <Section title={t('settings.app')}>
           <Row style={{ padding: S.lg }} gap={S.md}>
             <View
               style={{
@@ -235,46 +251,43 @@ export default function SettingsScreen() {
             <View style={{ flex: 1 }}>
               <Txt v="h2">Kundo</Txt>
               <Txt v="monoSm" style={{ marginTop: 1 }}>
-                versiya {version}
+                {t('settings.version', { v: version })}
               </Txt>
             </View>
           </Row>
           <View style={{ paddingHorizontal: S.lg, paddingBottom: S.lg }}>
-            <Txt v="small">
-              Kuningizni va xarajatlaringizni bir joyda tartibga soladigan oddiy daftar. Rang va naqshlar
-              Buxoro koshinidan ilhomlangan.
-            </Txt>
+            <Txt v="small">{t('settings.about')}</Txt>
           </View>
           <Divider />
           <Item
             ico={IconShield}
-            title="Maxfiylik siyosati"
-            subtitle="Ilova nima yig‘adi va nima yig‘maydi"
+            title={t('settings.privacy')}
+            subtitle={t('settings.privacyHint')}
             onPress={() => ochish(`${SAYT}/maxfiylik.html`)}
           />
           <Sep />
           <Item
             ico={IconHelp}
-            title="Yordam va savollar"
-            subtitle="Tez-tez so‘raladigan savollar"
+            title={t('settings.help')}
+            subtitle={t('settings.helpHint')}
             onPress={() => ochish(`${SAYT}/qollab.html`)}
           />
           <Sep />
           <Item
             ico={IconMail}
-            title="Taklif va xato haqida yozish"
+            title={t('settings.contact')}
             subtitle={POCHTA}
             onPress={() => ochish(mailto)}
           />
         </Section>
 
-        <Section title="Xavfli hudud" tone={p.anor}>
+        <Section title={t('settings.danger')} tone={p.anor}>
           <Item
             ico={IconTrash}
             danger
             chevron={false}
-            title="Hamma ma’lumotni o‘chirish"
-            subtitle="Vazifa, odat va xarajat yozuvlari butunlay o‘chadi"
+            title={t('settings.wipe')}
+            subtitle={t('settings.wipeHint')}
             onPress={doReset}
           />
         </Section>
@@ -285,27 +298,19 @@ export default function SettingsScreen() {
           visible
           kind={cats}
           onClose={() => setCats(null)}
-          title={CAT_SHEETS[cats].title}
-          hint={CAT_SHEETS[cats].hint}
+          title={CAT_SHEET[cats].title()}
+          hint={CAT_SHEET[cats].hint()}
         />
       ) : null}
     </>
   );
 }
 
-const CAT_SHEETS: Record<CatKind, { title: string; hint: string }> = {
-  task: {
-    title: 'Vazifa yo‘nalishlari',
-    hint: 'Vazifa qo‘shganda tanlanadigan yo‘nalishlar. Nomini va rangini o‘zgartirsangiz, mavjud vazifalarda ham o‘zgaradi.',
-  },
-  spend: {
-    title: 'Chiqim yo‘nalishlari',
-    hint: 'Chiqim yozganda tanlanadigan yo‘nalishlar. Yo‘nalishni o‘chirsangiz, yozuvlari boshqa yo‘nalishga ko‘chadi — yo‘qolmaydi.',
-  },
-  income: {
-    title: 'Kirim yo‘nalishlari',
-    hint: 'Kirim yozganda tanlanadigan yo‘nalishlar. Yo‘nalishni o‘chirsangiz, yozuvlari boshqa yo‘nalishga ko‘chadi — yo‘qolmaydi.',
-  },
+/** Sarlavha va izoh render paytida olinadi — til almashsa darhol o'zgaradi. */
+const CAT_SHEET: Record<CatKind, { title: () => string; hint: () => string }> = {
+  task: { title: () => t('settings.catsTask'), hint: () => t('cats.taskHint') },
+  spend: { title: () => t('settings.catsSpend'), hint: () => t('cats.moneyHint') },
+  income: { title: () => t('settings.catsIncome'), hint: () => t('cats.moneyHint') },
 };
 
 /* ---------- shu ekranning qismlari ---------- */

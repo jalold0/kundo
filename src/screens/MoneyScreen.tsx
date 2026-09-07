@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
 import { DatePanel } from '../components/pickers';
 import { findCat, kindOf } from '../lib/catalog';
+import { t } from '../i18n';
 import { addMonths, daysInMonth, longDate, monthLabel, monthOf, thisMonth, today } from '../lib/date';
 import { MINUS, fmt, fmtShort, maskAmount, parseAmount } from '../lib/money';
 import { byCategory, dailyTotals, entriesInMonth, recentAmounts, sumBy, useStore } from '../store';
@@ -293,7 +294,7 @@ export default function MoneyScreen() {
                 return (
                   <View key={c.cat} style={{ gap: 5 }}>
                     <Row>
-                      <Txt style={{ flex: 1, fontSize: 14 }}>{meta.uz}</Txt>
+                      <Txt style={{ flex: 1, fontSize: 14 }}>{meta.label}</Txt>
                       <Txt v="mono" style={{ fontSize: 13 }}>
                         {fmt(c.total)}
                       </Txt>
@@ -351,7 +352,7 @@ export default function MoneyScreen() {
                       }}
                     />
                     <View style={{ flex: 1 }}>
-                      <Txt style={{ fontSize: 14.5 }}>{meta.uz}</Txt>
+                      <Txt style={{ fontSize: 14.5 }}>{meta.label}</Txt>
                       {e.note ? (
                         <Txt v="small" numberOfLines={1}>
                           {e.note}
@@ -382,8 +383,8 @@ export default function MoneyScreen() {
         <Seg
           value={draft.kind}
           options={[
-            { k: 'chiqim' as EntryKind, uz: 'Chiqim' },
-            { k: 'kirim' as EntryKind, uz: 'Kirim' },
+            { k: 'chiqim' as EntryKind, label: t('money.spend') },
+            { k: 'kirim' as EntryKind, label: t('money.income') },
           ]}
           onChange={(k) => setDraft({ ...draft, kind: k, cat: catsOf(k)[0].k })}
         />
@@ -420,7 +421,7 @@ export default function MoneyScreen() {
             {catsOf(draft.kind).map((c) => (
               <Chip
                 key={c.k}
-                label={c.uz}
+                label={c.label}
                 active={draft.cat === c.k}
                 tone={p[c.tone] as string}
                 onPress={() => setDraft({ ...draft, cat: c.k })}
@@ -493,7 +494,7 @@ export default function MoneyScreen() {
               {fmt(editing.amount)} {cur}
             </Txt>
             <Txt v="small" style={{ marginTop: 4 }}>
-              {findCat(catsOf(editing.kind), editing.cat).uz}
+              {findCat(catsOf(editing.kind), editing.cat).label}
             </Txt>
             {editing.note ? <Txt style={{ marginTop: S.sm }}>{editing.note}</Txt> : null}
           </Card>

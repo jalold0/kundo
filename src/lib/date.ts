@@ -1,21 +1,16 @@
-export const MONTHS = [
-  'yanvar',
-  'fevral',
-  'mart',
-  'aprel',
-  'may',
-  'iyun',
-  'iyul',
-  'avgust',
-  'sentabr',
-  'oktabr',
-  'noyabr',
-  'dekabr',
-];
-export const MONTHS_CAP = MONTHS.map((m) => m[0].toUpperCase() + m.slice(1));
-export const WDAYS = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba'];
-export const WSHORT = ['yak', 'dush', 'sesh', 'chor', 'pay', 'jum', 'shan'];
-export const WMIN = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh'];
+import { getLang, t } from '../i18n';
+import { MONTHS_FULL, MONTHS_IN, WDAYS_FULL, WDAYS_MIN, WDAYS_SHORT } from '../i18n/dates';
+
+/*
+ * Nomlar joriy tildan olinadi. Ular o'zgarmas ro'yxat emas, funksiya — chunki til
+ * ish paytida almashadi. Hafta indeksi hamma joyda `Date.getDay()` tartibida:
+ * 0 — yakshanba.
+ */
+export const months = () => MONTHS_FULL[getLang()];
+export const monthsIn = () => MONTHS_IN[getLang()];
+export const wdays = () => WDAYS_FULL[getLang()];
+export const wshort = () => WDAYS_SHORT[getLang()];
+export const wmin = () => WDAYS_MIN[getLang()];
 
 const p2 = (n: number) => (n < 10 ? '0' + n : '' + n);
 
@@ -56,20 +51,25 @@ export function thisMonth(): string {
 }
 export function monthLabel(ym: string): string {
   const [y, m] = ym.split('-').map(Number);
-  return `${MONTHS_CAP[m - 1]} ${y}`;
+  return `${months()[m - 1]} ${y}`;
 }
 export function daysInMonth(ym: string): number {
   const [y, m] = ym.split('-').map(Number);
   return new Date(y, m, 0).getDate();
 }
+/** Sana yozilishi har tilda boshqacha: «7-sentabr», «7 сентября», «Sep 7». */
 export function longDate(s: string): string {
   const d = parseISO(s);
-  return `${d.getDate()}-${MONTHS[d.getMonth()]}`;
+  const m = monthsIn()[d.getMonth()];
+  const lang = getLang();
+  if (lang === 'uz') return `${d.getDate()}-${m}`;
+  if (lang === 'ru') return `${d.getDate()} ${m}`;
+  return `${m} ${d.getDate()}`;
 }
 export function dayTitle(s: string): string {
-  if (s === today()) return 'Bugun';
-  if (s === addDays(today(), -1)) return 'Kecha';
-  if (s === addDays(today(), 1)) return 'Ertaga';
+  if (s === today()) return t('common.today');
+  if (s === addDays(today(), -1)) return t('common.yesterday');
+  if (s === addDays(today(), 1)) return t('common.tomorrow');
   return longDate(s);
 }
 export function nowHM(): string {

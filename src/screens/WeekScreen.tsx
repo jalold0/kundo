@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { TaskRow } from '../components/TaskRow';
-import { WSHORT, addDays, longDate, parseISO, today, wd, weekStart } from '../lib/date';
+import { addDays, longDate, parseISO, today, wd, weekStart, wshort } from '../lib/date';
 import { sortTasks, tasksOn, useStore } from '../store';
 import { F, R, S } from '../theme';
 import { Bar, Card, Divider, Empty, Row, Screen, Txt, usePal } from '../ui/kit';
@@ -34,7 +34,7 @@ export default function WeekScreen() {
     let best = { uz: '—', n: 0, tone: p.ink };
     cats.forEach((c) => {
       const n = perDay.reduce((a, x) => a + x.list.filter((t) => t.cat === c.k).length, 0);
-      if (n > best.n) best = { uz: c.uz, n, tone: p[c.tone] as string };
+      if (n > best.n) best = { uz: c.label, n, tone: p[c.tone] as string };
     });
     return best;
   }, [perDay, p, cats]);
@@ -107,7 +107,7 @@ export default function WeekScreen() {
                 }}
               >
                 <Txt v="monoSm" color={wd(x.d) === 0 ? p.anor : p.muted} style={{ fontSize: 9.5 }}>
-                  {WSHORT[wd(x.d)]}
+                  {wshort()[wd(x.d)]}
                 </Txt>
                 <Txt style={{ fontFamily: F.display, fontSize: 19, color: isToday ? p.lojuvard : p.ink }}>
                   {parseISO(x.d).getDate()}

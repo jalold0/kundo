@@ -1,3 +1,4 @@
+import type { Lang } from './i18n';
 import type { ThemeMode } from './theme';
 
 /** Yo'nalish rangi — palitradagi urg'u ranglari (Buxoro koshini). */
@@ -6,9 +7,10 @@ export type ToneKey = 'lojuvard' | 'feruza' | 'oltin' | 'anor' | 'bodom';
 /**
  * Yo'nalish. Foydalanuvchi qo'shadi, nomini va rangini o'zgartiradi, o'chiradi —
  * shuning uchun kod ichida qotib yozilgan ro'yxat emas, `AppState.cats` da yashaydi.
- * `k` — yozuvlarda saqlanadigan barqaror kalit, uni hech qachon o'zgartirmaymiz.
+ * `k` — yozuvlarda saqlanadigan barqaror kalit, uni hech qachon o'zgartirmaymiz;
+ * `label` — ko'rinadigan nom (avvalgi zaxiralarda `uz` deb saqlangan).
  */
-export type Cat = { k: string; uz: string; tone: ToneKey };
+export type Cat = { k: string; label: string; tone: ToneKey };
 
 /** Uch xil ro'yxat: vazifa yo'nalishlari, chiqim va kirim yo'nalishlari. */
 export type CatKind = 'task' | 'spend' | 'income';
@@ -59,6 +61,7 @@ export type Entry = {
 
 export type Settings = {
   theme: ThemeMode;
+  lang: Lang;
   currency: string; // "so'm"
   weekStartsMonday: boolean;
   onboarded: boolean;
