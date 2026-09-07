@@ -137,3 +137,77 @@ export const IconRepeat = ({ size = 14, color, strokeWidth = 1.5 }: P) =>
     />,
     size,
   );
+
+export const IconDownload = ({ size = 20, color, strokeWidth = 1.7 }: P) =>
+  wrap(
+    <Path
+      d="M12 3.5 V14.8 M7.6 10.6 L12 15 L16.4 10.6 M4.5 18.8 H19.5"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />,
+    size,
+  );
+
+export const IconUpload = ({ size = 20, color, strokeWidth = 1.7 }: P) =>
+  wrap(
+    <Path
+      d="M12 15.2 V3.9 M7.6 8.3 L12 3.9 L16.4 8.3 M4.5 18.8 H19.5"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />,
+    size,
+  );
+
+export const IconTable = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Rect x="3.5" y="4.5" width="17" height="15" rx="2.5" stroke={color} strokeWidth={strokeWidth} />
+      <Path d="M3.5 9.5 H20.5 M9.5 9.5 V19.5 M3.5 14.5 H20.5" stroke={color} strokeWidth={strokeWidth - 0.35} />
+    </>,
+    size,
+  );
+
+export const IconShield = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <Path
+      d="M12 3 L19 5.8 V11.4 C19 15.5 16.2 19.2 12 21 C7.8 19.2 5 15.5 5 11.4 V5.8 Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinejoin="round"
+    />,
+    size,
+  );
+
+export const IconHelp = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Circle cx="12" cy="12" r="8.6" stroke={color} strokeWidth={strokeWidth} />
+      <Path
+        d="M9.5 9.6 A2.6 2.6 0 1 1 12 12.9 V14.2"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+      <Circle cx="12" cy="17" r="0.95" fill={color} />
+    </>,
+    size,
+  );
+
+export const IconMail = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke={color} strokeWidth={strokeWidth} />
+      <Path
+        d="M4 7.2 L12 13 L20 7.2"
+        stroke={color}
+        strokeWidth={strokeWidth - 0.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </>,
+    size,
+  );

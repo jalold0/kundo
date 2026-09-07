@@ -3,17 +3,38 @@ import React, { useState } from 'react';
 import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
 import { exportBackup, exportEntriesCsv, pickBackup } from '../lib/backup';
 import { useStore } from '../store';
-import { S } from '../theme';
+import { R, S } from '../theme';
 import type { ThemeMode } from '../theme';
-import { StarMark } from '../ui/icons';
-import { Btn, Card, Divider, Row, Screen, Seg, Txt, usePal } from '../ui/kit';
+import {
+  IconChevron,
+  IconDownload,
+  IconHelp,
+  IconMail,
+  IconShield,
+  IconTable,
+  IconTrash,
+  IconUpload,
+  StarMark,
+} from '../ui/icons';
+import { Card, Divider, Row, Screen, Seg, Txt, usePal } from '../ui/kit';
 import { useToast } from '../ui/toast';
+
+const SAYT = 'https://kundoapp.vercel.app';
+const POCHTA = 'jaloldin@buxoro.online';
+
+type IconCmp = (props: { size?: number; color: string; strokeWidth?: number }) => React.ReactElement;
 
 export default function SettingsScreen() {
   const p = usePal();
   const store = useStore();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
+
+  const version = Constants.expoConfig?.version ?? '1.0.0';
+
+  const ochish = (url: string) => {
+    Linking.openURL(url).catch(() => toast.show('Havolani ochib bo‘lmadi.'));
+  };
 
   const doExport = async () => {
     setBusy(true);
@@ -95,13 +116,18 @@ export default function SettingsScreen() {
     );
   };
 
-  const version = Constants.expoConfig?.version ?? '1.0.0';
+  const mailto = `mailto:${POCHTA}?subject=${encodeURIComponent(`Kundo ${version}`)}`;
 
   return (
-    <Screen eyebrow="Sozlamalar" title="Sozlamalar">
-      <Card>
-        <Txt v="label">Ko'rinish</Txt>
-        <View style={{ marginTop: S.md }}>
+    <Screen eyebrow="Kundo" title="Sozlamalar">
+      <Section title="Ko‘rinish">
+        <View style={{ padding: S.lg, gap: S.md }}>
+          <View>
+            <Txt v="h3">Mavzu</Txt>
+            <Txt v="small" style={{ marginTop: 2 }}>
+              «Tizim» tanlansa, telefon sozlamasiga qarab o‘zi almashadi.
+            </Txt>
+          </View>
           <Seg<ThemeMode>
             value={store.state.settings.theme}
             options={[
@@ -112,76 +138,218 @@ export default function SettingsScreen() {
             onChange={(t) => store.setSettings({ theme: t })}
           />
         </View>
-        <Txt v="small" style={{ marginTop: S.sm }}>
-          «Tizim» — telefon sozlamasiga qarab o‘zi almashadi.
-        </Txt>
-      </Card>
+      </Section>
 
-      <Card>
-        <Txt v="label">Ma'lumot</Txt>
-        <Row style={{ marginTop: S.md }}>
-          <Txt v="small" style={{ flex: 1 }}>
-            Hammasi shu telefonda saqlanadi. Hech qanday server yo‘q, hisob ochish shart emas.
-          </Txt>
-        </Row>
-        <View style={{ gap: S.sm, marginTop: S.md }}>
-          <Btn label="Zaxira olish (JSON)" tone="ghost" onPress={doExport} disabled={busy} />
-          <Btn label="Zaxiradan tiklash" tone="ghost" onPress={doImport} disabled={busy} />
-          <Btn label="Xarajatlarni CSV qilib chiqarish" tone="ghost" onPress={doCsv} disabled={busy} />
-        </View>
+      <Section title="Ma’lumot">
+        <Item
+          ico={IconDownload}
+          title="Zaxira olish"
+          subtitle="Hamma yozuv bitta JSON fayliga"
+          onPress={doExport}
+          disabled={busy}
+        />
+        <Sep />
+        <Item
+          ico={IconUpload}
+          title="Zaxiradan tiklash"
+          subtitle="Fayldagini birlashtirish yoki butunlay almashtirish"
+          onPress={doImport}
+          disabled={busy}
+        />
+        <Sep />
+        <Item
+          ico={IconTable}
+          title="Xarajatlarni CSV qilish"
+          subtitle="Excel va Google Sheets ochadigan jadval"
+          onPress={doCsv}
+          disabled={busy}
+        />
         <Divider />
-        <Row style={{ marginTop: S.md }} gap={S.md}>
-          <Stat label="vazifa" value={store.state.tasks.length} />
-          <Stat label="odat" value={store.state.habits.length} />
-          <Stat label="moliyaviy yozuv" value={store.state.entries.length} />
-        </Row>
-        {store.state.updated ? (
-          <Txt v="small" style={{ marginTop: S.sm }}>
-            Oxirgi o‘zgarish: {new Date(store.state.updated).toLocaleString('uz-UZ')}
+        <View style={{ paddingHorizontal: S.lg, paddingVertical: S.lg }}>
+          <Row gap={S.md}>
+            <Stat value={store.state.tasks.length} label="vazifa" />
+            <Stat value={store.state.habits.length} label="odat" />
+            <Stat value={store.state.entries.length} label="yozuv" />
+          </Row>
+          <Txt v="small" style={{ marginTop: S.md }}>
+            Hammasi shu telefonda saqlanadi — server yo‘q, hisob ochish shart emas.
           </Txt>
-        ) : null}
-      </Card>
+          {store.state.updated ? (
+            <Txt v="monoSm" style={{ marginTop: S.xs }}>
+              oxirgi o‘zgarish: {new Date(store.state.updated).toLocaleString('uz-UZ')}
+            </Txt>
+          ) : null}
+        </View>
+      </Section>
 
-      <Card>
-        <Row gap={S.md}>
-          <StarMark color={p.lojuvard} size={30} />
+      <Section title="Ilova">
+        <Row style={{ padding: S.lg }} gap={S.md}>
+          <View
+            style={{
+              width: 46,
+              height: 46,
+              borderRadius: R.md,
+              backgroundColor: p.lojuvard,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <StarMark color={p.onAccent} size={26} />
+          </View>
           <View style={{ flex: 1 }}>
             <Txt v="h2">Kundo</Txt>
-            <Txt v="monoSm">versiya {version}</Txt>
+            <Txt v="monoSm" style={{ marginTop: 1 }}>
+              versiya {version}
+            </Txt>
           </View>
         </Row>
-        <Txt v="small" style={{ marginTop: S.md }}>
-          Kuningizni va xarajatlaringizni bir joyda tartibga soladigan oddiy daftar. Rang va naqshlar Buxoro
-          koshinidan ilhomlangan.
-        </Txt>
-        <Pressable
-          onPress={() => Linking.openURL('mailto:jaloldin@buxoro.online?subject=Kun%20Tartibi')}
-          style={{ marginTop: S.md }}
-        >
-          <Txt v="small" color={p.lojuvard}>
-            Taklif va xatolar haqida yozish
+        <View style={{ paddingHorizontal: S.lg, paddingBottom: S.lg }}>
+          <Txt v="small">
+            Kuningizni va xarajatlaringizni bir joyda tartibga soladigan oddiy daftar. Rang va naqshlar
+            Buxoro koshinidan ilhomlangan.
           </Txt>
-        </Pressable>
-      </Card>
+        </View>
+        <Divider />
+        <Item
+          ico={IconShield}
+          title="Maxfiylik siyosati"
+          subtitle="Ilova nima yig‘adi va nima yig‘maydi"
+          onPress={() => ochish(`${SAYT}/maxfiylik.html`)}
+        />
+        <Sep />
+        <Item
+          ico={IconHelp}
+          title="Yordam va savollar"
+          subtitle="Tez-tez so‘raladigan savollar"
+          onPress={() => ochish(`${SAYT}/qollab.html`)}
+        />
+        <Sep />
+        <Item
+          ico={IconMail}
+          title="Taklif va xato haqida yozish"
+          subtitle={POCHTA}
+          onPress={() => ochish(mailto)}
+        />
+      </Section>
 
-      <Card style={{ borderColor: p.anor }}>
-        <Txt v="label">Xavfli hudud</Txt>
-        <Txt v="small" style={{ marginTop: S.sm }}>
-          Ilovadagi barcha yozuvlarni o‘chirish.
-        </Txt>
-        <Btn label="Hammasini o‘chirish" tone="danger" style={{ marginTop: S.md }} onPress={doReset} />
-      </Card>
+      <Section title="Xavfli hudud" tone={p.anor}>
+        <Item
+          ico={IconTrash}
+          danger
+          chevron={false}
+          title="Hamma ma’lumotni o‘chirish"
+          subtitle="Vazifa, odat va xarajat yozuvlari butunlay o‘chadi"
+          onPress={doReset}
+        />
+      </Section>
     </Screen>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+/* ---------- shu ekranning qismlari ---------- */
+
+/** Sarlavhasi kartadan tashqarida turadigan bo'lim — sozlamalar ro'yxati shaklida. */
+function Section({ title, tone, children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
-    <View style={{ flex: 1 }}>
-      <Txt v="mono">{value}</Txt>
-      <Txt v="small">{label}</Txt>
+    <View>
+      <Txt v="label" style={{ marginBottom: S.sm, marginLeft: S.xs }}>
+        {title}
+      </Txt>
+      <Card pad={false} style={tone ? { borderColor: tone } : undefined}>
+        {children}
+      </Card>
     </View>
   );
 }
 
-export const styles = StyleSheet.create({});
+/** Ikonka + sarlavha + izoh + o'ng tomonda strelka. */
+function Item({
+  ico: Ico,
+  title,
+  subtitle,
+  onPress,
+  disabled,
+  danger,
+  /** Strelka «boshqa joyga o'tadi» degan ma'noni beradi — dialog ochadigan qatorda o'chiriladi. */
+  chevron = true,
+}: {
+  ico: IconCmp;
+  title: string;
+  subtitle?: string;
+  onPress: () => void;
+  disabled?: boolean;
+  danger?: boolean;
+  chevron?: boolean;
+}) {
+  const p = usePal();
+  const accent = danger ? p.anor : p.lojuvard;
+  const tint = danger ? p.anorSoft : p.lojuvardSoft;
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: S.md,
+        paddingHorizontal: S.lg,
+        paddingVertical: 13,
+        backgroundColor: pressed ? p.surface2 : 'transparent',
+        opacity: disabled ? 0.45 : 1,
+      })}
+    >
+      <View
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: 10,
+          backgroundColor: tint,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Ico size={19} color={accent} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Txt v="h3" color={danger ? p.anor : undefined}>
+          {title}
+        </Txt>
+        {subtitle ? (
+          <Txt v="small" style={{ marginTop: 1 }}>
+            {subtitle}
+          </Txt>
+        ) : null}
+      </View>
+      {chevron ? <IconChevron size={15} color={p.muted} /> : null}
+    </Pressable>
+  );
+}
+
+/** Qatorlar orasidagi chiziq — ikonka kengligicha ichkariga surilgan. */
+function Sep() {
+  const p = usePal();
+  return (
+    <View
+      style={{
+        height: StyleSheet.hairlineWidth * 2,
+        backgroundColor: p.line,
+        marginLeft: S.lg + 34 + S.md,
+      }}
+    />
+  );
+}
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <View style={{ flex: 1 }}>
+      <Txt v="mono" style={{ fontSize: 20, lineHeight: 25 }}>
+        {value}
+      </Txt>
+      <Txt v="label" style={{ marginTop: 3 }}>
+        {label}
+      </Txt>
+    </View>
+  );
+}
