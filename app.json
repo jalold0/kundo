@@ -10,9 +10,7 @@
     "userInterfaceStyle": "automatic",
     "primaryColor": "#1D3F91",
     "backgroundColor": "#E9E3D7",
-    "assetBundlePatterns": [
-      "assets/**/*"
-    ],
+    "assetBundlePatterns": ["assets/**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "online.buxoro.kundo",

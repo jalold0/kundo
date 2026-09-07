@@ -1,14 +1,14 @@
 # Do'kon materiallari
 
-| Fayl | Nima uchun | Talab |
-| ---- | ---------- | ----- |
-| `listing-uz.md` | Ilova nomi, qisqa va to'liq tavsif | Play Console, App Store Connect |
-| `privacy-uz.md` | Maxfiylik siyosati matni | Saytda ham turibdi: kundoapp.vercel.app/maxfiylik.html |
-| `banner-1024x500.png` | Play «Feature graphic» | 1024×500, shaffofliksiz |
-| `icon-512-play.png` | Play ilova ikonkasi | 512×512 |
-| `icon-1024-appstore.png` | App Store ikonkasi | 1024×1024, **alfa kanalsiz** — Apple shaffoflikni rad etadi |
-| `banner.html` | Bannerning manbasi | quyida qarang |
-| `mark.png` | `assets/adaptive-icon.png` dan chekkasi kesilgan belgi | faqat banner uchun |
+| Fayl                     | Nima uchun                                             | Talab                                                       |
+| ------------------------ | ------------------------------------------------------ | ----------------------------------------------------------- |
+| `listing-uz.md`          | Ilova nomi, qisqa va to'liq tavsif                     | Play Console, App Store Connect                             |
+| `privacy-uz.md`          | Maxfiylik siyosati matni                               | Saytda ham turibdi: kundoapp.vercel.app/maxfiylik.html      |
+| `banner-1024x500.png`    | Play «Feature graphic»                                 | 1024×500, shaffofliksiz                                     |
+| `icon-512-play.png`      | Play ilova ikonkasi                                    | 512×512                                                     |
+| `icon-1024-appstore.png` | App Store ikonkasi                                     | 1024×1024, **alfa kanalsiz** — Apple shaffoflikni rad etadi |
+| `banner.html`            | Bannerning manbasi                                     | quyida qarang                                               |
+| `mark.png`               | `assets/adaptive-icon.png` dan chekkasi kesilgan belgi | faqat banner uchun                                          |
 
 Ekran rasmlari (kamida 2 ta, telefon o'lchamida) hali kerak — ularni telefondan
 olasiz, `SINOV.md` dagi ro'yxat bo'yicha yurib.

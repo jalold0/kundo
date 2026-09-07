@@ -1,0 +1,50 @@
+# Har bir o'zgarishda kod tekshiriladi: tiplar, lint, formatlash, testlar va
+# bundle yig'ilishi. `.github/workflows/ci.yml` bilan bir xil tekshiruvlar —
+# GitHub nusxasi zaxira sifatida qoldirilgan, asosiy ombor esa GitLab'da.
+
+default:
+  image: node:20-alpine
+  # Paket keshi: har ishga tushirishda npm ni noldan yuklamaslik uchun.
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+
+stages:
+  - tekshiruv
+
+workflow:
+  rules:
+    # `main`ga push, merge request va qo'lda ishga tushirish.
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+
+kod:
+  stage: tekshiruv
+  script:
+    - npm run typecheck
+    - npm run lint
+    - npm run format:check
+    - npm test -- --ci
+  artifacts:
+    when: on_failure
+    expire_in: 1 week
+    paths:
+      - npm-debug.log
+
+bundle:
+  stage: tekshiruv
+  # Bundle yig'ilishi alohida ish: u sekinroq va kod tekshiruvidan mustaqil,
+  # shuning uchun ikkinchisi yiqilsa ham natijasi ko'rinadi.
+  script:
+    - npx expo export --platform android --output-dir dist-check
+  artifacts:
+    when: on_failure
+    expire_in: 1 week
+    paths:
+      - dist-check/

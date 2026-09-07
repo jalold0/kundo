@@ -2,13 +2,13 @@
 
 Sayt **joylangan va ishlayapti**: <https://kundoapp.vercel.app>
 
-| Nima | Holat |
-| ---- | ----- |
-| Kod GitLab'da (`gitlab.com/jalold0/kundo`) | ✅ |
-| Vercel'ga joylangan (proyekt: `kundo`, jamoa: Sifat Nazorati's projects) | ✅ |
-| Statik sahifalar: bosh sahifa, maxfiylik, qo'llab-quvvatlash | ✅ |
-| Kutish ro'yxati formasi (`/api/waitlist`) | ⏳ baza ulanmagan |
-| Hammaga ochiq kirish | ⏳ Vercel Authentication o'chirilishi kerak |
+| Nima                                                                     | Holat                                       |
+| ------------------------------------------------------------------------ | ------------------------------------------- |
+| Kod GitLab'da (`gitlab.com/jalold0/kundo`)                               | ✅                                          |
+| Vercel'ga joylangan (proyekt: `kundo`, jamoa: Sifat Nazorati's projects) | ✅                                          |
+| Statik sahifalar: bosh sahifa, maxfiylik, qo'llab-quvvatlash             | ✅                                          |
+| Kutish ro'yxati formasi (`/api/waitlist`)                                | ⏳ baza ulanmagan                           |
+| Hammaga ochiq kirish                                                     | ⏳ Vercel Authentication o'chirilishi kerak |
 
 > **Diqqat:** yangi proyektda Vercel «Deployment Protection → Vercel Authentication»
 > ni o'zi yoqib qo'yadi va `*.vercel.app` manzillari Vercel'ga kirishni talab qiladi
