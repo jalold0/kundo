@@ -104,6 +104,7 @@ for (const lang of site.langs) {
       ...text,
       htmlLang: L.htmlLang,
       base: lang === 'uz' ? '' : '../',
+      langDir: lang,
       home: `/${dirFor(lang)}`,
       canonical: urlFor(lang, page.file),
       origin: ORIGIN,

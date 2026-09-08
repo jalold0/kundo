@@ -10,14 +10,46 @@
 | `icon-1024-appstore.png` | App Store ikonkasi                                     | 1024×1024, **alfa kanalsiz** — Apple shaffoflikni rad etadi |
 | `banner.html`            | Bannerning manbasi                                     | quyida qarang                                               |
 | `mark.png`               | `assets/adaptive-icon.png` dan chekkasi kesilgan belgi | faqat banner uchun                                          |
+| `shots/<til>/*.png`      | Ekran rasmlari, uch tilda                              | 1170×2532 — quyida qarang                                   |
 
 **Maxfiylik siyosati** bu papkada emas — u saytda yashaydi va do'kon aynan
 o'sha havolani so'raydi: <https://kundoapp.vercel.app/maxfiylik.html>
 (manbasi `web/maxfiylik.html`). Ilgari bu yerda `privacy-uz.md` nusxasi bor
 edi; ikkita nusxa bir-biridan uzilib ketishi aniq bo'lgani uchun olib tashlandi.
 
-Ekran rasmlari (kamida 2 ta, telefon o'lchamida) hali kerak — ularni telefondan
-olasiz, `SINOV.md` dagi ro'yxat bo'yicha yurib.
+## Ekran rasmlari
+
+`shots/uz`, `shots/ru`, `shots/en` — har birida to'rtta rasm, **1170×2532px**:
+kun rejasi, xarajat, odatlar, hafta. Ular skript bilan olinadi:
+
+```powershell
+# birinchi terminalda
+cd C:\Dev\kundo
+npm run web
+
+# ikkinchi terminalda
+cd C:\Dev\kundo
+npm run shots
+```
+
+Skript Chrome'ni DevTools protokoli orqali boshqaradi: telefon o'lchamini
+(390×844, 3x aniqlik) qo'yadi, har til uchun namunaviy ma'lumotni joylaydi va
+to'rt ekranni suratga oladi. UI o'zgarganda buyruqni qaytadan ishlatasiz —
+rasmlar eskirib qolmaydi va uch tilda bir xil ma'lumot ko'rinadi.
+
+Namunaviy ma'lumot skript ichida (`scripts/shots.mjs` → `DEMO`): bo'sh ekran
+ilovani tayyor emasdek ko'rsatadi, shuning uchun bir haftalik real ko'rinishdagi
+vazifa, odat va xarajat qo'yilgan.
+
+Shu rasmlar saytga ham ketadi: `web/img/<til>/` ichiga 620px kenglikda
+kichraytirilgan nusxalari qo'yiladi (`npm run site` ni ishlatishdan oldin
+kichraytirish qo'lda qilinadi — hozircha bir marta bajarilgan).
+
+> Bu rasmlar **web build**dan olingan: kod bir xil, shrift va ranglar ham bir xil,
+> lekin telefonning tepa qatori (soat, batareya) va tizim burchaklari yo'q.
+> Do'kon buni talab qilmaydi. Xohlasangiz, keyinchalik haqiqiy qurilmadan olingan
+> nusxalar bilan almashtirasiz — o'lcham va tartib bir xil bo'lganicha, listing
+> o'zgarmaydi.
 
 ## Tilga bog'liq bo'lmagan narsalar
 

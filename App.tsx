@@ -55,7 +55,9 @@ function Tabs() {
           tabBarActiveTintColor: p.lojuvard,
           tabBarInactiveTintColor: p.muted,
           tabBarLabelPosition: 'below-icon',
-          tabBarLabelStyle: { fontFamily: F.displayMed, fontSize: 11 },
+          // lineHeight aniq beriladi: Jost metrikasi balandroq va usiz
+          // yorliqning pastki qismi kesilib qolardi (skrinshotda ko‘rindi).
+          tabBarLabelStyle: { fontFamily: F.displayMed, fontSize: 11, lineHeight: 15 },
           tabBarStyle: {
             backgroundColor: p.surface,
             borderTopColor: p.line,
