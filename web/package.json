@@ -6,5 +6,8 @@
   "description": "Kundo sayti va kutish ro'yxati API'si (Vercel)",
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0"
+  },
+  "scripts": {
+    "site": "node build.mjs"
   }
 }

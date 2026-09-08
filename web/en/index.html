@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="uz">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kundo — kunlik reja va xarajat daftari</title>
-    <meta name="description" content="Kuningizni va pulingizni bir joyda yuritadigan oddiy ilova. Ma'lumot faqat telefoningizda qoladi — server yo'q, ro'yxatdan o'tish shart emas." />
+    <title>Kundo — a notebook for your day and your money</title>
+    <meta name="description" content="A simple app that keeps your day and your money in one place. Your data stays on your phone — no server, no sign-up." />
     <meta name="theme-color" content="#E9E3D7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#111319" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="img/icon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="img/icon.png" />
-    <link rel="canonical" href="https://kundoapp.vercel.app/" />
+    <link rel="icon" href="../img/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../img/icon.png" />
+    <link rel="canonical" href="https://kundoapp.vercel.app/en/" />
     <link rel="alternate" hreflang="uz" href="https://kundoapp.vercel.app/" />
     <link rel="alternate" hreflang="ru" href="https://kundoapp.vercel.app/ru/" />
     <link rel="alternate" hreflang="en" href="https://kundoapp.vercel.app/en/" />
     <link rel="alternate" hreflang="x-default" href="https://kundoapp.vercel.app/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Kundo — kunlik reja va xarajat daftari" />
-    <meta property="og:description" content="Kuningizni va pulingizni bir joyda yuritadigan oddiy ilova. Ma'lumot telefoningizdan chiqmaydi." />
-    <meta property="og:url" content="https://kundoapp.vercel.app/" />
+    <meta property="og:title" content="Kundo — a notebook for your day and your money" />
+    <meta property="og:description" content="A simple app that keeps your day and your money in one place. Your data never leaves your phone." />
+    <meta property="og:url" content="https://kundoapp.vercel.app/en/" />
     <meta property="og:image" content="https://kundoapp.vercel.app/img/og.png" />
-    <meta property="og:locale" content="uz_UZ" />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,13 +28,13 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
 
   <body>
     <header class="top">
       <div class="wrap">
-        <a class="brand" href="/">
+        <a class="brand" href="/en/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M12 2 L22 12 L12 22 L2 12 Z" />
             <rect x="5" y="5" width="14" height="14" />
@@ -42,16 +42,16 @@
           <b>Kundo</b>
         </a>
         <nav>
-          <a href="#imkoniyatlar" class="hide-sm">Imkoniyatlar</a>
-          <a href="#ekranlar" class="hide-sm">Ekranlar</a>
-          <a href="#xabar" class="hide-sm">Xabar berish</a>
-          <a href="maxfiylik.html">Maxfiylik</a>
-          <a href="qollab.html">Qo'llab-quvvatlash</a>
+          <a href="#imkoniyatlar" class="hide-sm">Features</a>
+          <a href="#ekranlar" class="hide-sm">Screens</a>
+          <a href="#xabar" class="hide-sm">Notify me</a>
+          <a href="maxfiylik.html">Privacy</a>
+          <a href="qollab.html">Support</a>
         </nav>
-        <div class="langs" aria-label="Til">
-          <a class="on" aria-current="true" hreflang="uz" href="/">UZ</a>
+        <div class="langs" aria-label="Language">
+          <a hreflang="uz" href="/">UZ</a>
           <a hreflang="ru" href="/ru/">RU</a>
-          <a hreflang="en" href="/en/">EN</a>
+          <a class="on" aria-current="true" hreflang="en" href="/en/">EN</a>
         </div>
       </div>
     </header>
@@ -59,24 +59,24 @@
     <main>
       <div class="wrap hero">
         <div>
-          <span class="eyebrow">Android va iOS uchun</span>
-          <h1>Kuningiz va pulingiz — bitta daftarda.</h1>
-          <p class="lead">Vazifalarni ertalab, kunduzi va kechqurunga ajratib yozasiz. Har bir xarajatni bir necha soniyada qayd qilasiz. Oy oxirida pul qayerga ketgani aniq ko'rinadi.</p>
+          <span class="eyebrow">For Android and iOS</span>
+          <h1>Your day and your money — in one notebook.</h1>
+          <p class="lead">Tasks are split into morning, afternoon and evening. Each expense takes a couple of seconds to write down. At the end of the month you can see where the money went.</p>
           <div class="cta">
-            <a class="btn primary" href="#imkoniyatlar">Nima qila oladi</a>
-            <a class="btn ghost" href="maxfiylik.html">Ma'lumotim qayerda qoladi?</a>
+            <a class="btn primary" href="#imkoniyatlar">What it does</a>
+            <a class="btn ghost" href="maxfiylik.html">Where does my data stay?</a>
           </div>
-          <p class="note">Ilova hozir tayyorlanmoqda. <a href="#xabar">Xabar berishimizni so'rang</a> — chiqqan kuni bir marta yozamiz, boshqa hech qachon bezovta qilmaymiz.</p>
+          <p class="note">The app is getting ready for release. <a href="#xabar">Ask us to let you know</a> — we write once on the day it ships and never bother you again.</p>
         </div>
         <div class="shot">
-          <img src="img/kun.png" width="620" height="1384" alt="Kun rejasi ekrani: vaqt bloklariga ajratilgan vazifalar va bajarilish foizi" />
+          <img src="img/kun.png" width="620" height="1384" alt="The day screen: tasks split into parts of the day and a completion ring" />
         </div>
       </div>
 
       <section id="imkoniyatlar">
         <div class="wrap">
-          <h2>Kichik, lekin kundalik ishga yetadi</h2>
-          <p class="sub">Ortiqcha narsa yo'q. Faqat har kuni kerak bo'ladigan narsalar — va ular yaxshi ishlaydi.</p>
+          <h2>Small, but enough for every day</h2>
+          <p class="sub">Nothing extra. Only what you need every day — and it works well.</p>
 
           <div class="grid">
             <article class="card">
@@ -90,8 +90,8 @@
               >
                 <path d="M4 6 H20 M4 12 H20 M4 18 H14" stroke-linecap="round" />
               </svg>
-              <h3>Kun rejasi</h3>
-              <p>Vazifa yo'nalishi, ustuvorligi va aniq vaqti bilan yoziladi. Bajarilmay qolganlar yo'qolmaydi — bir tugma bilan bugunga ko'chiriladi.</p>
+              <h3>The day</h3>
+              <p>A task carries a category, a priority and an exact time. Whatever you did not finish is not lost — one button moves it to today.</p>
             </article>
 
             <article class="card gold">
@@ -107,8 +107,8 @@
                 <path d="M2.5 10 H21.5" />
                 <circle cx="17" cy="15" r="1.4" fill="currentColor" />
               </svg>
-              <h3>Xarajat va byudjet</h3>
-              <p>Chiqim va kirim, o'zingiz boshqaradigan yo'nalishlar, oylik byudjet. Ilova qancha qolganini va kuniga qancha sarflash mumkinligini o'zi hisoblab boradi.</p>
+              <h3>Money and budget</h3>
+              <p>Expenses and income, categories you manage yourself, a monthly budget. The app keeps track of what is left and how much a day that leaves you.</p>
             </article>
 
             <article class="card teal">
@@ -123,8 +123,8 @@
                 <path d="M12 2 L22 12 L12 22 L2 12 Z" />
                 <rect x="5" y="5" width="14" height="14" />
               </svg>
-              <h3>Odatlar</h3>
-              <p>Sport, kitob, suv — har kuni bir bosish. Ketma-ket necha kun bajarganingiz sanalib turadi, oylik dinamika esa butun oyni bir chiziqda ko'rsatadi.</p>
+              <h3>Habits</h3>
+              <p>Exercise, reading, water — one tap a day. Days in a row are counted, and the monthly trend shows the whole month as one strip.</p>
             </article>
 
             <article class="card">
@@ -142,8 +142,8 @@
                 />
                 <path d="M10 19 a2.1 2.1 0 0 0 4 0" stroke-linecap="round" />
               </svg>
-              <h3>Eslatmalar</h3>
-              <p>Vaqti qo'yilgan vazifa uchun o'sha soatda bildirishnoma keladi. Kunlik eslatma esa kun oxirida vazifa va odatlarni belgilashni eslatib turadi.</p>
+              <h3>Reminders</h3>
+              <p>A task with a time set gets a notification at that hour. The daily reminder asks you to tick off tasks and habits at the end of the day.</p>
             </article>
 
             <article class="card teal">
@@ -158,8 +158,8 @@
                 <rect x="3" y="3" width="18" height="18" rx="2.5" />
                 <path d="M3 9 H21 M9 9 V21 M15 9 V21" stroke-width="1.4" />
               </svg>
-              <h3>Hafta ko'rinishi</h3>
-              <p>Butun hafta bir ekranda: qaysi kun to'la, qaysi kun bo'sh, nima ochiq qolgan.</p>
+              <h3>Week overview</h3>
+              <p>The whole week on one screen: which day is full, which is free, what is still open.</p>
             </article>
 
             <article class="card gold">
@@ -174,8 +174,8 @@
                 <path d="M12 3 V15 M8 11 L12 15 L16 11" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M4 17 V19 A2 2 0 0 0 6 21 H18 A2 2 0 0 0 20 19 V17" stroke-linecap="round" />
               </svg>
-              <h3>Zaxira va eksport</h3>
-              <p>Hamma yozuvni bitta faylga chiqarib olasiz, xohlagan paytda tiklaysiz. Xarajatlarni Excel uchun jadval qilib ham olish mumkin.</p>
+              <h3>Backup and export</h3>
+              <p>Export every record into a single file and restore it whenever you want. Expenses can also be exported as a table for Excel.</p>
             </article>
           </div>
         </div>
@@ -183,20 +183,20 @@
 
       <section id="ekranlar">
         <div class="wrap">
-          <h2>Ilova qanday ko'rinadi</h2>
-          <p class="sub">Ranglar va naqshlar Buxoro koshinidan olingan. Telefon sozlamasiga qarab yorug' va qorong'i rejim o'zi almashadi. Ilova o'zbek, rus va ingliz tillarida.</p>
+          <h2>What the app looks like</h2>
+          <p class="sub">The colours and patterns come from Bukhara tilework. Light and dark themes follow your phone's setting. Available in Uzbek, Russian and English.</p>
           <div class="shots">
             <figure>
-              <img src="img/kun.png" width="620" height="1384" alt="Kun rejasi: vaqt bloklari va vazifalar" />
-              <figcaption>Kun rejasi</figcaption>
+              <img src="img/kun.png" width="620" height="1384" alt="The day: parts of the day and tasks" />
+              <figcaption>The day</figcaption>
             </figure>
             <figure>
-              <img src="img/xarajat.png" width="620" height="1384" alt="Xarajat ekrani: oylik chiqim, byudjet chizig'i va yo'nalishlar taqsimoti" />
-              <figcaption>Xarajat va byudjet</figcaption>
+              <img src="img/xarajat.png" width="620" height="1384" alt="The money screen: monthly spending, the budget bar and the split by category" />
+              <figcaption>Money and budget</figcaption>
             </figure>
             <figure>
-              <img src="img/odatlar.png" width="620" height="1384" alt="Odatlar ekrani qorong'i rejimda: haftalik belgilar va ketma-ket kunlar" />
-              <figcaption>Odatlar — qorong'i rejim</figcaption>
+              <img src="img/odatlar.png" width="620" height="1384" alt="The habits screen in dark mode: the week's marks and days in a row" />
+              <figcaption>Habits — dark mode</figcaption>
             </figure>
           </div>
         </div>
@@ -205,12 +205,12 @@
       <section id="xabar">
         <div class="wrap">
           <div class="waitlist">
-            <h2>Chiqqanda xabar beraylikmi?</h2>
-            <p>Emailingizni qoldiring — ilova Play Market va App Store'da paydo bo'lgan kuni bir marta yozamiz. Xolos: na axborotnoma, na reklama.</p>
+            <h2>Want to know when it ships?</h2>
+            <p>Leave your email — we write once on the day the app shows up on Play Market and the App Store. That is all: no newsletter, no ads.</p>
 
             <form id="waitlist-form" novalidate>
               <label class="hp" aria-hidden="true">
-                Saytingiz
+                Your site
                 <input type="text" name="website" tabindex="-1" autocomplete="off" />
               </label>
 
@@ -222,24 +222,24 @@
                 required
                 autocomplete="email"
                 inputmode="email"
-                placeholder="email@misol.uz"
+                placeholder="email@example.com"
               />
 
-              <label class="hp" for="wl-name">Ism</label>
+              <label class="hp" for="wl-name">Name</label>
               <input
                 id="wl-name"
                 type="text"
                 name="name"
                 autocomplete="name"
-                placeholder="Ism (ixtiyoriy)"
+                placeholder="Name (optional)"
               />
 
-              <button type="submit" id="wl-submit">Xabar bering</button>
+              <button type="submit" id="wl-submit">Let me know</button>
             </form>
 
             <p class="msg" id="wl-msg" role="status" aria-live="polite" hidden></p>
 
-            <p class="fine">Emailingiz faqat shu bitta xabar uchun ishlatiladi va hech kimga berilmaydi. Batafsil — <a href="maxfiylik.html#kutish">maxfiylik siyosatida</a>.</p>
+            <p class="fine">Your email is used for this one message only and is never shared. Details in the <a href="maxfiylik.html#kutish">privacy policy</a>.</p>
           </div>
         </div>
       </section>
@@ -252,10 +252,10 @@
               <path d="M8.5 12 L11 14.5 L15.5 9.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div>
-              <h3>Ma'lumotingiz telefoningizdan chiqmaydi</h3>
+              <h3>Your data never leaves your phone</h3>
               <p>
-                Ro'yxatdan o'tish yo'q. Server yo'q. Internetsiz ham ishlaydi. Vazifalaringiz va xarajatlaringiz faqat qurilmangizda saqlanadi — biz ularni ko'rmaymiz va hech kimga uzatmaymiz. Ilovada reklama ham yo'q.
-                <a href="maxfiylik.html">Maxfiylik siyosati →</a>
+                No sign-up. No server. It works offline. Your tasks and expenses are kept on your device only — we cannot see them and we pass them to nobody. There are no ads in the app either.
+                <a href="maxfiylik.html">Privacy policy →</a>
               </p>
             </div>
           </div>
@@ -268,9 +268,9 @@
       <div class="wrap">
         <small>© <span id="yil">2026</span> Kundo</small>
         <div class="links">
-          <a href="maxfiylik.html">Maxfiylik siyosati</a>
-          <a href="qollab.html">Qo'llab-quvvatlash</a>
-          <a href="mailto:jaloldin@buxoro.online">Aloqa</a>
+          <a href="maxfiylik.html">Privacy policy</a>
+          <a href="qollab.html">Support</a>
+          <a href="mailto:jaloldin@buxoro.online">Contact</a>
         </div>
       </div>
     </footer>
@@ -293,13 +293,13 @@
         e.preventDefault();
         const data = Object.fromEntries(new FormData(form));
         if (!data.email || !data.email.includes('@')) {
-          show('err', 'Email manzil to'g'ri ko'rinmayapti.');
+          show('err', 'That address does not look right.');
           return;
         }
 
         submit.disabled = true;
         const label = submit.textContent;
-        submit.textContent = 'Yuborilmoqda…';
+        submit.textContent = 'Sending…';
         msg.hidden = true;
 
         try {
@@ -312,16 +312,16 @@
 
           if (res.ok && out.ok) {
             form.hidden = true;
-            show('ok', out.already ? 'Siz allaqachon ro'yxatdasiz.' : 'Bo'ldi! Chiqqan kuni yozamiz.');
+            show('ok', out.already ? 'You are already on the list.' : 'Done! We'll write on release day.');
           } else {
             // Serverning xabari o'zbekcha — uni ko'rsatmaymiz, aks holda rus va
             // ingliz sahifalarida boshqa tildagi matn chiqib qolardi.
             if (out.error) console.error('waitlist:', out.error);
-            show('err', 'Yuborilmadi. Birozdan keyin urinib ko'ring.');
+            show('err', 'Could not send it. Please try again in a moment.');
           }
         } catch (err) {
           console.error('waitlist:', err);
-          show('err', 'Yuborilmadi. Birozdan keyin urinib ko'ring.');
+          show('err', 'Could not send it. Please try again in a moment.');
         } finally {
           submit.disabled = false;
           submit.textContent = label;

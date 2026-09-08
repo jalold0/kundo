@@ -8,6 +8,20 @@
     <meta name="theme-color" content="#E9E3D7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#111319" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="img/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="img/icon.png" />
+    <link rel="canonical" href="https://kundoapp.vercel.app/qollab.html" />
+    <link rel="alternate" hreflang="uz" href="https://kundoapp.vercel.app/qollab.html" />
+    <link rel="alternate" hreflang="ru" href="https://kundoapp.vercel.app/ru/qollab.html" />
+    <link rel="alternate" hreflang="en" href="https://kundoapp.vercel.app/en/qollab.html" />
+    <link rel="alternate" hreflang="x-default" href="https://kundoapp.vercel.app/qollab.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Qo'llab-quvvatlash — Kundo" />
+    <meta property="og:description" content="Kundo ilovasi bo'yicha yordam, tez-tez so'raladigan savollar va aloqa." />
+    <meta property="og:url" content="https://kundoapp.vercel.app/qollab.html" />
+    <meta property="og:image" content="https://kundoapp.vercel.app/img/og.png" />
+    <meta property="og:locale" content="uz_UZ" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,11 +42,17 @@
           <b>Kundo</b>
         </a>
         <nav>
-          <a href="#imkoniyatlar" class="hide-sm">Imkoniyatlar</a>
-          <a href="#ekranlar" class="hide-sm">Ekranlar</a>
+          <a href="/#imkoniyatlar" class="hide-sm">Imkoniyatlar</a>
+          <a href="/#ekranlar" class="hide-sm">Ekranlar</a>
+          <a href="/#xabar" class="hide-sm">Xabar berish</a>
           <a href="maxfiylik.html">Maxfiylik</a>
           <a href="qollab.html">Qo'llab-quvvatlash</a>
         </nav>
+        <div class="langs" aria-label="Til">
+          <a class="on" aria-current="true" hreflang="uz" href="/qollab.html">UZ</a>
+          <a hreflang="ru" href="/ru/qollab.html">RU</a>
+          <a hreflang="en" href="/en/qollab.html">EN</a>
+        </div>
       </div>
     </header>
 
@@ -44,8 +64,7 @@
         <h2>Savolingiz bormi?</h2>
         <p>
           Ilovada biror narsa ishlamasa yoki taklifingiz bo'lsa, yozing —
-          <a href="mailto:jaloldin@buxoro.online">jaloldin@buxoro.online</a>. Odatda bir-ikki kun
-          ichida javob beriladi.
+          <a href="mailto:jaloldin@buxoro.online">jaloldin@buxoro.online</a>. Odatda bir-ikki kun ichida javob beriladi.
         </p>
         <p>
           Xatolik haqida yozayotganda telefon modeli va Android/iOS versiyasini ham qo'shsangiz,
@@ -54,7 +73,7 @@
 
         <h2>Tez-tez so'raladigan savollar</h2>
 
-        <h2>Ma'lumotim yo'qolib qolmaydimi?</h2>
+        <h3>Ma'lumotim yo'qolib qolmaydimi?</h3>
         <p>
           Hamma yozuv telefoningizda saqlanadi. Telefonni almashtirsangiz yoki ilovani o'chirib
           tashlasangiz, ular ham ketadi. Shuning uchun vaqti-vaqti bilan
@@ -62,35 +81,60 @@
           <b>Zaxiradan tiklash</b> bilan hammasini qaytarasiz.
         </p>
 
-        <h2>Ikkita telefonda ishlata olamanmi?</h2>
+        <h3>Ikkita telefonda ishlata olamanmi?</h3>
         <p>
           Hozircha avtomatik sinxronizatsiya yo'q. Lekin zaxira faylini bir telefondan olib,
-          ikkinchisida tiklash mumkin. Bulutli sinxronizatsiya keyingi versiyalar rejasida.
+          ikkinchisida tiklash mumkin. Bulutli sinxronizatsiya keyingi versiyalar rejasida va u
+          ixtiyoriy bo'ladi.
         </p>
 
-        <h2>Nega ro'yxatdan o'tish yo'q?</h2>
+        <h3>Nega ro'yxatdan o'tish yo'q?</h3>
         <p>
           Ataylab. Hisob bo'lmasa — parol ham, server ham, ma'lumot sizdan chiqib ketish xavfi ham
           yo'q. Ilova internetsiz ishlayveradi.
         </p>
 
-        <h2>Bajarilgan vazifalarni qanday tozalayman?</h2>
+        <h3>Ilova tilini qanday o'zgartiraman?</h3>
+        <p>
+          <b>Sozlama → Til</b> bo'limida uchta til bor: o'zbek, rus va ingliz. Birinchi ochilishda
+          ilova telefon tiliga qarab o'zi tanlaydi. Siz o'zingiz yozgan vazifa va yo'nalish nomlari
+          tarjima qilinmaydi — ular qanday yozilgan bo'lsa, shundayligicha qoladi.
+        </p>
+
+        <h3>Eslatmalar kelmayapti</h3>
+        <p>
+          Ikki narsani tekshiring: <b>Sozlama → Eslatmalar</b> da tugma yoqilganmi, va telefon
+          sozlamasida ilovaga bildirishnoma ruxsati berilganmi. Vazifa eslatmasi faqat
+          <b>vaqti qo'yilgan</b> vazifalar uchun keladi. Ba'zi telefonlarda batareya tejash rejimi
+          fon rejalarini to'xtatadi — o'sha sozlamada Kundo'ni cheklovdan chiqarib qo'ysangiz,
+          eslatma o'z vaqtida keladi.
+        </p>
+
+        <h3>Bajarilgan vazifalarni qanday tozalayman?</h3>
         <p>
           Ular o'zi ro'yxat oxiriga tushadi va keyingi kunga o'tmaydi. Butunlay o'chirmoqchi
           bo'lsangiz, vazifani bosib «O'chirish» ni tanlang — adashsangiz, pastda chiqadigan
           «Bekor qilish» tugmasi qaytarib beradi.
         </p>
 
-        <h2>Takrorlanuvchi vazifani qanday to'xtataman?</h2>
+        <h3>Takrorlanuvchi vazifani qanday to'xtataman?</h3>
         <p>
           <b>Odatlar</b> bo'limiga o'ting — pastda «Takrorlanuvchi vazifalar» ro'yxati bor, o'sha
           yerda «To'xtatish» tugmasi.
         </p>
 
-        <h2>Ilova pullikmi?</h2>
+        <h3>Yo'nalishlarni o'zgartira olamanmi?</h3>
+        <p>
+          Ha. <b>Sozlama → Yo'nalishlar</b> da yangi qo'shasiz, nomini va rangini o'zgartirasiz,
+          keraksizini o'chirasiz. Yo'nalish o'chirilganda yozuvlar yo'qolmaydi — ularni qaysi
+          yo'nalishga ko'chirishni ilova sizdan so'raydi.
+        </p>
+
+        <h3>Ilova pullikmi?</h3>
         <p>Yo'q. Ilova bepul, ichida xarid ham, reklama ham yo'q.</p>
       </div>
     </main>
+
 
     <footer>
       <div class="wrap">
@@ -106,7 +150,6 @@
     <script>
       document.getElementById('yil').textContent = new Date().getFullYear();
     </script>
-  </body>
 
   </body>
 </html>

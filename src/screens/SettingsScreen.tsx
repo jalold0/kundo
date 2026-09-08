@@ -47,6 +47,15 @@ export default function SettingsScreen() {
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const n = store.state.cats;
 
+  /**
+   * Sayt sahifasi joriy tilda: o'zbekcha ildizda, rus va ingliz o'z papkasida.
+   * Havolalar generator chiqargan yo'llar bilan bir xil (web/build.mjs).
+   */
+  const sahifa = (fayl: string) => {
+    const lang = store.state.settings.lang;
+    return `${SAYT}${lang === 'uz' ? '' : `/${lang}`}/${fayl}`;
+  };
+
   const ochish = (url: string) => {
     Linking.openURL(url).catch(() => toast.show(t('common.linkFailed')));
   };
@@ -326,14 +335,14 @@ export default function SettingsScreen() {
             ico={IconShield}
             title={t('settings.privacy')}
             subtitle={t('settings.privacyHint')}
-            onPress={() => ochish(`${SAYT}/maxfiylik.html`)}
+            onPress={() => ochish(sahifa('maxfiylik.html'))}
           />
           <Sep />
           <Item
             ico={IconHelp}
             title={t('settings.help')}
             subtitle={t('settings.helpHint')}
-            onPress={() => ochish(`${SAYT}/qollab.html`)}
+            onPress={() => ochish(sahifa('qollab.html'))}
           />
           <Sep />
           <Item

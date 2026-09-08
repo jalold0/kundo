@@ -1,9 +1,8 @@
-# Do'kon uchun matnlar
+# Do'kon matnlari — o'zbekcha
 
-Play Console va App Store Connect'ga shu matnlarni ko'chirасiz.
-Har biri uzunlik chegarasiga moslab yozilgan.
-
----
+Play Console'da `uz-UZ`, App Store Connect'da «Uzbek» lokali uchun.
+Uzunlik chegaralari qavs ichida. Tilga bog'liq bo'lmagan narsalar (kategoriya,
+yosh reytingi, ekran rasmlari, ma'lumot xavfsizligi formasi) — `README.md` da.
 
 ## Ilova nomi (30 belgi)
 
@@ -11,8 +10,8 @@ Har biri uzunlik chegarasiga moslab yozilgan.
 Kundo — reja, odat, xarajat
 ```
 
-«Kundo» yasama so'z — uni hech kim qidirmaydi. Shuning uchun do'kon sarlavhasi
-kalit so'zlarni o'zi ko'tarib turishi kerak. Qisqaroq variant kerak bo'lsa:
+«Kundo» yasama so'z — uni hech kim qidirmaydi. Shuning uchun sarlavha kalit
+so'zlarni o'zi ko'tarib turishi kerak. Qisqaroq variant kerak bo'lsa:
 
 ```
 Kundo — reja va xarajat
@@ -24,25 +23,29 @@ Kundo — reja va xarajat
 Kunlik reja, odatlar va xarajatlar — bir joyda, internetsiz, hisobsiz.
 ```
 
-## To'liq tavsif
+## To'liq tavsif (4000 belgi)
 
 ```
 Kundo — kuningizni va pulingizni bir daftarda yuritish uchun oddiy ilova.
 
 REJA
 Vazifalarni kun qismlariga ajratib yozasiz: ertalab, kunduzi, kechqurun.
-Har biriga yo'nalish (ish, o'qish, biznes, shaxsiy), ustuvorlik va aniq vaqt
-qo'yish mumkin. Kechagi bajarilmagan ishlar yo'qolib ketmaydi — bir tugma
-bilan bugunga ko'chiriladi.
+Har biriga yo'nalish, ustuvorlik va aniq vaqt qo'yish mumkin. Kechagi
+bajarilmagan ishlar yo'qolib ketmaydi — bir tugma bilan bugunga ko'chiriladi.
+
+ESLATMALAR
+Vaqti qo'yilgan vazifa uchun o'sha soatda bildirishnoma keladi. Kunlik
+eslatmani ham yoqib qo'ysangiz, kun oxirida vazifa va odatlarni belgilashni
+eslatib turadi. Eslatma vaqtini o'zingiz tanlaysiz.
 
 TAKRORLANUVCHI ISHLAR
 Har kuni yoki faqat ish kunlari qaytariladigan vazifalarni bir marta
-yozасiz — keyin ular har kuni o'zi ro'yxatga tushadi.
+yozasiz — keyin ular har kuni o'zi ro'yxatga tushadi.
 
 XARAJAT
 Chiqim va kirimni bir necha soniyada yozib qo'yasiz. Oy oxirida pul qayerga
 ketgani aniq ko'rinadi: yo'nalishlar bo'yicha taqsimot, kunlik sarf grafigi,
-kirim va chiqim farqi.
+kirim va chiqim farqi, o'tgan oyga nisbatan o'zgarish.
 
 BYUDJET
 Oyiga qancha sarflashni belgilaysiz — ilova qancha qolganini va kuniga
@@ -50,10 +53,17 @@ qancha sarflash mumkinligini o'zi hisoblab boradi.
 
 ODATLAR
 Sport, kitob, suv — har kuni bir bosish. Ketma-ket necha kun bajarganingiz
-ko'rinib turadi.
+ko'rinib turadi. Oylik dinamika esa butun oyni bir chiziqda ko'rsatadi:
+qaysi kun bajarilgan, bajarilish foizi qancha, eng uzun ketma-ketlik necha kun.
 
 HAFTA
 Butun haftani bir ekranda ko'rasiz: qaysi kun to'la, qaysi kun bo'sh.
+
+O'ZINGIZGA MOSLASH
+Yo'nalishlarni o'zingiz boshqarasiz: yangi qo'shasiz, nomini va rangini
+o'zgartirasiz, keraksizini o'chirasiz. Yo'nalish o'chirilsa yozuvlar
+yo'qolmaydi — ularni qaysi yo'nalishga ko'chirishni o'zingiz tanlaysiz.
+Yorug' va qorong'i rejim bor, yoki telefon sozlamasiga qarab o'zi almashadi.
 
 MA'LUMOTINGIZ SIZDA QOLADI
 Ro'yxatdan o'tish yo'q. Server yo'q. Internetsiz ham ishlaydi. Hamma yozuv
@@ -63,45 +73,12 @@ uchun jadval qilib chiqarasiz.
 
 Reklama yo'q. Obuna yo'q. Ortiqcha ruxsat so'ramaydi.
 
-Ilova to'liq o'zbek tilida. Rang va naqshlar Buxoro koshinidan ilhomlangan.
+Ilova o'zbek, rus va ingliz tillarida. Rang va naqshlar Buxoro koshinidan
+ilhomlangan.
 ```
 
 ## Kalit so'zlar (App Store, 100 belgi)
 
 ```
-reja,vazifa,xarajat,byudjet,odat,kunlik,pul,hisob,daftar,todo
+reja,vazifa,xarajat,byudjet,odat,kunlik,pul,hisob,daftar,todo,eslatma
 ```
-
-## Kategoriya
-
-- Play Market: **Productivity** (ikkilamchi: Finance)
-- App Store: **Productivity**
-
-## Yosh reytingi
-
-3+ / 4+ — ilovada foydalanuvchi yaratgan kontent, reklama, xarid yo'q.
-
----
-
-## Ekran rasmlari uchun tavsiya
-
-Kamida 4 ta, telefoningizdan olingan haqiqiy skrinshot. Tavsiya etilgan ketma-ketlik
-(birinchi ikkitasi eng muhim — ko'pchilik shundan nariga qaramaydi):
-
-1. **Kun rejasi** — 5–6 ta haqiqiy vazifa bilan to'ldirilgan, ba'zilari bajarilgan
-2. **Xarajat** — byudjet chizig'i va yo'nalishlar taqsimoti ko'rinib turgan holda
-3. **Hafta** — bir necha kun to'ldirilgan
-4. **Odatlar** — bir nechta odat, ketma-ket kunlar bilan
-5. (ixtiyoriy) Qorong'i rejimda kun rejasi
-
-Skrinshot olishdan oldin ilovaga bir haftalik real ma'lumot kiritib qo'ying —
-bo'sh ekranlar ilovani tayyor emasdek ko'rsatadi.
-
-## Ma'lumot xavfsizligi formasi (Play Console)
-
-Barcha savollarga javob bir xil:
-
-- Ma'lumot yig'iladimi? — **Yo'q**
-- Ma'lumot uchinchi tomonga ulashiladimi? — **Yo'q**
-- Ma'lumot shifrlanadimi? — telefonning o'z himoyasi
-- Foydalanuvchi ma'lumotni o'chira oladimi? — **Ha**, Sozlama bo'limidan

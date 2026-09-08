@@ -1,0 +1,50 @@
+    <script>
+      const form = document.getElementById('waitlist-form');
+      const msg = document.getElementById('wl-msg');
+      const submit = document.getElementById('wl-submit');
+
+      function show(kind, text) {
+        msg.dataset.kind = kind;
+        msg.textContent = text;
+        msg.hidden = false;
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form));
+        if (!data.email || !data.email.includes('@')) {
+          show('err', '{{wlBadEmail}}');
+          return;
+        }
+
+        submit.disabled = true;
+        const label = submit.textContent;
+        submit.textContent = '{{wlSending}}';
+        msg.hidden = true;
+
+        try {
+          const res = await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          const out = await res.json().catch(() => ({}));
+
+          if (res.ok && out.ok) {
+            form.hidden = true;
+            show('ok', out.already ? '{{wlAlready}}' : '{{wlOk}}');
+          } else {
+            // Serverning xabari o'zbekcha — uni ko'rsatmaymiz, aks holda rus va
+            // ingliz sahifalarida boshqa tildagi matn chiqib qolardi.
+            if (out.error) console.error('waitlist:', out.error);
+            show('err', '{{wlFailed}}');
+          }
+        } catch (err) {
+          console.error('waitlist:', err);
+          show('err', '{{wlFailed}}');
+        } finally {
+          submit.disabled = false;
+          submit.textContent = label;
+        }
+      });
+    </script>

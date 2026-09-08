@@ -1,65 +1,7 @@
-<!doctype html>
-<html lang="uz">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Maxfiylik siyosati — Kundo</title>
-    <meta name="description" content="Kundo ilovasi hech qanday ma'lumot yig'maydi. Hamma yozuv faqat foydalanuvchi qurilmasida saqlanadi." />
-    <meta name="theme-color" content="#E9E3D7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#111319" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="img/icon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="img/icon.png" />
-    <link rel="canonical" href="https://kundoapp.vercel.app/maxfiylik.html" />
-    <link rel="alternate" hreflang="uz" href="https://kundoapp.vercel.app/maxfiylik.html" />
-    <link rel="alternate" hreflang="ru" href="https://kundoapp.vercel.app/ru/maxfiylik.html" />
-    <link rel="alternate" hreflang="en" href="https://kundoapp.vercel.app/en/maxfiylik.html" />
-    <link rel="alternate" hreflang="x-default" href="https://kundoapp.vercel.app/maxfiylik.html" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Maxfiylik siyosati — Kundo" />
-    <meta property="og:description" content="Kundo ilovasi hech qanday ma'lumot yig'maydi. Hamma yozuv faqat foydalanuvchi qurilmasida saqlanadi." />
-    <meta property="og:url" content="https://kundoapp.vercel.app/maxfiylik.html" />
-    <meta property="og:image" content="https://kundoapp.vercel.app/img/og.png" />
-    <meta property="og:locale" content="uz_UZ" />
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-
-  <body>
-    <header class="top">
-      <div class="wrap">
-        <a class="brand" href="/">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M12 2 L22 12 L12 22 L2 12 Z" />
-            <rect x="5" y="5" width="14" height="14" />
-          </svg>
-          <b>Kundo</b>
-        </a>
-        <nav>
-          <a href="/#imkoniyatlar" class="hide-sm">Imkoniyatlar</a>
-          <a href="/#ekranlar" class="hide-sm">Ekranlar</a>
-          <a href="/#xabar" class="hide-sm">Xabar berish</a>
-          <a href="maxfiylik.html">Maxfiylik</a>
-          <a href="qollab.html">Qo'llab-quvvatlash</a>
-        </nav>
-        <div class="langs" aria-label="Til">
-          <a class="on" aria-current="true" hreflang="uz" href="/maxfiylik.html">UZ</a>
-          <a hreflang="ru" href="/ru/maxfiylik.html">RU</a>
-          <a hreflang="en" href="/en/maxfiylik.html">EN</a>
-        </div>
-      </div>
-    </header>
-
     <main>
       <div class="wrap doc">
-        <h1>Maxfiylik siyosati</h1>
-        <p class="updated">Oxirgi yangilanish: 8-sentabr, 2026 · Kundo ilovasi</p>
+        <h1>{{h1}}</h1>
+        <p class="updated">{{updated}}</p>
 
         <div class="callout">
           Qisqacha: <b>ilova</b> siz haqingizda hech qanday ma'lumot yig'maydi, saqlamaydi va
@@ -141,7 +83,7 @@
           <li>Manzil sotilmaydi, ulashilmaydi va reklama tarmoqlariga berilmaydi.</li>
           <li>
             Xohlagan paytda ro'yxatdan chiqishingiz mumkin — shunchaki
-            <a href="mailto:jaloldin@buxoro.online">jaloldin@buxoro.online</a> manziliga yozing, yozuvingiz o'chiriladi.
+            <a href="mailto:{{email}}">{{email}}</a> manziliga yozing, yozuvingiz o'chiriladi.
           </li>
         </ul>
         <p>
@@ -167,25 +109,6 @@
         </p>
 
         <h2>Aloqa</h2>
-        <p>Savollar bo'lsa: <a href="mailto:jaloldin@buxoro.online">jaloldin@buxoro.online</a></p>
+        <p>Savollar bo'lsa: <a href="mailto:{{email}}">{{email}}</a></p>
       </div>
     </main>
-
-
-    <footer>
-      <div class="wrap">
-        <small>© <span id="yil">2026</span> Kundo</small>
-        <div class="links">
-          <a href="maxfiylik.html">Maxfiylik siyosati</a>
-          <a href="qollab.html">Qo'llab-quvvatlash</a>
-          <a href="mailto:jaloldin@buxoro.online">Aloqa</a>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      document.getElementById('yil').textContent = new Date().getFullYear();
-    </script>
-
-  </body>
-</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="{{htmlLang}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+    <meta name="description" content="{{desc}}" />
+    <meta name="theme-color" content="#E9E3D7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111319" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="{{base}}img/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="{{base}}img/icon.png" />
+    <link rel="canonical" href="{{canonical}}" />
+{{alternates}}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{title}}" />
+    <meta property="og:description" content="{{ogDesc}}" />
+    <meta property="og:url" content="{{canonical}}" />
+    <meta property="og:image" content="{{origin}}/img/og.png" />
+    <meta property="og:locale" content="{{ogLocale}}" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="{{base}}style.css" />
+  </head>
+
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="{{home}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 2 L22 12 L12 22 L2 12 Z" />
+            <rect x="5" y="5" width="14" height="14" />
+          </svg>
+          <b>Kundo</b>
+        </a>
+        <nav>
+{{navLinks}}
+          <a href="maxfiylik.html">{{navPrivacy}}</a>
+          <a href="qollab.html">{{navSupport}}</a>
+        </nav>
+        <div class="langs" aria-label="{{langLabel}}">
+{{langLinks}}
+        </div>
+      </div>
+    </header>
+
+{{body}}
+
+    <footer>
+      <div class="wrap">
+        <small>© <span id="yil">2026</span> Kundo</small>
+        <div class="links">
+          <a href="maxfiylik.html">{{footPrivacy}}</a>
+          <a href="qollab.html">{{footSupport}}</a>
+          <a href="mailto:{{email}}">{{footContact}}</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('yil').textContent = new Date().getFullYear();
+    </script>
+{{scripts}}
+  </body>
+</html>
