@@ -6,7 +6,7 @@
  * ketadi — hozirgi sahifalarda `</body>` ikki marta yozilgani va boshqa
  * sahifadan ishlamaydigan `#imkoniyatlar` havolalari shuning isboti.
  *
- * Ishlatish: `npm run build` (yoki `node build.mjs`). Chiqqan fayllar omborga
+ * Ishlatish: `npm run site` (yoki `node build.mjs`). Chiqqan fayllar omborga
  * qo'shiladi — Vercel ularni oddiy statik fayl sifatida beradi, qurish qadami yo'q.
  *
  * Manba:
@@ -37,9 +37,14 @@ const PAGES = [
   { file: 'qollab.html', key: 'support', doc: true },
 ];
 
-/** `{{kalit}}` larni almashtiradi; qolgani bo'sh satrga aylanadi. */
+/**
+ * `{{kalit}}` larni almashtiradi. Noma'lum kalit **o'z holida qoladi** — ilgari
+ * u bo'sh satrga aylanardi va ketma-ket ikki o'tishda `{{base}}` yo'q bo'lib
+ * ketdi: rasm yo'llari `../img/` emas, `img/` bo'lib qolib, rus va ingliz
+ * sahifalarida rasmlar ochilmadi. Qolgan o'rinbosarni build oxirida tekshiramiz.
+ */
 function fill(tpl, vars) {
-  return tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? String(vars[k]) : ''));
+  return tpl.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
 }
 
 /** Til uchun yo'l: o'zbekcha ildizda, qolganlari o'z papkasida. */
@@ -58,7 +63,7 @@ function langLinks(lang, file) {
   return site.langs
     .map((l) => {
       const cls = l === lang ? ' class="on"' : '';
-      const href = `${ORIGIN.length ? '' : ''}/${dirFor(l)}${file === 'index.html' ? '' : file}`;
+      const href = `/${dirFor(l)}${file === 'index.html' ? '' : file}`;
       const aria = l === lang ? ' aria-current="true"' : '';
       return `          <a${cls}${aria} hreflang="${l}" href="${href}">${l.toUpperCase()}</a>`;
     })
@@ -91,22 +96,17 @@ for (const lang of site.langs) {
       continue;
     }
 
-    // Sahifa tanasi: uzun matnli sahifalarda tana o'zi tarjima qilingan,
-    // qolganlarida umumiy markup + shu tildagi matn.
-    const rawBody = readFileSync(bodyFile, 'utf8');
-    const body = page.doc ? fill(rawBody, { ...L, ...text, email: site.email }) : fill(rawBody, text);
-
-    const scripts = page.key === 'index' ? readFileSync(join(SRC, 'waitlist.js.html'), 'utf8') : '';
-
-    const html = fill(shell, {
+    // Barcha o'zgaruvchi bitta to'plamda: tana ham, qobiq ham shundan to'ldiriladi.
+    // Ketma-ket ikki o'tish qilmaymiz — aynan shu narsa `{{base}}` ni yo'q qilgan edi.
+    const vars = {
+      ...L,
+      ...text,
       htmlLang: L.htmlLang,
-      title: text.title,
-      desc: text.desc,
-      ogDesc: text.ogDesc ?? text.desc,
       base: lang === 'uz' ? '' : '../',
       home: `/${dirFor(lang)}`,
       canonical: urlFor(lang, page.file),
       origin: ORIGIN,
+      ogDesc: text.ogDesc ?? text.desc,
       ogLocale: OG_LOCALE[lang],
       alternates: alternates(page.file),
       langLabel: LANG_LABEL[lang],
@@ -118,9 +118,24 @@ for (const lang of site.langs) {
       footSupport: L.footer.support,
       footContact: L.footer.contact,
       email: site.email,
-      body: fill(body, { base: lang === 'uz' ? '' : '../', email: site.email }),
-      scripts: fill(scripts, text),
+    };
+
+    const rawBody = readFileSync(bodyFile, 'utf8');
+    const rawScripts = page.key === 'index' ? readFileSync(join(SRC, 'waitlist.js.html'), 'utf8') : '';
+
+    const html = fill(shell, {
+      ...vars,
+      body: fill(rawBody, vars),
+      scripts: fill(rawScripts, vars),
     });
+
+    // To'ldirilmagan o'rinbosar qolsa, build yiqiladi: bunday xato jimgina
+    // sahifaga chiqib ketmasligi kerak.
+    const left = [...html.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]);
+    if (left.length) {
+      console.error(`${dirFor(lang)}${page.file}: to'ldirilmagan kalit — ${[...new Set(left)].join(', ')}`);
+      process.exitCode = 1;
+    }
 
     const outDir = join(HERE, dirFor(lang));
     if (dirFor(lang)) mkdirSync(outDir, { recursive: true });

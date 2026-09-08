@@ -141,7 +141,13 @@ p {
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 62px;
+  /* Balandlik qotib turmaydi: tor ekranda menyu ikkinchi qatorga tushadi va
+     qotib qolgan 62px bilan u sahifa matni ustiga chiqib ketardi. */
+  min-height: 62px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  flex-wrap: wrap;
+  row-gap: 4px;
 }
 .brand {
   display: flex;
@@ -178,7 +184,12 @@ p {
   background: var(--surface-2);
   color: var(--lojuvard);
 }
-@media (max-width: 620px) {
+/*
+ * Langar havolalari 900px dan pastda yashiriladi, 620px emas: ruscha yorliqlar
+ * («Конфиденциальность») ancha uzun va 700px kenglikda menyu qobiqdan chiqib,
+ * sahifani gorizontal siljitardi. Qolgan havolalar footerda ham bor.
+ */
+@media (max-width: 900px) {
   .top nav a.hide-sm {
     display: none;
   }
