@@ -287,6 +287,26 @@ export const uz = {
   'notify.denied':
     'Telefon sozlamasida bildirishnoma o‘chirilgan. Ilova sozlamalaridan ruxsat bersangiz ishlaydi.',
 
+  // valyuta
+  'settings.currency': 'Valyuta',
+  'settings.currencyHint':
+    'Yangi yozuvlar shu valyutada yoziladi. Mavjud summalar qayta hisoblanmaydi — kurs yo‘q, chunki ilova internetsiz ishlaydi.',
+  'cur.title': 'Valyuta',
+  'cur.askTitle': 'Valyuta almashtirildi',
+  'cur.ask':
+    'Mavjud {n} yozuv {old} da yozilgan. Ularni ham {new} deb belgilaymizmi? Raqamlar o‘zgarmaydi, faqat yorliq almashadi.',
+  'cur.relabel': 'Ha, hammasini {new} qil',
+  'cur.keep': 'Yo‘q, o‘z valyutasida qolsin',
+  'cur.mixed': 'Bu oyda boshqa valyutadagi {n} yozuv bor — ular hisobga kirmadi.',
+  'cur.UZS': 'so‘m',
+  'cur.RUB': 'rubl',
+  'cur.KZT': 'tenge',
+  'cur.USD': 'dollar',
+  'cur.EUR': 'evro',
+  'cur.TRY': 'lira',
+  'money.mln': 'mln',
+  'money.k': 'ming',
+
   // ranglar
   'tone.lojuvard': 'Ko‘k',
   'tone.feruza': 'Feruza',

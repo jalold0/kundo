@@ -21,9 +21,9 @@ describe('summa formatlash', () => {
     expect(fmt(1999.6)).toBe(n('2 000'));
   });
 
-  test('fmtWith valyutani qo‘shadi', () => {
-    expect(fmtWith(50000)).toBe(`${n('50 000')} so'm`);
-    expect(fmtWith(50000, 'USD')).toBe(`${n('50 000')} USD`);
+  test('fmtWith yorliqni qo‘shadi', () => {
+    expect(fmtWith(50000, "so'm")).toBe(`${n('50 000')} so'm`);
+    expect(fmtWith(1234, '$', 'USD')).toBe('12,34 $');
   });
 
   test('fmtShort — ming va mln', () => {
@@ -56,5 +56,51 @@ describe('summa formatlash', () => {
     const stored = parseAmount(typed);
     expect(stored).toBe(1250000);
     expect(fmt(stored)).toBe(typed);
+  });
+});
+
+describe('kasr xonali valyuta', () => {
+  test('fmt sentlarni ajratadi', () => {
+    expect(fmt(0, 'USD')).toBe('0,00');
+    expect(fmt(5, 'USD')).toBe('0,05');
+    expect(fmt(1234, 'USD')).toBe('12,34');
+    expect(fmt(123456789, 'USD')).toBe(n('1 234 567,89'));
+    expect(fmt(-1234, 'USD')).toBe(n('-12,34'));
+  });
+
+  test('so‘m kasrsiz qoladi', () => {
+    expect(fmt(1234, 'UZS')).toBe(n('1 234'));
+  });
+
+  test('parseAmount kasrni sentga aylantiradi', () => {
+    expect(parseAmount('12.34', 'USD')).toBe(1234);
+    expect(parseAmount('12,34', 'USD')).toBe(1234);
+    expect(parseAmount('12', 'USD')).toBe(1200);
+    expect(parseAmount('12.3', 'USD')).toBe(1230);
+    // Ortiqcha xona tashlanadi, yaxlitlanmaydi — pul hisobida taxmin qilinmaydi.
+    expect(parseAmount('12.349', 'USD')).toBe(1234);
+    expect(parseAmount('0.05', 'USD')).toBe(5);
+    expect(parseAmount('', 'USD')).toBe(0);
+    expect(parseAmount('abc', 'USD')).toBe(0);
+    expect(parseAmount(n('1 234,56'), 'USD')).toBe(123456);
+  });
+
+  test('kiritish → saqlash → ko‘rsatish aylanasi dollarda ham buzilmaydi', () => {
+    const stored = parseAmount('1 234,56', 'USD');
+    expect(stored).toBe(123456);
+    expect(fmt(stored, 'USD')).toBe(n('1 234,56'));
+  });
+
+  test('fmtShort dollarda butun qismdan hisoblaydi', () => {
+    // 1 200 000 sent = 12 000 dollar
+    expect(fmtShort(1_200_000, 'USD')).toBe(n('12 ming'));
+    expect(fmtShort(120_000_000, 'USD')).toBe(n('1,2 mln'));
+  });
+
+  test('maskAmount kasr ajratuvchisini saqlaydi', () => {
+    expect(maskAmount('12.3', 'USD')).toBe('12,3');
+    expect(maskAmount('12.345', 'USD')).toBe('12,34');
+    expect(maskAmount('12', 'USD')).toBe('12');
+    expect(maskAmount('abc', 'USD')).toBe('');
   });
 });

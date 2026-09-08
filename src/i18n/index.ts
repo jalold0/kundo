@@ -50,7 +50,8 @@ export function deviceLang(): Lang {
  * hech qachon bo'sh matn ko'rsatmaydi.
  */
 export function t(key: TKey, vars?: Record<string, string | number>): string {
-  const raw = DICTS[current][key] ?? uz[key] ?? String(key);
+  // Buzilgan sozlamada noma’lum til kelib qolsa ham yiqilmaymiz.
+  const raw = (DICTS[current] ?? uz)[key] ?? uz[key] ?? String(key);
   if (!vars) return raw;
   return raw.replace(/\{(\w+)\}/g, (_, name: string) => (name in vars ? String(vars[name]) : `{${name}}`));
 }

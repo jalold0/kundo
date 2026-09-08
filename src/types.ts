@@ -52,7 +52,10 @@ export type EntryKind = 'chiqim' | 'kirim';
 export type Entry = {
   id: string;
   kind: EntryKind;
-  amount: number; // butun son, so'mda
+  /** Eng kichik birlikda butun son: so'mda 1 = 1 so'm, dollarda 1 = 1 sent. */
+  amount: number;
+  /** Yozuv yozilgan valyuta kodi (`UZS`, `USD`…) — keyin almashsa ham o'zgarmaydi. */
+  cur: string;
   cat: string; // cats.spend yoki cats.income kaliti
   note?: string;
   date: string; // "YYYY-MM-DD"
@@ -62,7 +65,8 @@ export type Entry = {
 export type Settings = {
   theme: ThemeMode;
   lang: Lang;
-  currency: string; // "so'm"
+  /** Joriy valyuta kodi (`lib/currency.ts`). */
+  cur: string;
   weekStartsMonday: boolean;
   onboarded: boolean;
   /** Vaqti qo'yilgan vazifa uchun eslatma. */

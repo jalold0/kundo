@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Sheet } from '../components/Sheet';
 import { DatePanel } from '../components/pickers';
 import { findCat, kindOf } from '../lib/catalog';
+import { curLabel, curOf } from '../lib/currency';
 import { t } from '../i18n';
 import { addMonths, daysInMonth, longDate, monthLabel, monthOf, thisMonth, today } from '../lib/date';
 import { MINUS, fmt, fmtShort, maskAmount, parseAmount } from '../lib/money';
@@ -23,7 +24,9 @@ export default function MoneyScreen() {
   const store = useStore();
   const { state } = store;
   const toast = useToast();
-  const cur = store.state.settings.currency;
+  /** Joriy valyuta kodi va uning ko'rinadigan nomi. */
+  const cur = state.settings.cur;
+  const curName = curLabel(cur);
   const [ym, setYm] = useState(thisMonth());
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState<Draft>(() => newDraft(store.state.settings.lastSpendCat));
@@ -32,7 +35,14 @@ export default function MoneyScreen() {
   const [budgeting, setBudgeting] = useState(false);
   const [budgetText, setBudgetText] = useState('');
 
-  const list = useMemo(() => entriesInMonth(state, ym), [state, ym]);
+  const all = useMemo(() => entriesInMonth(state, ym), [state, ym]);
+  /**
+   * Hisob faqat joriy valyutadagi yozuvlardan olinadi: kurs yo'q, shuning uchun
+   * boshqa valyutadagi summani qo'shib bo'lmaydi. Ular ro'yxatda ko'rinadi,
+   * lekin jamiga kirmaydi va bu haqda ogohlantirish chiqadi.
+   */
+  const list = useMemo(() => all.filter((e) => e.cur === cur), [all, cur]);
+  const otherCur = all.length - list.length;
   const spend = sumBy(list, 'chiqim');
   const income = sumBy(list, 'kirim');
   const balance = income - spend;
@@ -46,7 +56,14 @@ export default function MoneyScreen() {
   const recent = useMemo(() => recentAmounts(state, draft.kind), [state, draft.kind]);
 
   const prevYm = addMonths(ym, -1);
-  const prevSpend = useMemo(() => sumBy(entriesInMonth(state, prevYm), 'chiqim'), [state, prevYm]);
+  const prevSpend = useMemo(
+    () =>
+      sumBy(
+        entriesInMonth(state, prevYm).filter((e) => e.cur === cur),
+        'chiqim',
+      ),
+    [state, prevYm, cur],
+  );
   const delta = prevSpend > 0 ? Math.round(((spend - prevSpend) / prevSpend) * 100) : null;
 
   const isCurrent = ym === thisMonth();
@@ -56,7 +73,7 @@ export default function MoneyScreen() {
 
   const grouped = useMemo(() => {
     const map = new Map<string, Entry[]>();
-    [...list]
+    [...all]
       .sort((a, b) => (a.date === b.date ? b.created - a.created : a.date < b.date ? 1 : -1))
       .forEach((e) => {
         const arr = map.get(e.date) ?? [];
@@ -64,7 +81,7 @@ export default function MoneyScreen() {
         map.set(e.date, arr);
       });
     return [...map.entries()];
-  }, [list]);
+  }, [all]);
 
   const lastCatFor = (kind: EntryKind) =>
     kind === 'kirim' ? store.state.settings.lastIncomeCat : store.state.settings.lastSpendCat;
@@ -85,11 +102,12 @@ export default function MoneyScreen() {
   };
 
   const submit = () => {
-    const amount = parseAmount(draft.amount);
+    const amount = parseAmount(draft.amount, cur);
     if (amount <= 0) return;
     store.addEntry({
       kind: draft.kind,
       amount,
+      cur,
       cat: draft.cat,
       note: draft.note.trim() || undefined,
       date: draft.date,
@@ -100,7 +118,7 @@ export default function MoneyScreen() {
     toast.show(
       t('money.written', {
         kind: draft.kind === 'kirim' ? t('money.income') : t('money.spend'),
-        sum: `${fmt(amount)} ${cur}`,
+        sum: `${fmt(amount, cur)} ${curName}`,
       }),
     );
   };
@@ -177,24 +195,30 @@ export default function MoneyScreen() {
                   color: p.ink,
                 }}
               >
-                {fmt(spend)}
+                {fmt(spend, cur)}
               </Txt>
-              <Txt style={{ fontFamily: F.bodyMed, fontSize: 15, color: p.muted }}>{cur}</Txt>
+              <Txt style={{ fontFamily: F.bodyMed, fontSize: 15, color: p.muted }}>{curName}</Txt>
             </Row>
             {delta !== null ? (
               <Txt v="small" color={delta > 0 ? p.anor : delta < 0 ? p.feruza : p.muted}>
                 {delta > 0 ? '↑' : delta < 0 ? '↓' : '='} {t('money.vsPrev', { pct: Math.abs(delta) })}
                 {'  ·  '}
-                {fmtShort(prevSpend)}
+                {fmtShort(prevSpend, cur)}
               </Txt>
             ) : null}
           </View>
 
+          {otherCur > 0 ? (
+            <Txt v="small" color={p.oltin} style={{ marginTop: S.sm }}>
+              {t('cur.mixed', { n: otherCur })}
+            </Txt>
+          ) : null}
+
           <Row gap={S.md} style={{ marginTop: S.lg }}>
-            <Metric label={t('money.in')} value={fmt(income)} tone={income > 0 ? p.feruza : p.muted} />
+            <Metric label={t('money.in')} value={fmt(income, cur)} tone={income > 0 ? p.feruza : p.muted} />
             <Metric
               label={t('money.diff')}
-              value={`${balance >= 0 ? '+' : MINUS}${fmt(Math.abs(balance))}`}
+              value={`${balance >= 0 ? '+' : MINUS}${fmt(Math.abs(balance), cur)}`}
               tone={balance === 0 ? p.muted : balance > 0 ? p.feruza : p.anor}
             />
           </Row>
@@ -207,7 +231,7 @@ export default function MoneyScreen() {
             <View style={{ marginTop: S.md, gap: S.sm }}>
               <Row>
                 <Txt v="small" style={{ flex: 1 }}>
-                  {t('money.budget', { sum: `${fmt(budget)} ${cur}` })}
+                  {t('money.budget', { sum: `${fmt(budget, cur)} ${curName}` })}
                 </Txt>
                 <Pressable
                   onPress={() => {
@@ -229,11 +253,11 @@ export default function MoneyScreen() {
               <Row>
                 <Txt v="small" color={left >= 0 ? p.ink2 : p.anor} style={{ flex: 1 }}>
                   {left >= 0
-                    ? t('money.left', { sum: `${fmt(left)} ${cur}` })
-                    : t('money.over', { sum: `${fmt(-left)} ${cur}` })}
+                    ? t('money.left', { sum: `${fmt(left, cur)} ${curName}` })
+                    : t('money.over', { sum: `${fmt(-left, cur)} ${curName}` })}
                 </Txt>
                 {perDayLeft > 0 ? (
-                  <Txt v="small">{t('money.perDay', { sum: fmtShort(perDayLeft) })}</Txt>
+                  <Txt v="small">{t('money.perDay', { sum: fmtShort(perDayLeft, cur) })}</Txt>
                 ) : null}
               </Row>
             </View>
@@ -285,7 +309,7 @@ export default function MoneyScreen() {
                 1
               </Txt>
               <Txt v="monoSm" style={{ fontSize: 9.5 }}>
-                {t('money.dailyMax', { sum: fmtShort(maxDaily) })}
+                {t('money.dailyMax', { sum: fmtShort(maxDaily, cur) })}
               </Txt>
               <Txt v="monoSm" style={{ flex: 1, textAlign: 'right', fontSize: 9.5 }}>
                 {dim}
@@ -306,7 +330,7 @@ export default function MoneyScreen() {
                     <Row>
                       <Txt style={{ flex: 1, fontSize: 14 }}>{meta.label}</Txt>
                       <Txt v="mono" style={{ fontSize: 13 }}>
-                        {fmt(c.total)}
+                        {fmt(c.total, cur)}
                       </Txt>
                       <Txt v="monoSm" style={{ width: 42, textAlign: 'right' }}>
                         {Math.round((c.total / spend) * 100)}%
@@ -329,7 +353,10 @@ export default function MoneyScreen() {
                     {d === today() ? t('common.today') : longDate(d)}
                   </Txt>
                   <Txt v="monoSm">
-                    {fmt(rows.reduce((a, e) => a + (e.kind === 'chiqim' ? e.amount : 0), 0))}
+                    {fmt(
+                      rows.reduce((a, e) => a + (e.kind === 'chiqim' && e.cur === cur ? e.amount : 0), 0),
+                      cur,
+                    )}
                   </Txt>
                 </Row>
               </View>
@@ -369,10 +396,15 @@ export default function MoneyScreen() {
                         </Txt>
                       ) : null}
                     </View>
-                    <Txt v="mono" color={e.kind === 'kirim' ? p.feruza : p.ink}>
-                      {e.kind === 'kirim' ? '+' : '−'}
-                      {fmt(e.amount)}
-                    </Txt>
+                    <View style={{ alignItems: 'flex-end' }}>
+                      <Txt v="mono" color={e.kind === 'kirim' ? p.feruza : p.ink}>
+                        {e.kind === 'kirim' ? '+' : '−'}
+                        {fmt(e.amount, e.cur)}
+                      </Txt>
+                      {/* Boshqa valyutadagi yozuv — yorlig'i ko'rsatiladi, aks holda
+                          raqam joriy valyutadek tuyulardi. */}
+                      {e.cur !== cur ? <Txt v="monoSm">{curLabel(e.cur)}</Txt> : null}
+                    </View>
                   </Pressable>
                 );
               })}
@@ -388,7 +420,9 @@ export default function MoneyScreen() {
         visible={adding}
         onClose={() => setAdding(false)}
         title={draft.kind === 'kirim' ? t('money.addIncomeTitle') : t('money.addSpendTitle')}
-        footer={<Btn label={t('common.save')} onPress={submit} disabled={parseAmount(draft.amount) <= 0} />}
+        footer={
+          <Btn label={t('common.save')} onPress={submit} disabled={parseAmount(draft.amount, cur) <= 0} />
+        }
       >
         <Seg
           value={draft.kind}
@@ -400,10 +434,10 @@ export default function MoneyScreen() {
         />
 
         <View style={{ gap: S.sm }}>
-          <Txt v="label">{t('money.amount', { cur })}</Txt>
+          <Txt v="label">{t('money.amount', { cur: curName })}</Txt>
           <Field
             value={draft.amount}
-            onChangeText={(v) => setDraft({ ...draft, amount: maskAmount(v) })}
+            onChangeText={(v) => setDraft({ ...draft, amount: maskAmount(v, cur) })}
             placeholder="0"
             keyboardType="numeric"
             autoFocus
@@ -413,13 +447,19 @@ export default function MoneyScreen() {
           <Row gap={S.sm} style={{ flexWrap: 'wrap' }}>
             {recent.length
               ? recent.map((q) => (
-                  <Chip key={`r${q}`} label={fmt(q)} onPress={() => setDraft({ ...draft, amount: fmt(q) })} />
+                  <Chip
+                    key={`r${q}`}
+                    label={fmt(q, cur)}
+                    onPress={() => setDraft({ ...draft, amount: fmt(q, cur) })}
+                  />
                 ))
-              : [10000, 50000, 100000, 500000].map((q) => (
+              : curOf(cur).quick.map((q) => (
                   <Chip
                     key={q}
-                    label={`+${fmtShort(q)}`}
-                    onPress={() => setDraft({ ...draft, amount: fmt(parseAmount(draft.amount) + q) })}
+                    label={`+${fmtShort(q, cur)}`}
+                    onPress={() =>
+                      setDraft({ ...draft, amount: fmt(parseAmount(draft.amount, cur) + q, cur) })
+                    }
                   />
                 ))}
           </Row>
@@ -484,10 +524,13 @@ export default function MoneyScreen() {
             onPress={() => {
               if (!editing) return;
               const amount = editing.amount;
+              const eCur = editing.cur;
               store.removeEntry(editing.id);
               setEditing(null);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
-              toast.show(t('money.entryDeleted', { sum: `${fmt(amount)} ${cur}` }), { undo: store.undo });
+              toast.show(t('money.entryDeleted', { sum: `${fmt(amount, eCur)} ${curLabel(eCur)}` }), {
+                undo: store.undo,
+              });
             }}
           />
         }
@@ -501,7 +544,7 @@ export default function MoneyScreen() {
               <Txt v="monoSm">{editing.date}</Txt>
             </Row>
             <Txt v="h1" style={{ marginTop: 6 }}>
-              {fmt(editing.amount)} {cur}
+              {fmt(editing.amount, editing.cur)} {curLabel(editing.cur)}
             </Txt>
             <Txt v="small" style={{ marginTop: 4 }}>
               {findCat(catsOf(editing.kind), editing.cat).label}
@@ -527,7 +570,7 @@ export default function MoneyScreen() {
             <Btn
               label={t('common.save')}
               onPress={() => {
-                store.setBudget(ym, parseAmount(budgetText));
+                store.setBudget(ym, parseAmount(budgetText, cur));
                 setBudgeting(false);
               }}
             />
@@ -550,7 +593,7 @@ export default function MoneyScreen() {
         </Txt>
         <Field
           value={budgetText}
-          onChangeText={(v) => setBudgetText(maskAmount(v))}
+          onChangeText={(v) => setBudgetText(maskAmount(v, cur))}
           placeholder="0"
           keyboardType="numeric"
           align="right"
@@ -559,7 +602,7 @@ export default function MoneyScreen() {
         />
         <Row gap={S.sm} style={{ flexWrap: 'wrap' }}>
           {[2000000, 3000000, 5000000, 8000000].map((q) => (
-            <Chip key={q} label={fmtShort(q)} onPress={() => setBudgetText(fmt(q))} />
+            <Chip key={q} label={fmtShort(q, cur)} onPress={() => setBudgetText(fmt(q, cur))} />
           ))}
         </Row>
       </Sheet>

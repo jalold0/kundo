@@ -2,8 +2,10 @@ import Constants from 'expo-constants';
 import React, { useState } from 'react';
 import { Alert, Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
 import { CatsSheet } from '../components/CatsSheet';
+import { Sheet } from '../components/Sheet';
 import { TimePanel } from '../components/pickers';
 import { exportBackup, exportEntriesCsv, pickBackup } from '../lib/backup';
+import { CURRENCIES, curLabel } from '../lib/currency';
 import { askPermission } from '../lib/notify';
 import { LANGS, t, type Lang } from '../i18n';
 import { useStore } from '../store';
@@ -12,8 +14,10 @@ import type { ThemeMode } from '../theme';
 import type { CatKind } from '../types';
 import {
   IconBell,
+  IconCheck,
   IconChevron,
   IconClock,
+  IconCoin,
   IconDownload,
   IconHelp,
   IconList,
@@ -43,6 +47,7 @@ export default function SettingsScreen() {
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [cats, setCats] = useState<CatKind | null>(null);
+  const [curOpen, setCurOpen] = useState(false);
 
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const n = store.state.cats;
@@ -151,6 +156,26 @@ export default function SettingsScreen() {
     store.setSettings(patch);
   };
 
+  /**
+   * Valyutani almashtirish. Kurs yo'q, shuning uchun mavjud summalar qayta
+   * hisoblanmaydi — foydalanuvchidan faqat bittasini so'raymiz: eski yozuvlar
+   * yangi valyutada deb belgilansinmi yoki o'z valyutasida qolsinmi.
+   */
+  const pickCur = (code: string) => {
+    setCurOpen(false);
+    const now = store.state.settings.cur;
+    if (code === now) return;
+    const n = store.state.entries.filter((e) => e.cur === now).length;
+    if (!n) {
+      store.setCurrency(code, false);
+      return;
+    }
+    Alert.alert(t('cur.askTitle'), t('cur.ask', { n, old: curLabel(now), new: curLabel(code) }), [
+      { text: t('cur.keep'), onPress: () => store.setCurrency(code, false) },
+      { text: t('cur.relabel', { new: curLabel(code) }), onPress: () => store.setCurrency(code, true) },
+    ]);
+  };
+
   const mailto = `mailto:${POCHTA}?subject=${encodeURIComponent(`Kundo ${version}`)}`;
 
   return (
@@ -188,6 +213,13 @@ export default function SettingsScreen() {
               onChange={(lang) => store.setSettings({ lang })}
             />
           </View>
+          <Divider />
+          <Item
+            ico={IconCoin}
+            title={t('settings.currency')}
+            subtitle={curLabel(store.state.settings.cur)}
+            onPress={() => setCurOpen(true)}
+          />
         </Section>
 
         <Section title={t('settings.notify')}>
@@ -364,6 +396,41 @@ export default function SettingsScreen() {
           />
         </Section>
       </Screen>
+
+      <Sheet visible={curOpen} onClose={() => setCurOpen(false)} title={t('cur.title')}>
+        <Txt v="small">{t('settings.currencyHint')}</Txt>
+        <Card pad={false}>
+          {CURRENCIES.map((c, i) => {
+            const on = c.code === store.state.settings.cur;
+            return (
+              <View key={c.code}>
+                {i > 0 ? <Sep /> : null}
+                <Pressable
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: on }}
+                  onPress={() => pickCur(c.code)}
+                  style={({ pressed }) => ({
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: S.md,
+                    paddingHorizontal: S.lg,
+                    paddingVertical: 13,
+                    backgroundColor: pressed ? p.surface2 : 'transparent',
+                  })}
+                >
+                  <Txt v="mono" color={on ? p.lojuvard : p.muted} style={{ width: 42 }}>
+                    {c.code}
+                  </Txt>
+                  <Txt v="h3" style={{ flex: 1 }} color={on ? p.lojuvard : undefined}>
+                    {curLabel(c.code)}
+                  </Txt>
+                  {on ? <IconCheck color={p.lojuvard} size={15} /> : null}
+                </Pressable>
+              </View>
+            );
+          })}
+        </Card>
+      </Sheet>
 
       {cats ? (
         <CatsSheet

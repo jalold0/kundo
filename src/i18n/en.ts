@@ -270,6 +270,25 @@ export const en: Dict = {
   'notify.denied':
     'Notifications are turned off in your phone settings. Allow them for the app and reminders will work.',
 
+  'settings.currency': 'Currency',
+  'settings.currencyHint':
+    'New records use this currency. Existing amounts are not recalculated — there are no exchange rates, because the app works offline.',
+  'cur.title': 'Currency',
+  'cur.askTitle': 'Currency changed',
+  'cur.ask':
+    'You already have {n} records in {old}. Mark them as {new} too? The numbers stay the same, only the label changes.',
+  'cur.relabel': 'Yes, make them all {new}',
+  'cur.keep': 'No, leave them as they are',
+  'cur.mixed': 'This month has {n} records in another currency — they are not counted in the totals.',
+  'cur.UZS': 'so‘m',
+  'cur.RUB': 'ruble',
+  'cur.KZT': 'tenge',
+  'cur.USD': 'dollar',
+  'cur.EUR': 'euro',
+  'cur.TRY': 'lira',
+  'money.mln': 'M',
+  'money.k': 'k',
+
   'tone.lojuvard': 'Blue',
   'tone.feruza': 'Turquoise',
   'tone.oltin': 'Gold',

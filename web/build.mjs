@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- buyruq satri skripti: chiqishi uning interfeysi */
 /**
  * Saytni uch tilda yig'adi.
  *

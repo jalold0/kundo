@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultCatList } from './lib/catalog';
-import { deviceLang, getLang, setLang, t, type Lang } from './i18n';
+import { DEFAULT_CUR, curFromLabel, deviceCur } from './lib/currency';
+import { LANGS, deviceLang, getLang, setLang, t, type Lang } from './i18n';
 import { addDays, daysInMonth, iso, today, wd } from './lib/date';
 import { resync } from './lib/notify';
 import type {
@@ -67,16 +68,6 @@ export function catUsage(s: AppState, kind: CatKind, k: string): number {
   return s.entries.filter((e) => e.kind === ek && e.cat === k).length;
 }
 
-/**
- * Valyuta belgisi — faqat birinchi ochilishda tilga qarab qo‘yiladi. Keyin u
- * foydalanuvchi ma’lumoti: til almashsa o‘zgarmaydi (ko‘p valyuta alohida ish).
- */
-function seedCurrency(lang: Lang): string {
-  if (lang === 'ru') return 'сум';
-  if (lang === 'en') return 'UZS';
-  return "so'm";
-}
-
 function seed(): AppState {
   const lang = deviceLang();
   return {
@@ -91,7 +82,7 @@ function seed(): AppState {
     settings: {
       theme: 'system',
       lang,
-      currency: seedCurrency(lang),
+      cur: deviceCur(),
       weekStartsMonday: true,
       onboarded: false,
       notifyTasks: false,
@@ -108,9 +99,28 @@ function seed(): AppState {
 /** Boshlanish uchun taklif qilinadigan odatlar — joriy tilda, tanlansa qo'shiladi. */
 export const starterHabits = (): string[] => [t('habit.sport'), t('habit.book'), t('habit.water')];
 
+/**
+ * Yozuvlar. `cur` maydoni eski zaxiralarda yo'q — unda joriy valyuta qo'yiladi:
+ * o'sha paytda bir valyuta bo'lgan, ya'ni bu to'g'ri taxmin.
+ */
+function normEntries(raw: unknown, cur: string): Entry[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((e: any) => e && e.id && typeof e.amount === 'number')
+    .map((e: any) => ({ ...e, cur: typeof e.cur === 'string' && e.cur ? e.cur : cur }));
+}
+
 export function normalize(raw: any): AppState {
+  if (!raw || typeof raw !== 'object') return seed();
+  // Til hammasidan avval: namunaviy yo‘nalish nomlari shu tilda yaratiladi.
+  // Ilgari bu qurilma tilida bo‘lardi — o‘zbekcha zaxirani rus tilli telefonga
+  // tiklaganda yo‘nalishlar ruscha chiqib qolardi.
+  const lang: Lang = LANGS.some((l) => l.k === raw.settings?.lang) ? raw.settings.lang : deviceLang();
+  if (lang !== getLang()) setLang(lang);
   const base = seed();
-  if (!raw || typeof raw !== 'object') return base;
+  // Valyuta avval hal qilinadi: yozuvlarga ham shu qiymat tushadi.
+  // Eski zaxirada `settings.currency` da «so'm» kabi *yorliq* turgan.
+  const cur = curFromLabel(raw.settings?.cur ?? raw.settings?.currency ?? DEFAULT_CUR);
   const s: AppState = {
     v: 1,
     tasks: Array.isArray(raw.tasks) ? raw.tasks.filter((t: any) => t && t.id && t.title) : [],
@@ -118,9 +128,7 @@ export function normalize(raw: any): AppState {
     habits: Array.isArray(raw.habits)
       ? raw.habits.filter((h: any) => h && h.id && h.name).map((h: any) => ({ ...h, days: h.days ?? {} }))
       : [],
-    entries: Array.isArray(raw.entries)
-      ? raw.entries.filter((e: any) => e && e.id && typeof e.amount === 'number')
-      : [],
+    entries: normEntries(raw.entries, cur),
     cats: {
       task: normCats(raw.cats?.task, 'task'),
       spend: normCats(raw.cats?.spend, 'spend'),
@@ -128,7 +136,7 @@ export function normalize(raw: any): AppState {
     },
     budgets: raw.budgets && typeof raw.budgets === 'object' ? raw.budgets : {},
     notes: typeof raw.notes === 'string' ? raw.notes : '',
-    settings: { ...base.settings, ...(raw.settings ?? {}) },
+    settings: { ...base.settings, ...(raw.settings ?? {}), lang, cur },
     updated: raw.updated ?? null,
   };
   return s;
@@ -156,6 +164,11 @@ type Ctx = {
   setBudget: (ym: string, amount: number) => void;
   setNotes: (v: string) => void;
   setSettings: (patch: Partial<Settings>) => void;
+  /**
+   * Valyutani almashtiradi. `relabel` — mavjud yozuvlarni ham yangi valyutada
+   * deb belgilash (raqamlar o'zgarmaydi, qayta hisoblanmaydi).
+   */
+  setCurrency: (code: string, relabel: boolean) => void;
   addCat: (kind: CatKind, label: string, tone: ToneKey) => void;
   updateCat: (kind: CatKind, k: string, patch: { label?: string; tone?: ToneKey }) => void;
   /** `moveTo` — o'chirilayotgan yo'nalishdagi yozuvlar ko'chiriladigan yo'nalish. */
@@ -365,6 +378,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       setNotes: (v) => edit((s) => ({ ...s, notes: v })),
       setSettings: (patch) => edit((s) => ({ ...s, settings: { ...s.settings, ...patch } })),
+
+      setCurrency: (code, relabel) =>
+        editU((s) => ({
+          ...s,
+          settings: { ...s.settings, cur: code },
+          entries: relabel ? s.entries.map((e) => ({ ...e, cur: code })) : s.entries,
+        })),
 
       addCat: (kind, label, tone) =>
         edit((s) => {

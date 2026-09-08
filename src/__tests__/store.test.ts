@@ -33,6 +33,7 @@ const e = (over: Partial<Entry> = {}): Entry => ({
   id: uid(),
   kind: 'chiqim',
   amount: 1000,
+  cur: 'UZS',
   cat: 'oziq',
   date: today(),
   created: 1,
@@ -45,8 +46,8 @@ describe('normalize — buzilgan ma’lumotdan himoya', () => {
   test('bo‘sh yoki noto‘g‘ri kiritmadan ishlaydigan holat qaytaradi', () => {
     expect(normalize(null).tasks).toEqual([]);
     expect(normalize('salom' as any).habits).toEqual([]);
-    // Valyuta qurilma tiliga qarab qo‘yiladi, shuning uchun aniq qiymatga bog‘lanmaymiz.
-    expect(["so'm", 'сум', 'UZS']).toContain(normalize(undefined).settings.currency);
+    // Valyuta qurilmaga qarab qo‘yiladi, shuning uchun aniq qiymatga bog‘lanmaymiz.
+    expect(normalize(undefined).settings.cur).toMatch(/^[A-Z]{3}$/);
   });
 
   test('nomsiz yoki id’siz yozuvlar tashlab yuboriladi', () => {
@@ -321,5 +322,50 @@ describe('yo‘nalishlar migratsiyasi', () => {
   test('label bor bo‘lsa uz e’tiborga olinmaydi', () => {
     const s = normalize({ cats: { task: [{ k: 'x', label: 'Yangi', uz: 'Eski', tone: 'anor' }] } });
     expect(s.cats.task).toEqual([{ k: 'x', label: 'Yangi', tone: 'anor' }]);
+  });
+});
+
+describe('valyuta migratsiyasi', () => {
+  test('eski zaxiradagi yorliq kodga aylanadi', () => {
+    expect(normalize({ settings: { currency: "so'm" } }).settings.cur).toBe('UZS');
+    expect(normalize({ settings: { currency: 'сум' } }).settings.cur).toBe('UZS');
+    expect(normalize({ settings: { currency: 'USD' } }).settings.cur).toBe('USD');
+    expect(normalize({ settings: { currency: '$' } }).settings.cur).toBe('USD');
+    expect(normalize({ settings: { currency: 'nimadir' } }).settings.cur).toBe('UZS');
+  });
+
+  test('valyutasiz yozuvlar joriy valyutani oladi', () => {
+    const st = normalize({
+      settings: { currency: 'USD' },
+      entries: [{ id: 'e1', kind: 'chiqim', amount: 500, cat: 'oziq', date: today(), created: 1 }],
+    });
+    expect(st.entries[0].cur).toBe('USD');
+  });
+
+  test('yozuvdagi valyuta saqlanadi', () => {
+    const st = normalize({
+      settings: { cur: 'UZS' },
+      entries: [
+        { id: 'e1', kind: 'chiqim', amount: 500, cur: 'EUR', cat: 'oziq', date: today(), created: 1 },
+      ],
+    });
+    expect(st.entries[0].cur).toBe('EUR');
+  });
+});
+
+describe('til va namunaviy yo‘nalishlar', () => {
+  test('zaxiradagi til namunaviy yo‘nalish nomlarini belgilaydi', () => {
+    const ru = normalize({ settings: { lang: 'ru' } });
+    expect(ru.settings.lang).toBe('ru');
+    expect(ru.cats.spend.find((c) => c.k === 'oziq')?.label).toBe('Продукты');
+
+    const uz = normalize({ settings: { lang: 'uz' } });
+    expect(uz.cats.spend.find((c) => c.k === 'oziq')?.label).toBe('Oziq-ovqat');
+  });
+
+  test('noma’lum til qurilma tiliga tushadi va yiqitmaydi', () => {
+    const s = normalize({ settings: { lang: 'xx' } });
+    expect(['uz', 'ru', 'en']).toContain(s.settings.lang);
+    expect(s.cats.task.length).toBeGreaterThan(0);
   });
 });

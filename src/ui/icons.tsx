@@ -258,3 +258,18 @@ export const IconClock = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
     </>,
     size,
   );
+
+export const IconCoin = ({ size = 20, color, strokeWidth = 1.6 }: P) =>
+  wrap(
+    <>
+      <Circle cx="12" cy="12" r="8.6" stroke={color} strokeWidth={strokeWidth} />
+      <Path
+        d="M14.6 9.2 a3 3 0 0 0-5.2 2 v1.6 a3 3 0 0 0 5.2 2"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+      <Path d="M8.6 11.2 H13.4 M8.6 13.4 H13.4" stroke={color} strokeWidth={strokeWidth - 0.4} />
+    </>,
+    size,
+  );
